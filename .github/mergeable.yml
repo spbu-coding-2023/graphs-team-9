@@ -4,7 +4,7 @@ mergeable:
     validate:
       - do: title
         must_exclude:
-          regex: ^\[WIP\]
+          regex: 'wip|work in progress'
 
       - do: description
         no_empty:
@@ -15,4 +15,7 @@ mergeable:
         min:
           count: 1
         limit:
-          users: [ TerrMen, Szczucki, vicitori ]
+          users:
+            - TerrMen
+            - Szczucki
+            - vicitori
