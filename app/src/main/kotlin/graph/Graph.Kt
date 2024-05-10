@@ -31,4 +31,12 @@ abstract class Graph<V>{
         vertexIndicesMap = hashMapOf()
         isAbleToAdd = false
     }
+
+    abstract fun addEdge(
+        firstVertexValue: V,
+        secondVertexValue: V,
+        label : String = "",
+        weight: Int = 1
+    )
+
 }
