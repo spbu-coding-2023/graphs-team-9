@@ -5,7 +5,7 @@ abstract class Graph<V>{
     private var verticesCount = 0
     private var isAbleToAdd = true
 
-    fun getAdjacencyList() : ArrayList<ArrayList<Edge>>{
+    fun getTheAdjacencyList() : ArrayList<ArrayList<Edge>>{
         return adjacencyList
     }
         
