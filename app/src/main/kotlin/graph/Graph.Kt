@@ -37,16 +37,21 @@ abstract class Graph<V>{
         secondVertexValue: V,
         weight: Int = 1,
         label : String = ""
-    ) {
+    ){
         if (isAbleToAdd){
             val firstVertexInd = vertexIndicesMap[firstVertexValue]
                 ?: throw IllegalArgumentException("Graph has no $firstVertexValue vertex")
             val secondVertexInd = vertexIndicesMap[secondVertexValue]
                 ?: throw IllegalArgumentException("Graph has no $firstVertexValue vertex")
-            addToAdjacencyList(firstVertexInd, secondVertexInd, label, weight)
+            addEdgeToAdjacencyList(firstVertexInd, secondVertexInd, label, weight)
         } else{
             throw IllegalStateException("Not able to add edges when graph is immutable")
         }
     }
-
+    abstract fun addEdgeToAdjacencyList(
+        firstVertexInd: Int,
+        secondVertexInd: Int,
+        label : String,
+        weight: Int
+    )
 }
