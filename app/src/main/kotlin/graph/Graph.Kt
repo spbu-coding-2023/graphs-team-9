@@ -18,10 +18,15 @@ abstract class Graph<V>{
     }
 
     fun addVertex(value : V){
-        vertexIndicesMap[value] = verticesCount++
-        vertexValues.add(value)
+        if (isAbleToAdd){
+            vertexIndicesMap[value] = verticesCount++
+            vertexValues.add(value)
+        }
+        else{
+            throw IllegalStateException("Not able to add vertices when graph is immutable")
+        }
     }
-    
+
     fun makeItLighterAndImmutable(){
         vertexIndicesMap = hashMapOf()
         isAbleToAdd = false
