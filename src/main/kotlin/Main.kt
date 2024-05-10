@@ -16,9 +16,11 @@ fun app() {
     var text by remember { mutableStateOf("Hello, World!") }
 
     MaterialTheme {
-        Button(onClick = {
+        Button(
+            onClick = {
             text = "Hello, Desktop!"
-        }) {
+        }
+        ) {
             Text(text)
         }
     }
