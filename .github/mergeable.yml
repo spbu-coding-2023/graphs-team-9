@@ -1,6 +1,7 @@
 version: 2
 mergeable:
   - when: pull_request.*, pull_request_review.*
+    name: 'check pr'
     validate:
       - do: title
         must_exclude:
