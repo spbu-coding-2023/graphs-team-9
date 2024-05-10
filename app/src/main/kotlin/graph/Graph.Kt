@@ -1,6 +1,13 @@
 abstract class Graph<V>{
-        val vertexValues : ArrayList<V> = arrayListOf()
-    
-        abstract fun getAdjacencyList() : ArrayList<ArrayList<Edge>>
+        private val vertexValues : ArrayList<V> = arrayListOf()
+        private val adjacencyList : ArrayList<ArrayList<Edge>> = arrayListOf()
+        
+        fun getAdjacencyList() : ArrayList<ArrayList<Edge>>{
+            return adjacencyList
+        }
+        
+        fun getVertexValues() : ArrayList<V>{
+            return vertexValues
+        }
     }
     
