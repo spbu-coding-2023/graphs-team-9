@@ -1,5 +1,5 @@
 class Edge(
     val destinationVertexIndex: Int,
     val label: String,
-    val weight: Number = 1
+    val weight: Number = 1,
 )
