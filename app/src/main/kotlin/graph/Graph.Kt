@@ -1,9 +1,9 @@
 abstract class Graph<V>{
     private val vertexValues : ArrayList<V> = arrayListOf()
-    private val adjacencyList : ArrayList<ArrayList<Edge>> = arrayListOf()
+    protected val adjacencyList : ArrayList<ArrayList<Edge>> = arrayListOf()
+    protected var vertexIndicesMap : HashMap<V,Int> = hashMapOf()
     private var verticesCount = 0
-    private var vertexIndicesMap : HashMap<V,Int> = hashMapOf()
-    private var isAbleToAdd = true
+    protected var isAbleToAdd = true
 
     fun getAdjacencyList() : ArrayList<ArrayList<Edge>>{
         return adjacencyList
@@ -20,6 +20,7 @@ abstract class Graph<V>{
     fun addVertex(value : V){
         if (isAbleToAdd){
             vertexIndicesMap[value] = verticesCount++
+            adjacencyList.add(arrayListOf())
             vertexValues.add(value)
         }
         else{
