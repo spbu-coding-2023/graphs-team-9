@@ -1,3 +1,5 @@
+package graph
+
 class DirectedGraph<V> : Graph<V>() {
     override fun addEdgeToAdjacencyList(
         firstVertexInd: Int,

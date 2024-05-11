@@ -1,3 +1,5 @@
+package graph
+
 class UndirectedGraph<V> : Graph<V>() {
     override fun addEdgeToAdjacencyList(
         firstVertexInd: Int,

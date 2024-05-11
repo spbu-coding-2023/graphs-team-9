@@ -1,3 +1,5 @@
+package graph
+
 class Edge(
     val destinationVertexIndex: Int,
     val label: String,
