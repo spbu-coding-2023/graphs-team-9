@@ -59,4 +59,6 @@ abstract class Graph<V> {
         label: String,
         weight: Int,
     )
+
+    abstract fun getStronglyComponents(): ArrayList<ArrayList<Int>>
 }
