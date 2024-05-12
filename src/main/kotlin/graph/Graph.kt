@@ -1,7 +1,7 @@
 abstract class Graph<V> {
     private val vertexValues: ArrayList<V> = arrayListOf()
     protected val adjacencyList: ArrayList<ArrayList<Edge>> = arrayListOf()
-    private var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
+    protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
     private var verticesCount = 0
     private var isAbleToAdd = true
 
@@ -57,4 +57,9 @@ abstract class Graph<V> {
         label: String,
         weight: Int,
     )
+
+    abstract fun getShortestPath(
+        start: V,
+        end: V,
+    ): MutableList<V>?
 }
