@@ -1,3 +1,5 @@
+package graph
+
 class UndirectedGraph<V> : Graph<V>() {
     override fun addEdgeToAdjacencyList(
         firstVertexInd: Int,
@@ -14,5 +16,8 @@ class UndirectedGraph<V> : Graph<V>() {
         end: V,
     ): MutableList<V>? {
         throw UnsupportedOperationException("getShortestPath() hasn't implemented for undirected graphs")
+
+    override fun getStronglyComponents(): ArrayList<ArrayList<Int>> {
+        throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
     }
 }

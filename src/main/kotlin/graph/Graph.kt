@@ -1,3 +1,5 @@
+package graph
+
 abstract class Graph<V> {
     private val vertexValues: ArrayList<V> = arrayListOf()
     protected val adjacencyList: ArrayList<ArrayList<Edge>> = arrayListOf()
@@ -62,4 +64,6 @@ abstract class Graph<V> {
         start: V,
         end: V,
     ): MutableList<V>?
+
+    abstract fun getStronglyComponents(): ArrayList<ArrayList<Int>>
 }
