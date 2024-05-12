@@ -11,14 +11,14 @@ class BellmanFordAlgorithm<V>(graph: DirectedGraph<V>) {
     private val parentsTable: MutableList<Int> = mutableListOf()
 
     private fun buildTables(start: Int) {
-        for (i in 0..<verticesCount) {
+        for (i in 0 until verticesCount) {
             pathLengthTable.add(MAX_VALUE)
             parentsTable.add(-1)
         }
         pathLengthTable[start] = 0
         for (iteration in 0..<verticesCount) {
             var isTableChanges: Boolean = false
-            for (vertex in 0..<verticesCount) {
+            for (vertex in 0 until verticesCount) {
                 val id = (start + vertex) % verticesCount
                 if (pathLengthTable[id] != MAX_VALUE) {
                     for (edge in adjacencyList[id]) {
