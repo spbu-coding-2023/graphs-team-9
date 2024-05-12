@@ -1,7 +1,6 @@
 package algorithms
 
 import graph.DirectedGraph
-import java.lang.UnsupportedOperationException
 import kotlin.Int.Companion.MAX_VALUE
 
 class BellmanFordAlgorithm<V>(graph: DirectedGraph<V>) {
