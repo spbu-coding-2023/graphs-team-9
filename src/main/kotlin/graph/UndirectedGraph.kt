@@ -9,7 +9,10 @@ class UndirectedGraph<V> : Graph<V>() {
         adjacencyList[secondVertexInd].add(Edge(firstVertexInd, label, weight))
     }
 
-    override fun getShortestPath(start: V, end: V): MutableList<V>? {
+    override fun getShortestPath(
+        start: V,
+        end: V,
+    ): MutableList<V>? {
         throw UnsupportedOperationException("getShortestPath() hasn't implemented for undirected graphs")
     }
 }

@@ -12,12 +12,12 @@ class BellmanFordAlgorithm<V>(graph: DirectedGraph<V>) {
     private val parentsTable: MutableList<Int> = mutableListOf()
 
     private fun buildTables(start: Int) {
-        for (i in 0 ..< verticesCount) {
+        for (i in 0..<verticesCount) {
             pathLengthTable.add(MAX_VALUE)
             parentsTable.add(-1)
         }
         pathLengthTable[start] = 0
-        for (iteration in 0 ..< verticesCount) {
+        for (iteration in 0..<verticesCount) {
             var isTableChanges: Boolean = false
             for (vertex in 0..<verticesCount) {
                 val id = (start + vertex) % verticesCount
@@ -32,8 +32,11 @@ class BellmanFordAlgorithm<V>(graph: DirectedGraph<V>) {
                     }
                 }
             }
-            if (!isTableChanges) break
-            else if (iteration == verticesCount - 1) throw UnsupportedOperationException("Graph contains negative weight cycle")
+            if (!isTableChanges) {
+                break
+            } else if (iteration == verticesCount - 1) {
+                throw UnsupportedOperationException("Graph contains negative weight cycle")
+            }
         }
     }
 
@@ -44,17 +47,20 @@ class BellmanFordAlgorithm<V>(graph: DirectedGraph<V>) {
         return convertedPath
     }
 
-     fun findPath(start: Int, end: Int): MutableList<V>? {
-         buildTables(start)
-         val path: MutableList<Int> = mutableListOf()
-         var currentVertex = end
-         path.add(currentVertex)
-         if (start == end) return convertIntToCustomType(path)
-         if (parentsTable[end] == -1) return null
-         while (parentsTable[currentVertex] != -1){
-             path.add(parentsTable[currentVertex])
-             currentVertex = parentsTable[currentVertex]
-         }
-         return convertIntToCustomType(path)
+    fun findPath(
+        start: Int,
+        end: Int,
+    ): MutableList<V>? {
+        buildTables(start)
+        val path: MutableList<Int> = mutableListOf()
+        var currentVertex = end
+        path.add(currentVertex)
+        if (start == end) return convertIntToCustomType(path)
+        if (parentsTable[end] == -1) return null
+        while (parentsTable[currentVertex] != -1) {
+            path.add(parentsTable[currentVertex])
+            currentVertex = parentsTable[currentVertex]
+        }
+        return convertIntToCustomType(path)
     }
 }
