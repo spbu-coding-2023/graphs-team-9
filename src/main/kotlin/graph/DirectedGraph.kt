@@ -20,6 +20,7 @@ class DirectedGraph<V> : Graph<V>() {
         val algo = BellmanFordAlgorithm(this)
         if (vertexIndicesMap[end] == null || vertexIndicesMap[end] == null) throw IllegalArgumentException("Vertices can not be null")
         return algo.findPath(vertexIndicesMap.getValue(start), vertexIndicesMap.getValue(end))
+    }
 
     override fun getStronglyComponents(): ArrayList<ArrayList<Int>> {
         val tarjanSAlgo = TarjanSAlgo(this)
