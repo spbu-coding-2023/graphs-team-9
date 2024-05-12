@@ -16,7 +16,7 @@ class BellmanFordAlgorithm<V>(graph: DirectedGraph<V>) {
             parentsTable.add(-1)
         }
         pathLengthTable[start] = 0
-        for (iteration in 0..<verticesCount) {
+        for (iteration in 0 until verticesCount) {
             var isTableChanges: Boolean = false
             for (vertex in 0 until verticesCount) {
                 val id = (start + vertex) % verticesCount

@@ -16,7 +16,7 @@ class TarjanSAlgo<V>(graph: DirectedGraph<V>) {
     private val verticesStackAffiliations = BooleanArray(verticesCount) { false }
 
     fun tarjanSAlgo(): ArrayList<ArrayList<Int>> {
-        for (vertex in 0 ..< verticesCount) {
+        for (vertex in 0 until verticesCount) {
             if (orders[vertex] == -1) {
                 dfs(vertex)
             }
