@@ -1,3 +1,5 @@
+package graph
+
 class UndirectedGraph<V> : Graph<V>() {
     override fun addEdgeToAdjacencyList(
         firstVertexInd: Int,
@@ -7,5 +9,9 @@ class UndirectedGraph<V> : Graph<V>() {
     ) {
         adjacencyList[firstVertexInd].add(Edge(secondVertexInd, label, weight))
         adjacencyList[secondVertexInd].add(Edge(firstVertexInd, label, weight))
+    }
+
+    override fun getStronglyComponents(): ArrayList<ArrayList<Int>> {
+        throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
     }
 }

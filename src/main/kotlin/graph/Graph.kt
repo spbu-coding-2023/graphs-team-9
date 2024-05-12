@@ -1,3 +1,5 @@
+package graph
+
 abstract class Graph<V> {
     private val vertexValues: ArrayList<V> = arrayListOf()
     protected val adjacencyList: ArrayList<ArrayList<Edge>> = arrayListOf()
@@ -57,4 +59,6 @@ abstract class Graph<V> {
         label: String,
         weight: Int,
     )
+
+    abstract fun getStronglyComponents(): ArrayList<ArrayList<Int>>
 }
