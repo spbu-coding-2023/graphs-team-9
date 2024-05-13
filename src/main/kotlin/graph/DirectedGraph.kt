@@ -13,7 +13,7 @@ class DirectedGraph<V> : Graph<V>() {
         adjacencyList[firstVertexInd].add(Edge(secondVertexInd, label, weight))
     }
 
-    override fun getShortestPath(
+    override fun getShortestPathByBFAlgorithm(
         start: V,
         end: V,
     ): MutableList<Int>? {

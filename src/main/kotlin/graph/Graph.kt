@@ -60,7 +60,7 @@ abstract class Graph<V> {
         weight: Int,
     )
 
-    abstract fun getShortestPath(
+    abstract fun getShortestPathByBFAlgorithm(
         start: V,
         end: V,
     ): MutableList<Int>?

@@ -1,9 +1,9 @@
 package algorithms
 
-import graph.DirectedGraph
+import graph.Graph
 import kotlin.Int.Companion.MAX_VALUE
 
-class BellmanFordAlgorithm<V>(graph: DirectedGraph<V>) {
+class BellmanFordAlgorithm<V>(graph: Graph<V>) {
     private val verticesCount = graph.getVerticesCount()
     private val adjacencyList = graph.getTheAdjacencyList()
     private val pathLengthTable: MutableList<Int> = mutableListOf()
