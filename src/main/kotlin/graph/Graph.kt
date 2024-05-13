@@ -3,7 +3,7 @@ package graph
 abstract class Graph<V> {
     private val vertexValues: ArrayList<V> = arrayListOf()
     protected val adjacencyList: ArrayList<ArrayList<Edge>> = arrayListOf()
-    protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
+    private var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
     private var verticesCount = 0
     private var isAbleToAdd = true
 
