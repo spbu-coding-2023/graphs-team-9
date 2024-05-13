@@ -60,5 +60,7 @@ abstract class Graph<V> {
         weight: Int,
     )
 
+    abstract fun findBridges(): MutableList<IntArray>
+
     abstract fun getStronglyComponents(): ArrayList<ArrayList<Int>>
 }

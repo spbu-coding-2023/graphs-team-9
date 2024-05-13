@@ -1,5 +1,7 @@
 package graph
 
+import algorithms.FindBridgesAlgorithm
+
 class UndirectedGraph<V> : Graph<V>() {
     override fun addEdgeToAdjacencyList(
         firstVertexInd: Int,
@@ -9,6 +11,11 @@ class UndirectedGraph<V> : Graph<V>() {
     ) {
         adjacencyList[firstVertexInd].add(Edge(secondVertexInd, label, weight))
         adjacencyList[secondVertexInd].add(Edge(firstVertexInd, label, weight))
+    }
+
+    override fun findBridges(): MutableList<IntArray> {
+        val algo = FindBridgesAlgorithm(this)
+        return algo.findBridges()
     }
 
     override fun getStronglyComponents(): ArrayList<ArrayList<Int>> {
