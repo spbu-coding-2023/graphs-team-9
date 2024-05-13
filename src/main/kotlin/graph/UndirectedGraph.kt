@@ -21,7 +21,7 @@ class UndirectedGraph<V> : Graph<V>() {
         val vertexValues = getVertexValues()
         var idStart = -1
         var idEnd = -1
-        for (i in 0 until getVerticesCount()){
+        for (i in 0 until getVerticesCount()) {
             if (vertexValues[i] == start) idStart = i
             if (vertexValues[i] == end) idEnd = i
         }
