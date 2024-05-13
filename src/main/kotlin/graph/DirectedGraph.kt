@@ -16,7 +16,7 @@ class DirectedGraph<V> : Graph<V>() {
     override fun getShortestPath(
         start: V,
         end: V,
-    ): MutableList<V>? {
+    ): MutableList<Int>? {
         val algo = BellmanFordAlgorithm(this)
         if (vertexIndicesMap[end] == null || vertexIndicesMap[end] == null) throw IllegalArgumentException("Vertices can not be null")
         return algo.findPath(vertexIndicesMap.getValue(start), vertexIndicesMap.getValue(end))

@@ -5,7 +5,6 @@ import kotlin.Int.Companion.MAX_VALUE
 
 class BellmanFordAlgorithm<V>(graph: DirectedGraph<V>) {
     private val verticesCount = graph.getVerticesCount()
-    private val vertexValues = graph.getVertexValues()
     private val adjacencyList = graph.getTheAdjacencyList()
     private val pathLengthTable: MutableList<Int> = mutableListOf()
     private val parentsTable: MutableList<Int> = mutableListOf()
@@ -39,27 +38,20 @@ class BellmanFordAlgorithm<V>(graph: DirectedGraph<V>) {
         }
     }
 
-    private fun convertIntToCustomType(path: MutableList<Int>?): MutableList<V>? {
-        val convertedPath: MutableList<V> = mutableListOf()
-        if (path == null) return null
-        for (i in path.size - 1 downTo 0) convertedPath.add(vertexValues[path[i]])
-        return convertedPath
-    }
-
     fun findPath(
         start: Int,
         end: Int,
-    ): MutableList<V>? {
+    ): MutableList<Int>? {
         buildTables(start)
         val path: MutableList<Int> = mutableListOf()
         var currentVertex = end
         path.add(currentVertex)
-        if (start == end) return convertIntToCustomType(path)
+        if (start == end) return path
         if (parentsTable[end] == -1) return null
         while (parentsTable[currentVertex] != -1) {
             path.add(parentsTable[currentVertex])
             currentVertex = parentsTable[currentVertex]
         }
-        return convertIntToCustomType(path)
+        return path
     }
 }

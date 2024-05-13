@@ -14,7 +14,7 @@ class UndirectedGraph<V> : Graph<V>() {
     override fun getShortestPath(
         start: V,
         end: V,
-    ): MutableList<V>? {
+    ): MutableList<Int>? {
         throw UnsupportedOperationException("getShortestPath() hasn't implemented for undirected graphs")
     }
 

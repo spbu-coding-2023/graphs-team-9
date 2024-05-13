@@ -63,7 +63,7 @@ abstract class Graph<V> {
     abstract fun getShortestPath(
         start: V,
         end: V,
-    ): MutableList<V>?
+    ): MutableList<Int>?
 
     abstract fun getStronglyComponents(): ArrayList<ArrayList<Int>>
 }
