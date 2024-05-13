@@ -48,6 +48,7 @@ class BellmanFordAlgorithm<V>(graph: Graph<V>) {
             path.add(parentsTable[currentVertex])
             currentVertex = parentsTable[currentVertex]
         }
+        path.reverse()
         return path
     }
 }
