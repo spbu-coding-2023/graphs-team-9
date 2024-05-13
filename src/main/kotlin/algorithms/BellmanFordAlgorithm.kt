@@ -6,14 +6,10 @@ import kotlin.Int.Companion.MAX_VALUE
 class BellmanFordAlgorithm<V>(graph: Graph<V>) {
     private val verticesCount = graph.getVerticesCount()
     private val adjacencyList = graph.getTheAdjacencyList()
-    private val pathLengthTable: MutableList<Int> = mutableListOf()
-    private val parentsTable: MutableList<Int> = mutableListOf()
+    private val pathLengthTable = IntArray(verticesCount) { MAX_VALUE }
+    private val parentsTable = IntArray(verticesCount) { -1 }
 
     private fun buildTables(start: Int) {
-        for (i in 0 until verticesCount) {
-            pathLengthTable.add(MAX_VALUE)
-            parentsTable.add(-1)
-        }
         pathLengthTable[start] = 0
         for (iteration in 0 until verticesCount) {
             var isTableChanges: Boolean = false
