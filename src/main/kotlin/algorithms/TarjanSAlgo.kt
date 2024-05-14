@@ -16,7 +16,7 @@ class TarjanSAlgo<V>(graph: DirectedGraph<V>) {
     private val verticesStackAffiliations = BooleanArray(verticesCount) { false }
 
     fun tarjanSAlgo(): ArrayList<ArrayList<Int>> {
-        for (vertex in 0 ..< verticesCount) {
+        for (vertex in 0 until verticesCount) {
             if (orders[vertex] == -1) {
                 dfs(vertex)
             }
@@ -66,10 +66,10 @@ class TarjanSAlgo<V>(graph: DirectedGraph<V>) {
         }
     }
 
-    private fun createStronglyConnectedComponent(formativeVertex : Int) {
-        var curVertex : Int
+    private fun createStronglyConnectedComponent(formativeVertex: Int) {
+        var curVertex: Int
         val stronglyConnectedComponent = ArrayList<Int>()
-        do{
+        do {
             curVertex = verticesStack.pop()
             verticesStackAffiliations[curVertex] = false
             stronglyConnectedComponent.add(curVertex)
