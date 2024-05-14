@@ -7,8 +7,15 @@ class DijkstraShortestPathAlgorithm<V>(graph: Graph<V>) {
     private val verticesCount = graph.getVerticesCount()
     private val adjacencyList = graph.getTheAdjacencyList()
 
-    private fun getArrayWithNeighbourVertex(vertex: Pair<Int, Int>): Array<Pair<Int, Int>> {
-		TODO()
+    private fun getListWithNeighbourVertex(vertex: Pair<Int, Number>): MutableList<Pair<Int, Number>> {
+        val listWithNeighbourVertex: MutableList<Pair<Int, Number>> = mutableListOf()
+        val neighbourCount: Int = adjacencyList[vertex.first - 1].size
+        for (i in 0 until neighbourCount) {
+            val vertexNumber: Int = adjacencyList[vertex.first - 1][i].destinationVertexIndex
+            val weightOfVertex: Number = adjacencyList[vertex.first - 1][i].weight
+            listWithNeighbourVertex.add(Pair(vertexNumber, weightOfVertex))
+        }
+        return listWithNeighbourVertex
     }
 
     private fun getEdgeWeight(
@@ -47,7 +54,7 @@ class DijkstraShortestPathAlgorithm<V>(graph: Graph<V>) {
             if (!visited[currentVertex.first]) continue
             visited[currentVertex.first] = true
 
-            for (neighbourVertex in getArrayWithNeighbourVertex(currentVertex)) {
+            for (neighbourVertex in getListWithNeighbourVertex(currentVertex)) {
                 // туть подумать, как обойтись без каста и '!!'
                 val potentialDistance: Int =
                     currentVertex.let {
