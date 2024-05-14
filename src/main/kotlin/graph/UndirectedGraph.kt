@@ -1,7 +1,7 @@
 package graph
 
-import algorithms.FindBridgesAlgorithm
 import algorithms.BellmanFordAlgorithm
+import algorithms.FindBridgesAlgorithm
 
 class UndirectedGraph<V> : Graph<V>() {
     override fun addEdgeToAdjacencyList(
