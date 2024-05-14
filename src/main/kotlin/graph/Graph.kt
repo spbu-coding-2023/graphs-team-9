@@ -3,9 +3,9 @@ package graph
 abstract class Graph<V> {
     private val vertexValues: ArrayList<V> = arrayListOf()
     protected val adjacencyList: ArrayList<ArrayList<Edge>> = arrayListOf()
-    private var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
+    protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
     private var verticesCount = 0
-    private var isAbleToAdd = true
+    protected var isAbleToAdd = true
 
     fun getTheAdjacencyList(): ArrayList<ArrayList<Edge>> {
         return adjacencyList
