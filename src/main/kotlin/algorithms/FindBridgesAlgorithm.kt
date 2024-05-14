@@ -7,8 +7,8 @@ class FindBridgesAlgorithm<V>(graph: UndirectedGraph<V>) {
     private val adjacencyList = graph.getTheAdjacencyList()
     private val verticesCount = graph.getVerticesCount()
     private val visited = BooleanArray(verticesCount) { false }
-    private val tin = IntArray(verticesCount) { -1 }
-    private val fup = IntArray(verticesCount) { -1 }
+    private val enterTimeInVertex = IntArray(verticesCount) { -1 }
+    private val enterTimeInConnectedComponent = IntArray(verticesCount) { -1 }
     private var timer: Int = 0
     private val bridges: MutableList<IntArray> = mutableListOf()
 
@@ -17,16 +17,24 @@ class FindBridgesAlgorithm<V>(graph: UndirectedGraph<V>) {
         parent: Int = -1,
     ) {
         visited[vertex] = true
-        tin[vertex] = timer
-        fup[vertex] = timer++
+        enterTimeInVertex[vertex] = timer
+        enterTimeInConnectedComponent[vertex] = timer++
         for (edge in adjacencyList[vertex]) {
             if (parent == edge.destinationVertexIndex) continue
             if (visited[edge.destinationVertexIndex]) {
-                fup[vertex] = min(fup[vertex], tin[edge.destinationVertexIndex])
+                enterTimeInConnectedComponent[vertex] =
+                    min(
+                        enterTimeInConnectedComponent[vertex],
+                        enterTimeInVertex[edge.destinationVertexIndex],
+                    )
             } else {
                 dfs(edge.destinationVertexIndex, vertex)
-                fup[vertex] = min(fup[vertex], fup[edge.destinationVertexIndex])
-                if (fup[edge.destinationVertexIndex] > tin[vertex]) {
+                enterTimeInConnectedComponent[vertex] =
+                    min(
+                        enterTimeInConnectedComponent[vertex],
+                        enterTimeInConnectedComponent[edge.destinationVertexIndex],
+                    )
+                if (enterTimeInConnectedComponent[edge.destinationVertexIndex] > enterTimeInVertex[vertex]) {
                     bridges.add(intArrayOf(vertex, edge.destinationVertexIndex))
                 }
             }
