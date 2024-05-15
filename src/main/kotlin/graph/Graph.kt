@@ -5,7 +5,7 @@ abstract class Graph<V> {
     protected abstract val adjacencyList : AdjacencyList
     protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
     protected var isAbleToAdd = true
-
+    protected var hasNegativeWeights = false
     fun getTheAdjacencyList(): AdjacencyList {
         return adjacencyList
     }
@@ -22,10 +22,10 @@ abstract class Graph<V> {
         require(isAbleToAdd){
             "Not able to add vertices when graph is immutable"
         }
-         if (vertexIndicesMap[value] == null) {
-             vertexIndicesMap[value] = adjacencyList.addVertex()
-         }
-         vertexValues.add(value)
+        if (vertexIndicesMap[value] == null) {
+            vertexIndicesMap[value] = adjacencyList.addVertex()
+        }
+        vertexValues.add(value)
     }
 
     fun makeItLighterAndImmutable() {
@@ -48,8 +48,11 @@ abstract class Graph<V> {
         val secondVertexInd =
             vertexIndicesMap[secondVertexValue]
                 ?: throw IllegalArgumentException("Graph doesn't have $firstVertexValue vertex")
-            adjacencyList.addEdge(firstVertexInd, secondVertexInd, label, weight)
+        if (!hasNegativeWeights && weight < 0){
+            hasNegativeWeights = true
         }
+        adjacencyList.addEdge(firstVertexInd, secondVertexInd, label, weight)
+    }
 
     abstract fun getShortestPathByBFAlgorithm(
         start: V,
