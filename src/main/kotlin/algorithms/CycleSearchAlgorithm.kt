@@ -13,46 +13,49 @@ class CycleSearchAlgorithm<V>(graph: Graph<V>) {
         PROCESSED,
     }
 
-    fun outputTheCycleForVertex(vertexNumber: Int) {
-        val (precedingVertexNumberArray, cycleEndVertexNumber) = getListOfVerticesForACycleIfTheGraphIsCyclic(vertexNumber)
-        if (precedingVertexNumberArray == null) {
+    fun outputTheCycleForVertex(vertexIndex: Int) {
+        val (precedingVertexIndicesArray, cycleEndVertexIndex) =
+            getListOfVerticesForTheCycle(
+                vertexIndex,
+            )
+        if (precedingVertexIndicesArray == null) {
             println("There are no cycles for a given vertex in the graph")
             return
         }
 
-        val verticesForTheCycleArray: MutableList<Int> = mutableListOf()
-        verticesForTheCycleArray.add(cycleEndVertexNumber)
-        var currVertexIndex = cycleEndVertexNumber
+        val vertexIndicesForTheCycleArray: MutableList<Int> = mutableListOf()
+        vertexIndicesForTheCycleArray.add(cycleEndVertexIndex)
+        var currVertexIndex = cycleEndVertexIndex
         do {
-            currVertexIndex = precedingVertexNumberArray[currVertexIndex]
-            verticesForTheCycleArray.add(currVertexIndex)
-        } while (cycleEndVertexNumber != precedingVertexNumberArray[currVertexIndex])
-        verticesForTheCycleArray.reverse()
+            currVertexIndex = precedingVertexIndicesArray[currVertexIndex]
+            vertexIndicesForTheCycleArray.add(currVertexIndex)
+        } while (cycleEndVertexIndex != precedingVertexIndicesArray[currVertexIndex])
+        vertexIndicesForTheCycleArray.reverse()
 
         val sb = StringBuilder()
-        verticesForTheCycleArray.forEach { sb.append(it) }
+        vertexIndicesForTheCycleArray.forEach { sb.append(it) }
         println(sb)
     }
 
-    private fun getListOfVerticesForACycleIfTheGraphIsCyclic(vertexNumber: Int): Pair<Array<Int>?, Int> {
+    private fun getListOfVerticesForTheCycle(vertexIndex: Int): Pair<Array<Int>?, Int> {
         val stack = Stack<Int>()
         val vertexStatusArray = Array(vertexCount) { VertexStatus.NOT_VISITED }
-        val precedingVerticesArray = Array(vertexCount) { -1 } // initialize array with -1
+        val precedingVertexIndicesArray = Array(vertexCount) { -1 } // initialize array with -1
 
-        stack.push(vertexNumber)
+        stack.push(vertexIndex)
         while (stack.isNotEmpty()) {
-            val currentVertexNumber = stack.pop()
-            vertexStatusArray[currentVertexNumber] = VertexStatus.IN_PROCESSING
-            for (neighbourEdge in adjacencyList[currentVertexNumber - 1]) {
-                precedingVerticesArray[neighbourEdge.destinationVertexIndex] = currentVertexNumber
+            val currentVertexIndex = stack.pop()
+            vertexStatusArray[currentVertexIndex] = VertexStatus.IN_PROCESSING
+            for (neighbourEdge in adjacencyList[currentVertexIndex - 1]) {
+                precedingVertexIndicesArray[neighbourEdge.destinationVertexIndex] = currentVertexIndex
                 if (vertexStatusArray[neighbourEdge.destinationVertexIndex] == VertexStatus.IN_PROCESSING) {
-                    val cycleEndVertexNumber = neighbourEdge.destinationVertexIndex
-                    return Pair(precedingVerticesArray, cycleEndVertexNumber)
+                    val cycleEndVertexIndex = neighbourEdge.destinationVertexIndex
+                    return Pair(precedingVertexIndicesArray, cycleEndVertexIndex)
                 } else if (vertexStatusArray[neighbourEdge.destinationVertexIndex] == VertexStatus.NOT_VISITED) {
                     stack.push(neighbourEdge.destinationVertexIndex)
                 }
             }
-            vertexStatusArray[currentVertexNumber] = VertexStatus.PROCESSED
+            vertexStatusArray[currentVertexIndex] = VertexStatus.PROCESSED
         }
         return Pair(null, -1)
     }
