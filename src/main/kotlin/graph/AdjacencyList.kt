@@ -3,7 +3,26 @@ package graph
 abstract class AdjacencyList {
     protected val adjacencyList: ArrayList<ArrayList<Edge>> = arrayListOf()
 
-    abstract fun addEdge(
+    fun addEdge(
+        sourceVertexIndex: Int,
+        destinationVertexIndex : Int,
+        label: String,
+        weight: Int,
+    ) {
+        require(sourceVertexIndex < getVerticesCount()){
+            "Adjacency list doesn't have vertex with index $sourceVertexIndex"
+        }
+        require(destinationVertexIndex < getVerticesCount()){
+            "Adjacency list doesn't have vertex with index $destinationVertexIndex"
+        }
+        require(isEdgeContained(sourceVertexIndex, destinationVertexIndex)){
+            "Duplicated edges are not allowed"
+        }
+        
+        addEdgeToTheAdjacencyList(sourceVertexIndex, destinationVertexIndex, label, weight)
+    }
+    
+    protected abstract fun addEdgeToTheAdjacencyList(
         sourceVertexIndex: Int,
         destinationVertexIndex : Int,
         label: String,
@@ -34,7 +53,7 @@ abstract class AdjacencyList {
         return adjacencyList.size
     }
 
-    protected fun isEdgeContained(sourceVertexIndex: Int, destinationVertexIndex: Int) : Boolean{
+    private fun isEdgeContained(sourceVertexIndex: Int, destinationVertexIndex: Int) : Boolean{
         for (edge in adjacencyList[sourceVertexIndex]){
             if (edge.destinationVertexIndex == destinationVertexIndex){
                 return true
