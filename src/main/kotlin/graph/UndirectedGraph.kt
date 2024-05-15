@@ -38,7 +38,7 @@ class UndirectedGraph<V> : Graph<V>() {
         return algo.findPath(idStart, idEnd)
     }
 
-    override fun getStronglyComponents(): ArrayList<ArrayList<Int>> {
+    override fun getStronglyConnectedComponents(): ArrayList<ArrayList<Int>> {
         throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
     }
 }

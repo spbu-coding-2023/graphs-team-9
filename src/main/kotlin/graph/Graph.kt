@@ -60,5 +60,5 @@ abstract class Graph<V> {
         end: V,
     ): MutableList<Int>?
 
-    abstract fun getStronglyComponents(): ArrayList<ArrayList<Int>>
+    abstract fun getStronglyConnectedComponents(): ArrayList<ArrayList<Int>>
 }
