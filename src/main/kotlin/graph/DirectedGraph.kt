@@ -6,6 +6,10 @@ import algorithms.TarjanSAlgo
 class DirectedGraph<V> : Graph<V>() {
     override val adjacencyList = DirectedAdjacencyList()
 
+    override fun getTheAdjacencyList(): DirectedAdjacencyList {
+        return adjacencyList
+    }
+
     override fun getShortestPathByBFAlgorithm(
         start: V,
         end: V,

@@ -5,6 +5,10 @@ import algorithms.BellmanFordAlgorithm
 class UndirectedGraph<V> : Graph<V>() {
     override val adjacencyList = UndirectedAdjacencyList()
 
+    override fun getTheAdjacencyList(): UndirectedAdjacencyList {
+        return adjacencyList
+    }
+
     override fun getShortestPathByBFAlgorithm(
         start: V,
         end: V,

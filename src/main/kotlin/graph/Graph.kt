@@ -6,7 +6,8 @@ abstract class Graph<V> {
     protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
     protected var isAbleToAdd = true
     protected var hasNegativeWeights = false
-    fun getTheAdjacencyList(): AdjacencyList {
+    
+    open fun getTheAdjacencyList(): AdjacencyList {
         return adjacencyList
     }
 
