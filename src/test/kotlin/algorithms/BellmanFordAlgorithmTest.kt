@@ -1,5 +1,6 @@
 package algorithms
 
+import graph.DirectedGraph
 import graph.UndirectedGraph
 import org.junit.jupiter.api.*
 import kotlin.test.assertEquals
@@ -7,16 +8,11 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class BellmanFordAlgorithmTest {
-    private lateinit var undirectedGraph: UndirectedGraph<String>
     private var result: MutableList<Int>? = null
-
-    @BeforeEach
-    fun setup() {
-        undirectedGraph = UndirectedGraph()
-    }
 
     @Nested
     inner class TestsOnUndirectedGraph {
+        private var undirectedGraph: UndirectedGraph<String> = UndirectedGraph()
 
 //           u  <- start/end
 //         /   \
@@ -98,6 +94,116 @@ class BellmanFordAlgorithmTest {
             undirectedGraph.addEdge("e", "x", 7)
 
             result = undirectedGraph.getShortestPathByBFAlgorithm("m", "x")
+            val firstExpectedResult = mutableListOf(0, 3, 4)
+            val secondExpectedResult = mutableListOf(0, 1, 2, 4)
+            assertTrue(firstExpectedResult == result || secondExpectedResult == result)
+        }
+
+//        @Nested
+//        inner class TestExceptions {
+//            @Test
+//            fun `both vertices do not exist`() {
+//                undirectedGraph.addVertex("s")
+//                result = undirectedGraph.getShortestPathByBFAlgorithm("v", "o")
+//            }
+//
+//            @Test
+//            fun `start-vertex do not exist`() {
+//                undirectedGraph.addVertex("s")
+//                result = undirectedGraph.getShortestPathByBFAlgorithm("s", "s")
+//                expectedResult = mutableListOf(0)
+//            }
+//
+//            @Test
+//            fun `end-vertex do not exist`() {
+//                undirectedGraph.addVertex("s")
+//                result = undirectedGraph.getShortestPathByBFAlgorithm("s", "s")
+//                expectedResult = mutableListOf(0)
+//            }
+//        }
+    }
+
+    @Nested
+    inner class TestsOnDirectedGraph {
+        private var directedGraph: DirectedGraph<String> = DirectedGraph()
+
+//           u  <- start/end
+//         ↙   ↘
+//        f  —> o
+//
+        @Test
+        fun `path between the same vertex`() {
+            directedGraph.addVertex("u")
+            directedGraph.addVertex("f")
+            directedGraph.addVertex("o")
+            directedGraph.addEdge("u", "o")
+            directedGraph.addEdge("u", "f")
+            directedGraph.addEdge("f", "o")
+
+            result = directedGraph.getShortestPathByBFAlgorithm("u", "u")
+            val expectedResult = mutableListOf(0)
+            assertEquals(expectedResult, result)
+        }
+
+//           r  <- start    end -> i
+//         ↙   ↘                   ↓
+//        u  —> s                  a
+//
+        @Test
+        fun `path between unconnected vertices`() {
+            directedGraph.addVertex("r")
+            directedGraph.addVertex("u")
+            directedGraph.addVertex("s")
+            directedGraph.addVertex("i")
+            directedGraph.addVertex("a")
+            directedGraph.addEdge("r", "u")
+            directedGraph.addEdge("r", "s")
+            directedGraph.addEdge("u", "s")
+            directedGraph.addEdge("i", "a")
+
+            result = directedGraph.getShortestPathByBFAlgorithm("r", "i")
+            assertNull(result)
+        }
+
+//           d  <- start
+//       4 ↙   ↘ 3
+//        r  —> e  <- end
+//           -2
+//
+        @Test
+        fun `path with negative edge weights`() {
+            directedGraph.addVertex("d")
+            directedGraph.addVertex("r")
+            directedGraph.addVertex("e")
+            directedGraph.addEdge("d", "r", 4)
+            directedGraph.addEdge("d", "e", 3)
+            directedGraph.addEdge("r", "e", -2)
+
+            result = directedGraph.getShortestPathByBFAlgorithm("d", "e")
+            val expectedResult = mutableListOf(0, 1, 2)
+            assertEquals(expectedResult, result)
+        }
+
+//             -2   5
+// start ->  m — e — x <- end
+//       -3 /       / -2
+//         a  —  t
+//            8
+//
+        @Test
+        fun `path between different connected vertices with choice`() {
+            directedGraph.addVertex("m")
+            directedGraph.addVertex("a")
+            directedGraph.addVertex("t")
+            directedGraph.addVertex("e")
+            directedGraph.addVertex("x")
+            directedGraph.addEdge("m", "a", -3)
+            directedGraph.addEdge("a", "t", 8)
+            directedGraph.addEdge("t", "x", -2)
+            directedGraph.addEdge("m", "e", -2)
+            directedGraph.addEdge("e", "x", 5)
+
+            result = directedGraph.getShortestPathByBFAlgorithm("m", "x")
             val firstExpectedResult = mutableListOf(0, 3, 4)
             val secondExpectedResult = mutableListOf(0, 1, 2, 4)
             assertTrue(firstExpectedResult == result || secondExpectedResult == result)
