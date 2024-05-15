@@ -2,30 +2,30 @@ package graph
 
 abstract class Graph<V> {
     private val vertexValues: ArrayList<V> = arrayListOf()
-    protected val adjacencyList: ArrayList<ArrayList<Edge>> = arrayListOf()
+    protected abstract val adjacencyList : AdjacencyList
     protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
-    private var verticesCount = 0
     protected var isAbleToAdd = true
 
-    fun getTheAdjacencyList(): ArrayList<ArrayList<Edge>> {
+    fun getTheAdjacencyList(): AdjacencyList {
         return adjacencyList
     }
 
-    fun getVertexValues(): ArrayList<V> {
-        return vertexValues
+    fun getVertexValue(vertexIndex : Int): V {
+        return vertexValues[vertexIndex]
     }
 
     fun getVerticesCount(): Int {
-        return verticesCount
+        return adjacencyList.getVerticesCount()
     }
 
     fun addVertex(value: V) {
         require(isAbleToAdd){
             "Not able to add vertices when graph is immutable"
         }
-        vertexIndicesMap[value] = verticesCount++
-        adjacencyList.add(arrayListOf())
-        vertexValues.add(value)
+         if (vertexIndicesMap[value] == null) {
+             vertexIndicesMap[value] = adjacencyList.addVertex()
+         }
+         vertexValues.add(value)
     }
 
     fun makeItLighterAndImmutable() {
@@ -36,8 +36,8 @@ abstract class Graph<V> {
     fun addEdge(
         firstVertexValue: V,
         secondVertexValue: V,
-        weight: Int = 1,
         label: String = "",
+        weight: Int = 1,
     ) {
         require (isAbleToAdd) {
             "Not able to add edges when graph is immutable"
@@ -48,15 +48,8 @@ abstract class Graph<V> {
         val secondVertexInd =
             vertexIndicesMap[secondVertexValue]
                 ?: throw IllegalArgumentException("Graph doesn't have $firstVertexValue vertex")
-            addEdgeToAdjacencyList(firstVertexInd, secondVertexInd, label, weight)
-    }
-
-    abstract fun addEdgeToAdjacencyList(
-        firstVertexInd: Int,
-        secondVertexInd: Int,
-        label: String,
-        weight: Int,
-    )
+            adjacencyList.addEdge(firstVertexInd, secondVertexInd, label, weight)
+        }
 
     abstract fun getShortestPathByBFAlgorithm(
         start: V,
