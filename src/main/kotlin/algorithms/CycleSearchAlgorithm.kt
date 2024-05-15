@@ -14,6 +14,24 @@ class CycleSearchAlgorithm<V>(graph: Graph<V>) {
     }
 
     fun outputTheCycleForVertex(vertexNumber: Int) {
+        val (precedingVertexNumberArray, cycleEndVertexNumber) = getListOfVerticesForACycleIfTheGraphIsCyclic(vertexNumber)
+        if (precedingVertexNumberArray == null) {
+            println("There are no cycles for a given vertex in the graph")
+            return
+        }
+
+        val verticesForTheCycleArray: MutableList<Int> = mutableListOf()
+        verticesForTheCycleArray.add(cycleEndVertexNumber)
+        var currVertexIndex = cycleEndVertexNumber
+        do {
+            currVertexIndex = precedingVertexNumberArray[currVertexIndex]
+            verticesForTheCycleArray.add(currVertexIndex)
+        } while (cycleEndVertexNumber != precedingVertexNumberArray[currVertexIndex])
+        verticesForTheCycleArray.reverse()
+
+        val sb = StringBuilder()
+        verticesForTheCycleArray.forEach { sb.append(it) }
+        println(sb)
     }
 
     private fun getListOfVerticesForACycleIfTheGraphIsCyclic(vertexNumber: Int): Pair<Array<Int>?, Int> {
