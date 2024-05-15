@@ -15,7 +15,7 @@ abstract class AdjacencyList {
         require(destinationVertexIndex < getVerticesCount()) {
             "Adjacency list doesn't have vertex with index $destinationVertexIndex"
         }
-        require(isEdgeContained(sourceVertexIndex, destinationVertexIndex)) {
+        require(!isEdgeContained(sourceVertexIndex, destinationVertexIndex)) {
             "Duplicated edges are not allowed"
         }
 
