@@ -5,7 +5,7 @@ class DirectedAdjacencyList : AdjacencyList() {
         sourceVertexIndex: Int,
         destinationVertexIndex: Int,
         label: String,
-        weight: Int
+        weight: Int,
     ) {
         adjacencyList[sourceVertexIndex].add(Edge(destinationVertexIndex, label, weight))
     }

@@ -41,7 +41,10 @@ abstract class AdjacencyList {
         return adjacencyList[vertexIndex].size
     }
 
-    fun getEdge(sourceVertexIndex: Int, edgeOrdinalNumber: Int): Edge {
+    fun getEdge(
+        sourceVertexIndex: Int,
+        edgeOrdinalNumber: Int,
+    ): Edge {
         val outgoingEdgesCount = getOutgoingEdgesCount(sourceVertexIndex)
         require(edgeOrdinalNumber < outgoingEdgesCount) {
             "$sourceVertexIndex has only $outgoingEdgesCount edges"
@@ -53,7 +56,10 @@ abstract class AdjacencyList {
         return adjacencyList.size
     }
 
-    private fun isEdgeContained(sourceVertexIndex: Int, destinationVertexIndex: Int): Boolean {
+    private fun isEdgeContained(
+        sourceVertexIndex: Int,
+        destinationVertexIndex: Int,
+    ): Boolean {
         for (edge in adjacencyList[sourceVertexIndex]) {
             if (edge.destinationVertexIndex == destinationVertexIndex) {
                 return true
