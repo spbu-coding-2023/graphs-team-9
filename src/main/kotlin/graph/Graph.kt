@@ -49,7 +49,7 @@ abstract class Graph<V> {
             vertexIndicesMap[secondVertexValue]
                 ?: throw IllegalArgumentException("Graph doesn't have $firstVertexValue vertex")
             addEdgeToAdjacencyList(firstVertexInd, secondVertexInd, label, weight)
-        }
+    }
 
     abstract fun addEdgeToAdjacencyList(
         firstVertexInd: Int,

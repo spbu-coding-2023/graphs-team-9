@@ -33,4 +33,13 @@ abstract class AdjacencyList {
     fun getVerticesCount(): Int{
         return adjacencyList.size
     }
+
+    protected fun isEdgeContained(sourceVertexIndex: Int, destinationVertexIndex: Int) : Boolean{
+        for (edge in adjacencyList[sourceVertexIndex]){
+            if (edge.destinationVertexIndex == destinationVertexIndex){
+                return true
+            }
+        }
+        return false
+    }
 }
