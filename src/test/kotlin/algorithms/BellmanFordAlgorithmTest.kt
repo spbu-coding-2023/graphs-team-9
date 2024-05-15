@@ -2,8 +2,10 @@ package algorithms
 
 import graph.DirectedGraph
 import graph.UndirectedGraph
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -99,28 +101,42 @@ class BellmanFordAlgorithmTest {
             assertTrue(firstExpectedResult == result || secondExpectedResult == result)
         }
 
-//        @Nested
-//        inner class TestExceptions {
-//            @Test
-//            fun `both vertices do not exist`() {
-//                undirectedGraph.addVertex("s")
-//                result = undirectedGraph.getShortestPathByBFAlgorithm("v", "o")
-//            }
+        @Nested
+        inner class TestExceptionsInUndirectedGraph {
+            @Test
+            fun `both vertices do not exist`() {
+                undirectedGraph.addVertex("s")
+                assertFailsWith<IllegalArgumentException> { undirectedGraph.getShortestPathByBFAlgorithm("v", "o") }
+            }
+
+            @Test
+            fun `start-vertex do not exist`() {
+                undirectedGraph.addVertex("s")
+                assertFailsWith<IllegalArgumentException> { undirectedGraph.getShortestPathByBFAlgorithm("m", "s") }
+            }
+
+            @Test
+            fun `end-vertex do not exist`() {
+                undirectedGraph.addVertex("s")
+                assertFailsWith<IllegalArgumentException> { undirectedGraph.getShortestPathByBFAlgorithm("s", "k") }
+            }
+
+//           d  <- start
+//      -4 /   \ 3
+//        r  —  e  <- end
+//           -2
 //
-//            @Test
-//            fun `start-vertex do not exist`() {
-//                undirectedGraph.addVertex("s")
-//                result = undirectedGraph.getShortestPathByBFAlgorithm("s", "s")
-//                expectedResult = mutableListOf(0)
-//            }
-//
-//            @Test
-//            fun `end-vertex do not exist`() {
-//                undirectedGraph.addVertex("s")
-//                result = undirectedGraph.getShortestPathByBFAlgorithm("s", "s")
-//                expectedResult = mutableListOf(0)
-//            }
-//        }
+            @Test
+            fun `path with negative cycle`() {
+                undirectedGraph.addVertex("d")
+                undirectedGraph.addVertex("r")
+                undirectedGraph.addVertex("e")
+                undirectedGraph.addEdge("d", "r", -4)
+                undirectedGraph.addEdge("d", "e", 3)
+                undirectedGraph.addEdge("r", "e", -2)
+                assertFailsWith<UnsupportedOperationException> { undirectedGraph.getShortestPathByBFAlgorithm("d", "e") }
+            }
+        }
     }
 
     @Nested
@@ -185,10 +201,10 @@ class BellmanFordAlgorithmTest {
         }
 
 //             -2   5
-// start ->  m — e — x <- end
-//       -3 /       / -2
-//         a  —  t
-//            8
+// start ->  m —> e —> x <- end
+//       -3 ↙        ↗ -2
+//         a   —>  t
+//             8
 //
         @Test
         fun `path between different connected vertices with choice`() {
@@ -209,27 +225,44 @@ class BellmanFordAlgorithmTest {
             assertTrue(firstExpectedResult == result || secondExpectedResult == result)
         }
 
-//        @Nested
-//        inner class TestExceptions {
-//            @Test
-//            fun `both vertices do not exist`() {
-//                undirectedGraph.addVertex("s")
-//                result = undirectedGraph.getShortestPathByBFAlgorithm("v", "o")
-//            }
-//
-//            @Test
-//            fun `start-vertex do not exist`() {
-//                undirectedGraph.addVertex("s")
-//                result = undirectedGraph.getShortestPathByBFAlgorithm("s", "s")
-//                expectedResult = mutableListOf(0)
-//            }
-//
-//            @Test
-//            fun `end-vertex do not exist`() {
-//                undirectedGraph.addVertex("s")
-//                result = undirectedGraph.getShortestPathByBFAlgorithm("s", "s")
-//                expectedResult = mutableListOf(0)
-//            }
-//        }
+        @Nested
+        inner class TestExceptionsInDirectedGraph {
+            @Test
+            fun `both vertices do not exist`() {
+                directedGraph.addVertex("s")
+                assertFailsWith<IllegalArgumentException> { directedGraph.getShortestPathByBFAlgorithm("v", "o") }
+            }
+
+            @Test
+            fun `start-vertex do not exist`() {
+                directedGraph.addVertex("s")
+                assertFailsWith<IllegalArgumentException> { directedGraph.getShortestPathByBFAlgorithm("m", "s") }
+            }
+
+            @Test
+            fun `end-vertex do not exist`() {
+                directedGraph.addVertex("s")
+                assertFailsWith<IllegalArgumentException> { directedGraph.getShortestPathByBFAlgorithm("s", "k") }
+            }
+
+//              k <- end
+//              ↑ 1
+//              n
+//         -1 ↙  ↖ 2
+// start ->  p —> u
+//             -2
+            @Test
+            fun `path with negative cycle`() {
+                directedGraph.addVertex("p")
+                directedGraph.addVertex("u")
+                directedGraph.addVertex("n")
+                directedGraph.addVertex("k")
+                directedGraph.addEdge("p", "u", -2)
+                directedGraph.addEdge("u", "n", 2)
+                directedGraph.addEdge("n", "k", 1)
+                directedGraph.addEdge("n", "p", -1)
+                assertFailsWith<UnsupportedOperationException> { directedGraph.getShortestPathByBFAlgorithm("p", "k") }
+            }
+        }
     }
 }
