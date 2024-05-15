@@ -2,7 +2,7 @@ package graph
 
 abstract class Graph<V> {
     private val vertexValues: ArrayList<V> = arrayListOf()
-    protected abstract val adjacencyList : AdjacencyList
+    protected abstract val adjacencyList: AdjacencyList
     protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
     protected var isAbleToAdd = true
     protected var hasNegativeWeights = false
@@ -10,7 +10,7 @@ abstract class Graph<V> {
         return adjacencyList
     }
 
-    fun getVertexValue(vertexIndex : Int): V {
+    fun getVertexValue(vertexIndex: Int): V {
         return vertexValues[vertexIndex]
     }
 
@@ -19,7 +19,7 @@ abstract class Graph<V> {
     }
 
     fun addVertex(value: V) {
-        require(isAbleToAdd){
+        require(isAbleToAdd) {
             "Not able to add vertices when graph is immutable"
         }
         if (vertexIndicesMap[value] == null) {
@@ -39,7 +39,7 @@ abstract class Graph<V> {
         label: String = "",
         weight: Int = 1,
     ) {
-        require (isAbleToAdd) {
+        require(isAbleToAdd) {
             "Not able to add edges when graph is immutable"
         }
         val firstVertexInd =
@@ -48,7 +48,7 @@ abstract class Graph<V> {
         val secondVertexInd =
             vertexIndicesMap[secondVertexValue]
                 ?: throw IllegalArgumentException("Graph doesn't have $firstVertexValue vertex")
-        if (!hasNegativeWeights && weight < 0){
+        if (!hasNegativeWeights && weight < 0) {
             hasNegativeWeights = true
         }
         adjacencyList.addEdge(firstVertexInd, secondVertexInd, label, weight)
