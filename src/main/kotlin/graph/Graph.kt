@@ -20,13 +20,12 @@ abstract class Graph<V> {
     }
 
     fun addVertex(value: V) {
-        if (isAbleToAdd) {
-            vertexIndicesMap[value] = verticesCount++
-            adjacencyList.add(arrayListOf())
-            vertexValues.add(value)
-        } else {
-            throw IllegalStateException("Not able to add vertices when graph is immutable")
+        require(isAbleToAdd){
+            "Not able to add vertices when graph is immutable"
         }
+        vertexIndicesMap[value] = verticesCount++
+        adjacencyList.add(arrayListOf())
+        vertexValues.add(value)
     }
 
     fun makeItLighterAndImmutable() {
@@ -40,18 +39,17 @@ abstract class Graph<V> {
         weight: Int = 1,
         label: String = "",
     ) {
-        if (isAbleToAdd) {
-            val firstVertexInd =
-                vertexIndicesMap[firstVertexValue]
-                    ?: throw IllegalArgumentException("Graph has no $firstVertexValue vertex")
-            val secondVertexInd =
-                vertexIndicesMap[secondVertexValue]
-                    ?: throw IllegalArgumentException("Graph has no $firstVertexValue vertex")
-            addEdgeToAdjacencyList(firstVertexInd, secondVertexInd, label, weight)
-        } else {
-            throw IllegalStateException("Not able to add edges when graph is immutable")
+        require (isAbleToAdd) {
+            "Not able to add edges when graph is immutable"
         }
-    }
+        val firstVertexInd =
+            vertexIndicesMap[firstVertexValue]
+                ?: throw IllegalArgumentException("Graph doesn't have $firstVertexValue vertex")
+        val secondVertexInd =
+            vertexIndicesMap[secondVertexValue]
+                ?: throw IllegalArgumentException("Graph doesn't have $firstVertexValue vertex")
+            addEdgeToAdjacencyList(firstVertexInd, secondVertexInd, label, weight)
+        }
 
     abstract fun addEdgeToAdjacencyList(
         firstVertexInd: Int,
