@@ -39,8 +39,8 @@ class DirectedGraph<V> : Graph<V>() {
         return algo.findPath(idStart, idEnd)
     }
 
-    override fun getStronglyComponents(): ArrayList<ArrayList<Int>> {
-        val tarjanSAlgo = TarjanSAlgo(this)
+    override fun getStronglyConnectedComponents(): ArrayList<ArrayList<Int>> {
+        val tarjanSAlgo = TarjanSAlgo(this.getTheAdjacencyList())
         return tarjanSAlgo.tarjanSAlgo()
     }
 }
