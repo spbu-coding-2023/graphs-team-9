@@ -13,6 +13,8 @@ class UndirectedGraph<V> : Graph<V>() {
         start: V,
         end: V,
     ): MutableList<Int>? {
+        if (hasNegativeWeights) throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
+
         val algo = BellmanFordAlgorithm(adjacencyList)
         var idStart = -1
         var idEnd = -1
