@@ -13,8 +13,9 @@ class UndirectedGraph<V> : Graph<V>() {
         start: V,
         end: V,
     ): MutableList<Int>? {
-        val algo = BellmanFordAlgorithm(this)
-        val vertexValues = getVertexValues()
+        if (hasNegativeWeights) throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
+
+        val algo = BellmanFordAlgorithm(adjacencyList)
         var idStart = -1
         var idEnd = -1
         when (isAbleToAdd) {
@@ -29,8 +30,8 @@ class UndirectedGraph<V> : Graph<V>() {
             }
             false -> {
                 for (i in 0 until getVerticesCount()) {
-                    if (vertexValues[i] == start) idStart = i
-                    if (vertexValues[i] == end) idEnd = i
+                    if (getVertexValue(i) == start) idStart = i
+                    if (getVertexValue(i) == end) idEnd = i
                 }
                 if (idStart == -1 || idEnd == -1) throw IllegalArgumentException("Vertices can not be null")
             }

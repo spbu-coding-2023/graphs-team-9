@@ -1,11 +1,10 @@
 package algorithms
 
-import graph.Graph
+import graph.AdjacencyList
 import kotlin.Int.Companion.MAX_VALUE
 
-class BellmanFordAlgorithm<V>(graph: Graph<V>) {
-    private val verticesCount = graph.getVerticesCount()
-    private val adjacencyList = graph.getTheAdjacencyList()
+class BellmanFordAlgorithm(private val adjacencyList: AdjacencyList) {
+    private val verticesCount = adjacencyList.getVerticesCount()
     private val pathLengthTable = IntArray(verticesCount) { MAX_VALUE }
     private val parentsTable = IntArray(verticesCount) { -1 }
 
@@ -14,13 +13,14 @@ class BellmanFordAlgorithm<V>(graph: Graph<V>) {
         for (iteration in 0 until verticesCount) {
             var isTableChanges: Boolean = false
             for (vertex in 0 until verticesCount) {
-                val id = (start + vertex) % verticesCount
-                if (pathLengthTable[id] != MAX_VALUE) {
-                    for (edge in adjacencyList[id]) {
+                val source = (start + vertex) % verticesCount
+                if (pathLengthTable[source] != MAX_VALUE) {
+                    for (idEdge in 0 until adjacencyList.getOutgoingEdgesCount(source)) {
+                        val edge = adjacencyList.getEdge(source, idEdge)
                         val destination = edge.destinationVertexIndex
-                        if (pathLengthTable[destination] > pathLengthTable[id] + edge.weight.toInt()) {
-                            pathLengthTable[destination] = pathLengthTable[id] + edge.weight.toInt()
-                            parentsTable[destination] = id
+                        if (pathLengthTable[destination] > pathLengthTable[source] + edge.weight.toInt()) {
+                            pathLengthTable[destination] = pathLengthTable[source] + edge.weight.toInt()
+                            parentsTable[destination] = source
                             isTableChanges = true
                         }
                     }
