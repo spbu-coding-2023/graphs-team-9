@@ -2,9 +2,9 @@ package graph
 
 import algorithms.BellmanFordAlgorithm
 
-class UndirectedGraph<V>(
-    override val adjacencyList: UndirectedAdjacencyList = UndirectedAdjacencyList(),
-    override val vertexValues : ArrayList<V> = arrayListOf(),
+open class UndirectedGraph<V>(
+    final override val adjacencyList: UndirectedAdjacencyList = UndirectedAdjacencyList(),
+    final override val vertexValues : ArrayList<V> = arrayListOf(),
 ): Graph<V>(){
 
     init{

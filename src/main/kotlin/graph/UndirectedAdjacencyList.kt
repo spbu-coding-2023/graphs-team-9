@@ -1,6 +1,6 @@
 package graph
 
-class UndirectedAdjacencyList(initiallyVertexCount: Int = 0) : AdjacencyList(initiallyVertexCount) {
+open class UndirectedAdjacencyList(initiallyVertexCount: Int = 0) : AdjacencyList(initiallyVertexCount) {
     override fun addEdgeToTheAdjacencyList(
         sourceVertexIndex: Int,
         destinationVertexIndex: Int,

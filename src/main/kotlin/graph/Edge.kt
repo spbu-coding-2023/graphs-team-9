@@ -1,6 +1,6 @@
 package graph
 
-class Edge(
+open class Edge(
     val destinationVertexIndex: Int,
     val label: String,
     val weight: Number = 1,
