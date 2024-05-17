@@ -12,7 +12,7 @@ abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
         source: Int,
         target: Int,
         label: String,
-        weight: Int,
+        weight: Number,
     ) {
         require(source < verticesCount()) {
             "Adjacency list doesn't have vertex with index $source"
@@ -27,11 +27,20 @@ abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
         addEdgeToTheAdjacencyList(source, target, label, weight)
     }
 
+    private fun isEdgeContained(source: Int, target: Int): Boolean {
+        for (edge in adjacencyList[source]) {
+            if (edge.target() == target) {
+                return true
+            }
+        }
+        return false
+    }
+
     protected abstract fun addEdgeToTheAdjacencyList(
         source: Int,
         target: Int,
         label: String,
-        weight: Int,
+        weight: Number,
     )
 
     fun addVertex(): Int { // Возвращается индекс добавленной вершины (удалите коммент после наприсания доки)
@@ -56,15 +65,6 @@ abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
 
     fun verticesCount(): Int {
         return adjacencyList.size
-    }
-
-    private fun isEdgeContained(source: Int, target: Int): Boolean {
-        for (edge in adjacencyList[source]) {
-            if (edge.target() == target) {
-                return true
-            }
-        }
-        return false
     }
 
 }

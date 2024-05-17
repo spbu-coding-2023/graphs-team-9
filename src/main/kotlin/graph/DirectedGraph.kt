@@ -4,7 +4,7 @@ import algorithms.BellmanFordAlgorithm
 import algorithms.TarjanSAlgo
 
 open class DirectedGraph<V>(
-    final override val adjacencyList: DirectedAdjacencyList = DirectedAdjacencyList(),
+    private val adjacencyList: DirectedAdjacencyList = DirectedAdjacencyList(),
     final override val vertexValues : ArrayList<V> = arrayListOf(),
 ): Graph<V>() {
 
@@ -16,6 +16,24 @@ open class DirectedGraph<V>(
 
     override fun adjacencyList(): DirectedAdjacencyList {
         return adjacencyList
+    }
+
+    override fun verticesCount(): Int {
+        return adjacencyList.verticesCount()
+    }
+
+    override fun addIntoEdgesCollection(firstVertexInd: Int, secondVertexInd: Int, label: String, weight: Number) {
+        adjacencyList.addEdge(firstVertexInd, secondVertexInd, label, weight)
+    }
+
+    override fun addVertex(value: V) {
+        require(isAbleToAdd) {
+            "Not able to add vertices when graph is immutable"
+        }
+        if (vertexIndicesMap[value] == null) {
+            vertexIndicesMap[value] = adjacencyList.addVertex()
+        }
+        vertexValues.add(value)
     }
 
     override fun shortestPathByBFAlgorithm(
