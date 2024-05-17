@@ -9,16 +9,16 @@ open class DirectedGraph<V>(
 ): Graph<V>() {
 
     init{
-        require(adjacencyList.getVerticesCount() == vertexValues.size) {
+        require(adjacencyList.getVerticesCount() == vertexValues.size){
             "vertexValues size isn't equal adjacencyList's vertices count"
         }
     }
 
-    override fun getTheAdjacencyList(): DirectedAdjacencyList {
+    override fun adjacencyList(): DirectedAdjacencyList {
         return adjacencyList
     }
 
-    override fun getShortestPathByBFAlgorithm(
+    override fun shortestPathByBFAlgorithm(
         start: V,
         end: V,
     ): MutableList<Int>? {
@@ -36,9 +36,9 @@ open class DirectedGraph<V>(
                 idEnd = vertexIndicesMap.getValue(end)
             }
             false -> {
-                for (i in 0 until getVerticesCount()) {
-                    if (getVertexValue(i) == start) idStart = i
-                    if (getVertexValue(i) == end) idEnd = i
+                for (i in 0 until verticesCount()) {
+                    if (vertexValue(i) == start) idStart = i
+                    if (vertexValue(i) == end) idEnd = i
                 }
                 if (idStart == -1 || idEnd == -1) throw IllegalArgumentException("Vertices can not be null")
             }
@@ -46,8 +46,8 @@ open class DirectedGraph<V>(
         return algo.findPath(idStart, idEnd)
     }
 
-    override fun getStronglyConnectedComponents(): ArrayList<ArrayList<Int>> {
-        val tarjanSAlgo = TarjanSAlgo(this.getTheAdjacencyList())
+    override fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>> {
+        val tarjanSAlgo = TarjanSAlgo(this.adjacencyList())
         return tarjanSAlgo.tarjanSAlgo()
     }
 }

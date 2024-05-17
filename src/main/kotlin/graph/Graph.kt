@@ -7,15 +7,15 @@ abstract class Graph<V> {
     protected var isAbleToAdd = true
     protected var hasNegativeWeights = false
     
-    open fun getTheAdjacencyList(): AdjacencyList {
+    open fun adjacencyList(): AdjacencyList {
         return adjacencyList
     }
 
-    fun getVertexValue(vertexIndex: Int): V {
+    fun vertexValue(vertexIndex: Int): V {
         return vertexValues[vertexIndex]
     }
 
-    fun getVerticesCount(): Int {
+    fun verticesCount(): Int {
         return adjacencyList.getVerticesCount()
     }
 
@@ -55,10 +55,10 @@ abstract class Graph<V> {
         adjacencyList.addEdge(firstVertexInd, secondVertexInd, label, weight)
     }
 
-    abstract fun getShortestPathByBFAlgorithm(
+    abstract fun shortestPathByBFAlgorithm(
         start: V,
         end: V,
     ): MutableList<Int>?
 
-    abstract fun getStronglyConnectedComponents(): ArrayList<ArrayList<Int>>
+    abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
 }

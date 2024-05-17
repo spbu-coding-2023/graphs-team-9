@@ -2,22 +2,22 @@ package graph
 
 import algorithms.BellmanFordAlgorithm
 
-open class UndirectedGraph<V>(
-    final override val adjacencyList: UndirectedAdjacencyList = UndirectedAdjacencyList(),
-    final override val vertexValues : ArrayList<V> = arrayListOf(),
+class UndirectedGraph<V>(
+    override val adjacencyList: UndirectedAdjacencyList = UndirectedAdjacencyList(),
+    override val vertexValues : ArrayList<V> = arrayListOf(),
 ): Graph<V>(){
 
     init{
-        require(adjacencyList.getVerticesCount() == vertexValues.size) {
+        require(adjacencyList.getVerticesCount() == vertexValues.size){
             "vertexValues size isn't equal adjacencyList's vertices count"
         }
     }
 
-    override fun getTheAdjacencyList(): UndirectedAdjacencyList {
+    override fun adjacencyList(): UndirectedAdjacencyList {
         return adjacencyList
     }
 
-    override fun getShortestPathByBFAlgorithm(
+    override fun shortestPathByBFAlgorithm(
         start: V,
         end: V,
     ): MutableList<Int>? {
@@ -37,9 +37,9 @@ open class UndirectedGraph<V>(
                 idEnd = vertexIndicesMap.getValue(end)
             }
             false -> {
-                for (i in 0 until getVerticesCount()) {
-                    if (getVertexValue(i) == start) idStart = i
-                    if (getVertexValue(i) == end) idEnd = i
+                for (i in 0 until verticesCount()) {
+                    if (vertexValue(i) == start) idStart = i
+                    if (vertexValue(i) == end) idEnd = i
                 }
                 if (idStart == -1 || idEnd == -1) throw IllegalArgumentException("Vertices can not be null")
             }
@@ -47,7 +47,7 @@ open class UndirectedGraph<V>(
         return algo.findPath(idStart, idEnd)
     }
 
-    override fun getStronglyConnectedComponents(): ArrayList<ArrayList<Int>> {
+    override fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>> {
         throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
     }
 }
