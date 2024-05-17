@@ -9,27 +9,27 @@ abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
     protected val adjacencyList = ArrayList<ArrayList<Edge>>()
 
     fun addEdge(
-        sourceVertexIndex: Int,
-        destinationVertexIndex: Int,
+        source: Int,
+        target: Int,
         label: String,
         weight: Int,
     ) {
-        require(sourceVertexIndex < getVerticesCount()) {
-            "Adjacency list doesn't have vertex with index $sourceVertexIndex"
+        require(source < verticesCount()) {
+            "Adjacency list doesn't have vertex with index $source"
         }
-        require(destinationVertexIndex < getVerticesCount()) {
-            "Adjacency list doesn't have vertex with index $destinationVertexIndex"
+        require(source < verticesCount()) {
+            "Adjacency list doesn't have vertex with index $target"
         }
-        require(!isEdgeContained(sourceVertexIndex, destinationVertexIndex)) {
+        require(!isEdgeContained(source, target)) {
             "Duplicated edges are not allowed"
         }
 
-        addEdgeToTheAdjacencyList(sourceVertexIndex, destinationVertexIndex, label, weight)
+        addEdgeToTheAdjacencyList(source, target, label, weight)
     }
 
     protected abstract fun addEdgeToTheAdjacencyList(
-        sourceVertexIndex: Int,
-        destinationVertexIndex: Int,
+        source: Int,
+        target: Int,
         label: String,
         weight: Int,
     )
@@ -39,28 +39,28 @@ abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
         return adjacencyList.size - 1
     }
 
-    fun getOutgoingEdgesCount(vertexIndex: Int): Int {
-        require(vertexIndex < adjacencyList.size) {
-            "Adjacency list doesn't have vertex with index $vertexIndex"
+    fun outgoingEdgesCount(source: Int): Int {
+        require(source < adjacencyList.size) {
+            "Adjacency list doesn't have vertex with index $source"
         }
-        return adjacencyList[vertexIndex].size
+        return adjacencyList[source].size
     }
 
-    fun getEdge(sourceVertexIndex: Int, edgeOrdinalNumber: Int): Edge {
-        val outgoingEdgesCount = getOutgoingEdgesCount(sourceVertexIndex)
+    fun getEdge(source: Int, edgeOrdinalNumber: Int): Edge {
+        val outgoingEdgesCount = outgoingEdgesCount(source)
         require(edgeOrdinalNumber < outgoingEdgesCount) {
-            "$sourceVertexIndex has only $outgoingEdgesCount edges"
+            "$source has only $outgoingEdgesCount edges"
         }
-        return adjacencyList[sourceVertexIndex][edgeOrdinalNumber]
+        return adjacencyList[source][edgeOrdinalNumber]
     }
 
-    fun getVerticesCount(): Int {
+    fun verticesCount(): Int {
         return adjacencyList.size
     }
 
-    private fun isEdgeContained(sourceVertexIndex: Int, destinationVertexIndex: Int): Boolean {
-        for (edge in adjacencyList[sourceVertexIndex]) {
-            if (edge.destinationVertexIndex == destinationVertexIndex) {
+    private fun isEdgeContained(source: Int, target: Int): Boolean {
+        for (edge in adjacencyList[source]) {
+            if (edge.target() == target) {
                 return true
             }
         }

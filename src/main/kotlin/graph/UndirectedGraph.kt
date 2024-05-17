@@ -8,7 +8,7 @@ class UndirectedGraph<V>(
 ): Graph<V>(){
 
     init{
-        require(adjacencyList.getVerticesCount() == vertexValues.size){
+        require(adjacencyList.verticesCount() == vertexValues.size){
             "vertexValues size isn't equal adjacencyList's vertices count"
         }
     }

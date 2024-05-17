@@ -16,7 +16,7 @@ abstract class Graph<V> {
     }
 
     fun verticesCount(): Int {
-        return adjacencyList.getVerticesCount()
+        return adjacencyList.verticesCount()
     }
 
     fun addVertex(value: V) {
