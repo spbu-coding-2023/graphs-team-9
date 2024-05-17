@@ -1,7 +1,19 @@
 package graph
 
 open class Edge(
-    val destinationVertexIndex: Int,
-    val label: String,
-    val weight: Number = 1,
-)
+    private val target: Int,
+    private val label: String,
+    private val weight: Number = 1,
+) {
+    fun target(): Int {
+        return target
+    }
+
+    fun label(): String {
+        return label
+    }
+
+    fun weight() : Number {
+        return weight
+    }
+}
