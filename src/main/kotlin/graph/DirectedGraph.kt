@@ -4,21 +4,17 @@ import algorithms.BellmanFordAlgorithm
 import algorithms.TarjanSAlgo
 
 class DirectedGraph<V> : Graph<V>() {
-    override fun addEdgeToAdjacencyList(
-        firstVertexInd: Int,
-        secondVertexInd: Int,
-        label: String,
-        weight: Int,
-    ) {
-        adjacencyList[firstVertexInd].add(Edge(secondVertexInd, label, weight))
+    override val adjacencyList = DirectedAdjacencyList()
+
+    override fun getTheAdjacencyList(): DirectedAdjacencyList {
+        return adjacencyList
     }
 
     override fun getShortestPathByBFAlgorithm(
         start: V,
         end: V,
     ): MutableList<Int>? {
-        val algo = BellmanFordAlgorithm(this)
-        val vertexValues = getVertexValues()
+        val algo = BellmanFordAlgorithm(adjacencyList)
         var idStart = -1
         var idEnd = -1
         when (isAbleToAdd) {
@@ -33,8 +29,8 @@ class DirectedGraph<V> : Graph<V>() {
             }
             false -> {
                 for (i in 0 until getVerticesCount()) {
-                    if (vertexValues[i] == start) idStart = i
-                    if (vertexValues[i] == end) idEnd = i
+                    if (getVertexValue(i) == start) idStart = i
+                    if (getVertexValue(i) == end) idEnd = i
                 }
                 if (idStart == -1 || idEnd == -1) throw IllegalArgumentException("Vertices can not be null")
             }
@@ -42,8 +38,8 @@ class DirectedGraph<V> : Graph<V>() {
         return algo.findPath(idStart, idEnd)
     }
 
-    override fun getStronglyComponents(): ArrayList<ArrayList<Int>> {
-        val tarjanSAlgo = TarjanSAlgo(this)
+    override fun getStronglyConnectedComponents(): ArrayList<ArrayList<Int>> {
+        val tarjanSAlgo = TarjanSAlgo(this.getTheAdjacencyList())
         return tarjanSAlgo.tarjanSAlgo()
     }
 }

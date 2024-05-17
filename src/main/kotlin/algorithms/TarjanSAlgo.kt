@@ -1,17 +1,16 @@
 package algorithms
 
-import graph.DirectedGraph
+import graph.DirectedAdjacencyList
 import java.util.Stack
 
-class TarjanSAlgo<V>(graph: DirectedGraph<V>) {
+class TarjanSAlgo(private val adjacencyList: DirectedAdjacencyList) {
     private val stronglyConnectedComponents: ArrayList<ArrayList<Int>> = arrayListOf()
     private var order = 0
     private val verticesStack = Stack<Int>()
-    private val verticesCount = graph.getVerticesCount()
+    private val verticesCount = adjacencyList.getVerticesCount()
     private val orders = IntArray(verticesCount) { -1 }
     private val prevs = IntArray(verticesCount) { -1 }
-    private val adjacencyList = graph.getTheAdjacencyList()
-    private val edgesNotCheckedCounts = IntArray(verticesCount) { vertex -> adjacencyList[vertex].size }
+    private val edgesNotCheckedCounts = IntArray(verticesCount) { v -> adjacencyList.getOutgoingEdgesCount(v) }
     private val leastIndLinks = IntArray(verticesCount) { -1 }
     private val verticesStackAffiliations = BooleanArray(verticesCount) { false }
 
@@ -37,9 +36,8 @@ class TarjanSAlgo<V>(graph: DirectedGraph<V>) {
             }
             var shouldCheckAdjacentVertex = false
             while (edgesNotCheckedCounts[curVertex] != 0 && !shouldCheckAdjacentVertex) {
-                edgesNotCheckedCounts[curVertex]--
-                val fromCurVertexEdges = adjacencyList[curVertex]
-                val adjacentVertex = fromCurVertexEdges[edgesNotCheckedCounts[curVertex]].destinationVertexIndex
+                val edgeOrdinalNumber = --edgesNotCheckedCounts[curVertex]
+                val adjacentVertex = adjacencyList.getEdge(curVertex, edgeOrdinalNumber).destinationVertexIndex
                 if (orders[adjacentVertex] == -1) {
                     prevs[adjacentVertex] = curVertex
                     dfsStack.push(adjacentVertex)
