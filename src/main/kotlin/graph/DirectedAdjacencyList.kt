@@ -1,12 +1,12 @@
 package graph
 
-class DirectedAdjacencyList(initiallyVertexCount: Int = 0) : AdjacencyList(initiallyVertexCount) {
+open class DirectedAdjacencyList(initiallyVertexCount: Int = 0) : AdjacencyList(initiallyVertexCount) {
     override fun addEdgeToTheAdjacencyList(
-        sourceVertexIndex: Int,
-        destinationVertexIndex: Int,
+        source: Int,
+        target: Int,
         label: String,
-        weight: Int,
+        weight: Number,
     ) {
-        adjacencyList[sourceVertexIndex].add(Edge(destinationVertexIndex, label, weight))
+        adjacencyList[source].add(Edge(target, label, weight))
     }
 }

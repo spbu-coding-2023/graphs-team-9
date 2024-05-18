@@ -2,32 +2,19 @@ package graph
 
 abstract class Graph<V> {
     protected open val vertexValues: ArrayList<V> = arrayListOf()
-    protected abstract val adjacencyList: AdjacencyList
     protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
     protected var isAbleToAdd = true
     protected var hasNegativeWeights = false
 
-    open fun getTheAdjacencyList(): AdjacencyList {
-        return adjacencyList
-    }
+    abstract fun adjacencyList(): AdjacencyList
 
-    fun getVertexValue(vertexIndex: Int): V {
+    fun vertexValue(vertexIndex: Int): V {
         return vertexValues[vertexIndex]
     }
 
-    fun getVerticesCount(): Int {
-        return adjacencyList.getVerticesCount()
-    }
+    abstract fun verticesCount(): Int
 
-    fun addVertex(value: V) {
-        require(isAbleToAdd) {
-            "Not able to add vertices when graph is immutable"
-        }
-        if (vertexIndicesMap[value] == null) {
-            vertexIndicesMap[value] = adjacencyList.addVertex()
-        }
-        vertexValues.add(value)
-    }
+    abstract fun addVertex(value: V)
 
     fun makeItLighterAndImmutable() {
         vertexIndicesMap = hashMapOf()
@@ -52,13 +39,20 @@ abstract class Graph<V> {
         if (!hasNegativeWeights && weight < 0) {
             hasNegativeWeights = true
         }
-        adjacencyList.addEdge(firstVertexInd, secondVertexInd, label, weight)
+        addIntoEdgesCollection(firstVertexInd, secondVertexInd, label, weight)
     }
 
-    abstract fun getShortestPathByBFAlgorithm(
+    protected abstract fun addIntoEdgesCollection(
+        firstVertexInd: Int,
+        secondVertexInd: Int,
+        label: String,
+        weight: Number,
+    )
+
+    abstract fun shortestPathByBFAlgorithm(
         start: V,
         end: V,
     ): MutableList<Int>?
 
-    abstract fun getStronglyConnectedComponents(): ArrayList<ArrayList<Int>>
+    abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
 }
