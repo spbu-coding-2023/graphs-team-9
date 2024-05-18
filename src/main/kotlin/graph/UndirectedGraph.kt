@@ -6,7 +6,6 @@ class UndirectedGraph<V>(
     private val svsEdgesList: ArrayList<SourceVertexStoringEdge> = arrayListOf(),
     override val vertexValues: ArrayList<V> = arrayListOf(),
 ) : Graph<V>() {
-
     init {
         require(svsEdgesList.size == vertexValues.size) {
             "vertexValues size isn't equal adjacencyList's vertices count"
@@ -104,5 +103,10 @@ class UndirectedGraph<V>(
 
     override fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>> {
         throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
+    }
+
+    override fun minimumSpanningForest(): Graph<V> {
+        val boruvkaSAlgorithm = BoruvkaSAlgorithm(svsEdgesList, verticesCount)
+        return UndirectedGraph(boruvkaSAlgorithm.boruvkaSAlgo(), vertexValues)
     }
 }

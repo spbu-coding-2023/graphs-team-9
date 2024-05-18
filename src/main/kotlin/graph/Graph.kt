@@ -55,4 +55,6 @@ abstract class Graph<V> {
     ): MutableList<Int>?
 
     abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
+
+    abstract fun minimumSpanningForest(): Graph<V>
 }
