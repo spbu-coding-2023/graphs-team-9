@@ -21,14 +21,14 @@ class FindBridgesAlgorithmTest {
         assertEquals(expectedResult, result)
     }
 
-    //
+//
     @Test
     fun `graph is empty`() {
         result = graph.findBridges()
         expectedResult = mutableSetOf()
     }
 
-    //  1   2   3
+//  1   2   3
     @Test
     fun `no edges in graph`() {
         graph.addVertex(0)
@@ -38,7 +38,7 @@ class FindBridgesAlgorithmTest {
         expectedResult = mutableSetOf()
     }
 
-    //    0 — 1
+//    0 — 1
 //    |   |
 //    2 — 3
     @Test
@@ -55,7 +55,7 @@ class FindBridgesAlgorithmTest {
         expectedResult = mutableSetOf()
     }
 
-    //    0 — 1   7 — 6
+//    0 — 1   7 — 6
 //    |   |   |   |
 //    2 — 3 — 4 — 5
     @Test
@@ -81,7 +81,7 @@ class FindBridgesAlgorithmTest {
         expectedResult = mutableSetOf(setOf(3, 4))
     }
 
-    //    0 — 1 — 2 — 3
+//    0 — 1 — 2 — 3
 //
     @Test
     fun `all edges - bridges`() {
@@ -96,7 +96,7 @@ class FindBridgesAlgorithmTest {
         expectedResult = mutableSetOf(setOf(0, 1), setOf(1, 2), setOf(2, 3))
     }
 
-    //    0 — 1   2 — 3
+//    0 — 1   2 — 3
 //
     @Test
     fun `several connectivity components`() {
