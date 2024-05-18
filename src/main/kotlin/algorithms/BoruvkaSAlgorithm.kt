@@ -9,10 +9,10 @@ internal class ConnectedComponent(
 )
 
 class BoruvkaSAlgorithm(private val edges: List<SourceVertexStoringEdge>, private val verticesCount: Int) {
-    private val minimumSpanningForestSEdges: MutableList<SourceVertexStoringEdge> = mutableListOf()
+    private val minimumSpanningForestSEdges: ArrayList<SourceVertexStoringEdge> = arrayListOf()
     private var didAlgorithmSIterateMakeChanges = true
 
-    fun boruvkaSAlgo(): List<SourceVertexStoringEdge> {
+    fun boruvkaSAlgo(): ArrayList<SourceVertexStoringEdge> {
         var isItFirstIteration = true
         while (true) {
             val connectedComponentAffiliations = Array(verticesCount) { vertex -> ConnectedComponent(vertex) }
@@ -59,7 +59,7 @@ class BoruvkaSAlgorithm(private val edges: List<SourceVertexStoringEdge>, privat
             }
             isItFirstIteration = false
         }
-        return minimumSpanningForestSEdges.toList()
+        return minimumSpanningForestSEdges
     }
 
     private fun compareWithCheapest(
