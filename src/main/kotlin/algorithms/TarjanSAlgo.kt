@@ -7,10 +7,10 @@ class TarjanSAlgo(private val adjacencyList: DirectedAdjacencyList) {
     private val stronglyConnectedComponents: ArrayList<ArrayList<Int>> = arrayListOf()
     private var order = 0
     private val verticesStack = Stack<Int>()
-    private val verticesCount = adjacencyList.getVerticesCount()
+    private val verticesCount = adjacencyList.verticesCount()
     private val orders = IntArray(verticesCount) { -1 }
     private val prevs = IntArray(verticesCount) { -1 }
-    private val edgesNotCheckedCounts = IntArray(verticesCount) { v -> adjacencyList.getOutgoingEdgesCount(v) }
+    private val edgesNotCheckedCounts = IntArray(verticesCount) { v -> adjacencyList.outgoingEdgesCount(v) }
     private val leastIndLinks = IntArray(verticesCount) { -1 }
     private val verticesStackAffiliations = BooleanArray(verticesCount) { false }
 
@@ -37,7 +37,7 @@ class TarjanSAlgo(private val adjacencyList: DirectedAdjacencyList) {
             var shouldCheckAdjacentVertex = false
             while (edgesNotCheckedCounts[curVertex] != 0 && !shouldCheckAdjacentVertex) {
                 val edgeOrdinalNumber = --edgesNotCheckedCounts[curVertex]
-                val adjacentVertex = adjacencyList.getEdge(curVertex, edgeOrdinalNumber).destinationVertexIndex
+                val adjacentVertex = adjacencyList.getEdge(curVertex, edgeOrdinalNumber).target()
                 if (orders[adjacentVertex] == -1) {
                     prevs[adjacentVertex] = curVertex
                     dfsStack.push(adjacentVertex)
