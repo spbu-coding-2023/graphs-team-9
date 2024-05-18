@@ -30,7 +30,7 @@ class BellmanFordAlgorithmTest {
             undirectedGraph.addEdge("f", "o")
             undirectedGraph.makeItLighterAndImmutable()
 
-            result = undirectedGraph.getShortestPathByBFAlgorithm("u", "u")
+            result = undirectedGraph.shortestPathByBFAlgorithm("u", "u")
             val expectedResult = mutableListOf(0)
             assertEquals(expectedResult, result)
         }
@@ -52,7 +52,7 @@ class BellmanFordAlgorithmTest {
             undirectedGraph.addEdge("i", "a")
             undirectedGraph.makeItLighterAndImmutable()
 
-            result = undirectedGraph.getShortestPathByBFAlgorithm("r", "i")
+            result = undirectedGraph.shortestPathByBFAlgorithm("r", "i")
             assertNull(result)
         }
 
@@ -74,7 +74,7 @@ class BellmanFordAlgorithmTest {
             undirectedGraph.addEdge("C", "R", weight = 1)
             undirectedGraph.makeItLighterAndImmutable()
 
-            result = undirectedGraph.getShortestPathByBFAlgorithm("J", "R")
+            result = undirectedGraph.shortestPathByBFAlgorithm("J", "R")
             val expectedResult = mutableListOf(0, 1, 2, 3)
             assertEquals(expectedResult, result)
         }
@@ -99,7 +99,7 @@ class BellmanFordAlgorithmTest {
             undirectedGraph.addEdge("e", "x", weight = 7)
             undirectedGraph.makeItLighterAndImmutable()
 
-            result = undirectedGraph.getShortestPathByBFAlgorithm("m", "x")
+            result = undirectedGraph.shortestPathByBFAlgorithm("m", "x")
             val firstExpectedResult = mutableListOf(0, 3, 4)
             val secondExpectedResult = mutableListOf(0, 1, 2, 4)
             assertTrue(firstExpectedResult == result || secondExpectedResult == result)
@@ -111,21 +111,21 @@ class BellmanFordAlgorithmTest {
             fun `both vertices do not exist`() {
                 undirectedGraph.addVertex("s")
                 undirectedGraph.makeItLighterAndImmutable()
-                assertFailsWith<IllegalArgumentException> { undirectedGraph.getShortestPathByBFAlgorithm("v", "o") }
+                assertFailsWith<IllegalArgumentException> { undirectedGraph.shortestPathByBFAlgorithm("v", "o") }
             }
 
             @Test
             fun `start-vertex do not exist`() {
                 undirectedGraph.addVertex("s")
                 undirectedGraph.makeItLighterAndImmutable()
-                assertFailsWith<IllegalArgumentException> { undirectedGraph.getShortestPathByBFAlgorithm("m", "s") }
+                assertFailsWith<IllegalArgumentException> { undirectedGraph.shortestPathByBFAlgorithm("m", "s") }
             }
 
             @Test
             fun `end-vertex do not exist`() {
                 undirectedGraph.addVertex("s")
                 undirectedGraph.makeItLighterAndImmutable()
-                assertFailsWith<IllegalArgumentException> { undirectedGraph.getShortestPathByBFAlgorithm("s", "k") }
+                assertFailsWith<IllegalArgumentException> { undirectedGraph.shortestPathByBFAlgorithm("s", "k") }
             }
 
 //           d  <- start
@@ -142,7 +142,7 @@ class BellmanFordAlgorithmTest {
                 undirectedGraph.addEdge("d", "e", weight = 3)
                 undirectedGraph.addEdge("r", "e", weight = -2)
                 undirectedGraph.makeItLighterAndImmutable()
-                assertFailsWith<UnsupportedOperationException> { undirectedGraph.getShortestPathByBFAlgorithm("d", "e") }
+                assertFailsWith<UnsupportedOperationException> { undirectedGraph.shortestPathByBFAlgorithm("d", "e") }
             }
         }
     }
@@ -165,7 +165,7 @@ class BellmanFordAlgorithmTest {
             directedGraph.addEdge("f", "o")
             directedGraph.makeItLighterAndImmutable()
 
-            result = directedGraph.getShortestPathByBFAlgorithm("u", "u")
+            result = directedGraph.shortestPathByBFAlgorithm("u", "u")
             val expectedResult = mutableListOf(0)
             assertEquals(expectedResult, result)
         }
@@ -187,7 +187,7 @@ class BellmanFordAlgorithmTest {
             directedGraph.addEdge("i", "a")
             directedGraph.makeItLighterAndImmutable()
 
-            result = directedGraph.getShortestPathByBFAlgorithm("r", "i")
+            result = directedGraph.shortestPathByBFAlgorithm("r", "i")
             assertNull(result)
         }
 
@@ -206,7 +206,7 @@ class BellmanFordAlgorithmTest {
             directedGraph.addEdge("r", "e", weight = -2)
             directedGraph.makeItLighterAndImmutable()
 
-            result = directedGraph.getShortestPathByBFAlgorithm("d", "e")
+            result = directedGraph.shortestPathByBFAlgorithm("d", "e")
             val expectedResult = mutableListOf(0, 1, 2)
             assertEquals(expectedResult, result)
         }
@@ -231,7 +231,7 @@ class BellmanFordAlgorithmTest {
             directedGraph.addEdge("e", "x", weight = 5)
             directedGraph.makeItLighterAndImmutable()
 
-            result = directedGraph.getShortestPathByBFAlgorithm("m", "x")
+            result = directedGraph.shortestPathByBFAlgorithm("m", "x")
             val firstExpectedResult = mutableListOf(0, 3, 4)
             val secondExpectedResult = mutableListOf(0, 1, 2, 4)
             assertTrue(firstExpectedResult == result || secondExpectedResult == result)
@@ -243,21 +243,21 @@ class BellmanFordAlgorithmTest {
             fun `both vertices do not exist`() {
                 directedGraph.addVertex("s")
                 directedGraph.makeItLighterAndImmutable()
-                assertFailsWith<IllegalArgumentException> { directedGraph.getShortestPathByBFAlgorithm("v", "o") }
+                assertFailsWith<IllegalArgumentException> { directedGraph.shortestPathByBFAlgorithm("v", "o") }
             }
 
             @Test
             fun `start-vertex do not exist`() {
                 directedGraph.addVertex("s")
                 directedGraph.makeItLighterAndImmutable()
-                assertFailsWith<IllegalArgumentException> { directedGraph.getShortestPathByBFAlgorithm("m", "s") }
+                assertFailsWith<IllegalArgumentException> { directedGraph.shortestPathByBFAlgorithm("m", "s") }
             }
 
             @Test
             fun `end-vertex do not exist`() {
                 directedGraph.addVertex("s")
                 directedGraph.makeItLighterAndImmutable()
-                assertFailsWith<IllegalArgumentException> { directedGraph.getShortestPathByBFAlgorithm("s", "k") }
+                assertFailsWith<IllegalArgumentException> { directedGraph.shortestPathByBFAlgorithm("s", "k") }
             }
 
 //              k <- end
@@ -277,7 +277,7 @@ class BellmanFordAlgorithmTest {
                 directedGraph.addEdge("n", "k", weight = 1)
                 directedGraph.addEdge("n", "p", weight = -1)
                 directedGraph.makeItLighterAndImmutable()
-                assertFailsWith<UnsupportedOperationException> { directedGraph.getShortestPathByBFAlgorithm("p", "k") }
+                assertFailsWith<UnsupportedOperationException> { directedGraph.shortestPathByBFAlgorithm("p", "k") }
             }
         }
     }
