@@ -11,7 +11,7 @@ class UndirectedGraph<V> : Graph<V>() {
     }
 
     override fun findBridges(): MutableList<IntArray> {
-        val algo = FindBridgesAlgorithm(this)
+        val algo = FindBridgesAlgorithm(adjacencyList)
         return algo.findBridges()
     }
 

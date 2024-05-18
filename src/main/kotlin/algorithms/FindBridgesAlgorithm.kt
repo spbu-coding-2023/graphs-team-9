@@ -1,11 +1,13 @@
 package algorithms
 
-import graph.UndirectedGraph
+import graph.UndirectedAdjacencyList
+import java.util.Stack
 import kotlin.math.min
 
-class FindBridgesAlgorithm<V>(graph: UndirectedGraph<V>) {
-    private val adjacencyList = graph.getTheAdjacencyList()
-    private val verticesCount = graph.getVerticesCount()
+class FindBridgesAlgorithm(private val adjacencyList: UndirectedAdjacencyList) {
+    private val verticesCount = adjacencyList.getVerticesCount()
+    private val verticesStack = Stack<Int>()
+    private val idStartVertex = IntArray(verticesCount) { 0 }
     private val visited = BooleanArray(verticesCount) { false }
     private val enterTimeInVertex = IntArray(verticesCount) { -1 }
     private val enterTimeInConnectedComponent = IntArray(verticesCount) { -1 }
@@ -13,30 +15,55 @@ class FindBridgesAlgorithm<V>(graph: UndirectedGraph<V>) {
     private val bridges: MutableList<IntArray> = mutableListOf()
 
     private fun dfs(
-        vertex: Int,
-        parent: Int = -1,
+        startVertex: Int,
+        startParent: Int = -1,
     ) {
+        var parent = startParent
+        var vertex = startVertex
+        verticesStack.push(vertex)
         visited[vertex] = true
         enterTimeInVertex[vertex] = timer
         enterTimeInConnectedComponent[vertex] = timer++
-        for (edge in adjacencyList[vertex]) {
-            if (parent == edge.destinationVertexIndex) continue
-            if (visited[edge.destinationVertexIndex]) {
-                enterTimeInConnectedComponent[vertex] =
-                    min(
-                        enterTimeInConnectedComponent[vertex],
-                        enterTimeInVertex[edge.destinationVertexIndex],
-                    )
-            } else {
-                dfs(edge.destinationVertexIndex, vertex)
-                enterTimeInConnectedComponent[vertex] =
-                    min(
-                        enterTimeInConnectedComponent[vertex],
-                        enterTimeInConnectedComponent[edge.destinationVertexIndex],
-                    )
-                if (enterTimeInConnectedComponent[edge.destinationVertexIndex] > enterTimeInVertex[vertex]) {
-                    bridges.add(intArrayOf(vertex, edge.destinationVertexIndex))
+
+        while (!verticesStack.isEmpty()) {
+            for (idEdge in idStartVertex[vertex] until adjacencyList.getOutgoingEdgesCount(vertex)) {
+                ++idStartVertex[vertex]
+                val edge = adjacencyList.getEdge(vertex, idEdge)
+                if (parent == edge.destinationVertexIndex) continue
+                if (visited[edge.destinationVertexIndex]) {
+                    enterTimeInConnectedComponent[vertex] =
+                        min(
+                            enterTimeInConnectedComponent[vertex],
+                            enterTimeInVertex[edge.destinationVertexIndex],
+                        )
+                } else {
+                    verticesStack.push(edge.destinationVertexIndex)
+                    parent = vertex
+                    vertex = edge.destinationVertexIndex
+                    break
                 }
+            }
+
+            if (visited[vertex]) {
+                val destination = verticesStack.pop()
+                val source = verticesStack.pop()
+                enterTimeInConnectedComponent[source] =
+                    min(
+                        enterTimeInConnectedComponent[source],
+                        enterTimeInConnectedComponent[destination],
+                    )
+                if (enterTimeInConnectedComponent[destination] > enterTimeInVertex[source]) {
+                    bridges.add(intArrayOf(source, destination))
+                }
+                vertex = source
+                if (!verticesStack.isEmpty()) {
+                    parent = verticesStack.peek()
+                    verticesStack.push(vertex)
+                }
+            } else {
+                visited[vertex] = true
+                enterTimeInVertex[vertex] = timer
+                enterTimeInConnectedComponent[vertex] = timer++
             }
         }
     }
