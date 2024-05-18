@@ -3,8 +3,15 @@ package graph
 import algorithms.BellmanFordAlgorithm
 import algorithms.TarjanSAlgo
 
-class DirectedGraph<V> : Graph<V>() {
-    override val adjacencyList = DirectedAdjacencyList()
+class DirectedGraph<V>(
+    override val adjacencyList: DirectedAdjacencyList = DirectedAdjacencyList(),
+    override val vertexValues: ArrayList<V> = arrayListOf(),
+) : Graph<V>() {
+    init {
+        require(adjacencyList.getVerticesCount() == vertexValues.size) {
+            "vertexValues size isn't equal adjacencyList's vertices count"
+        }
+    }
 
     override fun getTheAdjacencyList(): DirectedAdjacencyList {
         return adjacencyList

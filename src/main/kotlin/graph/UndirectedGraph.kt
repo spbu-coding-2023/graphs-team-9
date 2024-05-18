@@ -2,8 +2,16 @@ package graph
 
 import algorithms.BellmanFordAlgorithm
 
-class UndirectedGraph<V> : Graph<V>() {
-    override val adjacencyList = UndirectedAdjacencyList()
+class UndirectedGraph<V>(
+    override val adjacencyList: UndirectedAdjacencyList = UndirectedAdjacencyList(),
+    override val vertexValues: ArrayList<V> = arrayListOf(),
+) : Graph<V>() {
+
+    init {
+        require(adjacencyList.getVerticesCount() == vertexValues.size) {
+            "vertexValues size isn't equal adjacencyList's vertices count"
+        }
+    }
 
     override fun getTheAdjacencyList(): UndirectedAdjacencyList {
         return adjacencyList

@@ -1,7 +1,7 @@
 package graph
 
 abstract class Graph<V> {
-    private val vertexValues: ArrayList<V> = arrayListOf()
+    protected open val vertexValues: ArrayList<V> = arrayListOf()
     protected abstract val adjacencyList: AdjacencyList
     protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
     protected var isAbleToAdd = true
