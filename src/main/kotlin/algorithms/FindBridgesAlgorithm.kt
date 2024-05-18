@@ -5,7 +5,7 @@ import java.util.Stack
 import kotlin.math.min
 
 class FindBridgesAlgorithm(private val adjacencyList: UndirectedAdjacencyList) {
-    private val verticesCount = adjacencyList.getVerticesCount()
+    private val verticesCount = adjacencyList.verticesCount()
     private val verticesStack = Stack<Int>()
     private val idStartVertex = IntArray(verticesCount) { 0 }
     private val visited = BooleanArray(verticesCount) { false }
@@ -26,20 +26,20 @@ class FindBridgesAlgorithm(private val adjacencyList: UndirectedAdjacencyList) {
         enterTimeInConnectedComponent[vertex] = timer++
 
         while (!verticesStack.isEmpty()) {
-            for (idEdge in idStartVertex[vertex] until adjacencyList.getOutgoingEdgesCount(vertex)) {
+            for (idEdge in idStartVertex[vertex] until adjacencyList.outgoingEdgesCount(vertex)) {
                 ++idStartVertex[vertex]
                 val edge = adjacencyList.getEdge(vertex, idEdge)
-                if (parent == edge.destinationVertexIndex) continue
-                if (visited[edge.destinationVertexIndex]) {
+                if (parent == edge.target()) continue
+                if (visited[edge.target()]) {
                     enterTimeInConnectedComponent[vertex] =
                         min(
                             enterTimeInConnectedComponent[vertex],
-                            enterTimeInVertex[edge.destinationVertexIndex],
+                            enterTimeInVertex[edge.target()],
                         )
                 } else {
-                    verticesStack.push(edge.destinationVertexIndex)
+                    verticesStack.push(edge.target())
                     parent = vertex
-                    vertex = edge.destinationVertexIndex
+                    vertex = edge.target()
                     break
                 }
             }
