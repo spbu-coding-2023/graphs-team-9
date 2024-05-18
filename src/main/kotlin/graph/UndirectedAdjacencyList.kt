@@ -1,13 +1,13 @@
 package graph
 
-class UndirectedAdjacencyList : AdjacencyList() {
+open class UndirectedAdjacencyList(initiallyVertexCount: Int = 0) : AdjacencyList(initiallyVertexCount) {
     override fun addEdgeToTheAdjacencyList(
-        sourceVertexIndex: Int,
-        destinationVertexIndex: Int,
+        source: Int,
+        target: Int,
         label: String,
-        weight: Int,
+        weight: Number,
     ) {
-        adjacencyList[sourceVertexIndex].add(Edge(destinationVertexIndex, label, weight))
-        adjacencyList[destinationVertexIndex].add(Edge(sourceVertexIndex, label, weight))
+        adjacencyList[source].add(Edge(target, label, weight))
+        adjacencyList[target].add(Edge(source, label, weight))
     }
 }
