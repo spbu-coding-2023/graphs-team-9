@@ -1,13 +1,13 @@
 package graph
 
 abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
+    protected val adjacencyList = ArrayList<ArrayList<Edge>>()
+
     init {
         for (vertex in 0 until initiallyVertexCount) {
             addVertex()
         }
     }
-
-    protected val adjacencyList = ArrayList<ArrayList<Edge>>()
 
     fun addEdge(
         source: Int,
