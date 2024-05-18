@@ -1,11 +1,12 @@
 package graph
 
 abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
-    init{
-        for (vertex in 0 until initiallyVertexCount){
+    init {
+        for (vertex in 0 until initiallyVertexCount) {
             addVertex()
         }
     }
+
     protected val adjacencyList = ArrayList<ArrayList<Edge>>()
 
     fun addEdge(
@@ -66,5 +67,4 @@ abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
     fun verticesCount(): Int {
         return adjacencyList.size
     }
-
 }
