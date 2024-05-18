@@ -12,7 +12,7 @@ class FindBridgesAlgorithm(private val adjacencyList: UndirectedAdjacencyList) {
     private val enterTimeInVertex = IntArray(verticesCount) { -1 }
     private val enterTimeInConnectedComponent = IntArray(verticesCount) { -1 }
     private var timer: Int = 0
-    private val bridges: MutableList<IntArray> = mutableListOf()
+    private val bridges: MutableSet<Set<Int>> = mutableSetOf()
 
     private fun dfs(
         startVertex: Int,
@@ -45,20 +45,27 @@ class FindBridgesAlgorithm(private val adjacencyList: UndirectedAdjacencyList) {
             }
 
             if (visited[vertex]) {
-                val destination = verticesStack.pop()
-                val source = verticesStack.pop()
-                enterTimeInConnectedComponent[source] =
-                    min(
-                        enterTimeInConnectedComponent[source],
-                        enterTimeInConnectedComponent[destination],
-                    )
-                if (enterTimeInConnectedComponent[destination] > enterTimeInVertex[source]) {
-                    bridges.add(intArrayOf(source, destination))
-                }
-                vertex = source
-                if (!verticesStack.isEmpty()) {
-                    parent = verticesStack.peek()
-                    verticesStack.push(vertex)
+                when (verticesStack.size) {
+                    1 -> verticesStack.pop()
+                    else -> {
+                        val destination = verticesStack.pop()
+                        val source = verticesStack.pop()
+                        enterTimeInConnectedComponent[source] =
+                            min(
+                                enterTimeInConnectedComponent[source],
+                                enterTimeInConnectedComponent[destination],
+                            )
+                        if (enterTimeInConnectedComponent[destination] > enterTimeInVertex[source]) {
+                            bridges.add(setOf(source, destination))
+                        }
+                        vertex = source
+                        parent =
+                            when (verticesStack.isEmpty()) {
+                                true -> -1
+                                else -> verticesStack.peek()
+                            }
+                        verticesStack.push(vertex)
+                    }
                 }
             } else {
                 visited[vertex] = true
@@ -68,7 +75,7 @@ class FindBridgesAlgorithm(private val adjacencyList: UndirectedAdjacencyList) {
         }
     }
 
-    fun findBridges(): MutableList<IntArray> {
+    fun findBridges(): MutableSet<Set<Int>> {
         for (vertex in 0 until verticesCount) if (!visited[vertex]) dfs(vertex)
         return bridges
     }

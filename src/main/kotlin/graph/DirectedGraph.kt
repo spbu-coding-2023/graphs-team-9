@@ -10,7 +10,7 @@ class DirectedGraph<V> : Graph<V>() {
         return adjacencyList
     }
 
-    override fun findBridges(): MutableList<IntArray> {
+    override fun findBridges(): MutableSet<Set<Int>> {
         throw UnsupportedOperationException("findBridges() hasn't implemented for directed graphs")
     }
 

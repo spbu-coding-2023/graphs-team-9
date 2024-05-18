@@ -10,7 +10,7 @@ class UndirectedGraph<V> : Graph<V>() {
         return adjacencyList
     }
 
-    override fun findBridges(): MutableList<IntArray> {
+    override fun findBridges(): MutableSet<Set<Int>> {
         val algo = FindBridgesAlgorithm(adjacencyList)
         return algo.findBridges()
     }

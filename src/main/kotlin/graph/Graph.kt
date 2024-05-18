@@ -55,7 +55,7 @@ abstract class Graph<V> {
         adjacencyList.addEdge(firstVertexInd, secondVertexInd, label, weight)
     }
 
-    abstract fun findBridges(): MutableList<IntArray>
+    abstract fun findBridges(): MutableSet<Set<Int>>
 
     abstract fun getShortestPathByBFAlgorithm(
         start: V,
