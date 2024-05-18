@@ -5,7 +5,7 @@ abstract class Graph<V> {
     protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
     protected var isAbleToAdd = true
     protected var hasNegativeWeights = false
-    
+
     abstract fun adjacencyList(): AdjacencyList
 
     fun vertexValue(vertexIndex: Int): V {
@@ -43,11 +43,12 @@ abstract class Graph<V> {
     }
 
     protected abstract fun addIntoEdgesCollection(
-        firstVertexInd : Int,
-        secondVertexInd : Int,
-        label : String,
-        weight : Number,
+        firstVertexInd: Int,
+        secondVertexInd: Int,
+        label: String,
+        weight: Number,
     )
+
     abstract fun shortestPathByBFAlgorithm(
         start: V,
         end: V,

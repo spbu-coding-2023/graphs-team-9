@@ -13,7 +13,7 @@ open class Edge(
         return label
     }
 
-    open fun weight() : Number {
+    open fun weight(): Number {
         return weight
     }
 }

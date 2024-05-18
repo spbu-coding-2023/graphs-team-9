@@ -4,10 +4,10 @@ import algorithms.BellmanFordAlgorithm
 
 class UndirectedGraph<V>(
     private val svsEdgesList: ArrayList<SourceVertexStoringEdge> = arrayListOf(),
-    override val vertexValues : ArrayList<V> = arrayListOf(),
-): Graph<V>(){
+    override val vertexValues: ArrayList<V> = arrayListOf(),
+) : Graph<V>() {
 
-    init{
+    init {
         require(svsEdgesList.size == vertexValues.size) {
             "vertexValues size isn't equal adjacencyList's vertices count"
         }
@@ -15,7 +15,7 @@ class UndirectedGraph<V>(
 
     private var verticesCount: Int = 0
 
-    fun svsEdgesList(): List<SourceVertexStoringEdge>{
+    fun svsEdgesList(): List<SourceVertexStoringEdge> {
         return svsEdgesList.toList()
     }
 
@@ -31,7 +31,12 @@ class UndirectedGraph<V>(
         return verticesCount
     }
 
-    override fun addIntoEdgesCollection(firstVertexInd: Int, secondVertexInd: Int, label: String, weight: Number) {
+    override fun addIntoEdgesCollection(
+        firstVertexInd: Int,
+        secondVertexInd: Int,
+        label: String,
+        weight: Number,
+    ) {
         require(!isEdgeContained(firstVertexInd, secondVertexInd)) {
             "Duplicated edges are not allowed"
         }
@@ -40,13 +45,15 @@ class UndirectedGraph<V>(
                 firstVertexInd,
                 secondVertexInd,
                 label,
-                weight.toDouble()
-            )
+                weight.toDouble(),
+            ),
         )
-
     }
 
-    private fun isEdgeContained(source: Int, target: Int): Boolean {
+    private fun isEdgeContained(
+        source: Int,
+        target: Int,
+    ): Boolean {
         for (edge in svsEdgesList()) {
             if (setOf(edge.source(), edge.target()) == setOf(source, target)) {
                 return true
