@@ -4,10 +4,10 @@ import algorithms.BellmanFordAlgorithm
 
 class UndirectedGraph<V>(
     override val adjacencyList: UndirectedAdjacencyList = UndirectedAdjacencyList(),
-    override val vertexValues : ArrayList<V> = arrayListOf(),
-): Graph<V>(){
+    override val vertexValues: ArrayList<V> = arrayListOf(),
+) : Graph<V>() {
 
-    init{
+    init {
         require(adjacencyList.getVerticesCount() == vertexValues.size) {
             "vertexValues size isn't equal adjacencyList's vertices count"
         }

@@ -1,11 +1,12 @@
 package graph
 
 abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
-    init{
-        for (vertex in 0 until initiallyVertexCount){
+    init {
+        for (vertex in 0 until initiallyVertexCount) {
             addVertex()
         }
     }
+
     protected val adjacencyList = ArrayList<ArrayList<Edge>>()
 
     fun addEdge(
@@ -46,7 +47,10 @@ abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
         return adjacencyList[vertexIndex].size
     }
 
-    fun getEdge(sourceVertexIndex: Int, edgeOrdinalNumber: Int): Edge {
+    fun getEdge(
+        sourceVertexIndex: Int,
+        edgeOrdinalNumber: Int,
+    ): Edge {
         val outgoingEdgesCount = getOutgoingEdgesCount(sourceVertexIndex)
         require(edgeOrdinalNumber < outgoingEdgesCount) {
             "$sourceVertexIndex has only $outgoingEdgesCount edges"
@@ -58,7 +62,10 @@ abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
         return adjacencyList.size
     }
 
-    private fun isEdgeContained(sourceVertexIndex: Int, destinationVertexIndex: Int): Boolean {
+    private fun isEdgeContained(
+        sourceVertexIndex: Int,
+        destinationVertexIndex: Int,
+    ): Boolean {
         for (edge in adjacencyList[sourceVertexIndex]) {
             if (edge.destinationVertexIndex == destinationVertexIndex) {
                 return true
@@ -66,5 +73,4 @@ abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
         }
         return false
     }
-
 }

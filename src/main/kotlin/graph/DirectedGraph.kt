@@ -5,10 +5,9 @@ import algorithms.TarjanSAlgo
 
 class DirectedGraph<V>(
     override val adjacencyList: DirectedAdjacencyList = DirectedAdjacencyList(),
-    override val vertexValues : ArrayList<V> = arrayListOf(),
-): Graph<V>() {
-
-    init{
+    override val vertexValues: ArrayList<V> = arrayListOf(),
+) : Graph<V>() {
+    init {
         require(adjacencyList.getVerticesCount() == vertexValues.size) {
             "vertexValues size isn't equal adjacencyList's vertices count"
         }
