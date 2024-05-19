@@ -1,16 +1,15 @@
 package algorithms
 
-import graph.Graph
+import graph.UndirectedGraph
 import java.util.Stack
 
-class CycleSearchAlgorithm<V>(graph: Graph<V>) {
+class CycleSearchAlgorithm<V>(graph: UndirectedGraph<V>) {
     private val vertexCount = graph.getVerticesCount()
     private val adjacencyList = graph.getTheAdjacencyList()
 
     enum class VertexStatus {
         NOT_VISITED,
-        IN_PROCESSING,
-        PROCESSED,
+        VISITED,
     }
 
     fun outputTheCycleForVertex(vertexIndex: Int) {
@@ -33,7 +32,7 @@ class CycleSearchAlgorithm<V>(graph: Graph<V>) {
         vertexIndicesForTheCycleArray.reverse()
 
         val sb = StringBuilder()
-        vertexIndicesForTheCycleArray.forEach { sb.append(it) }
+        vertexIndicesForTheCycleArray.forEach { sb.append("$it ") }
         println(sb)
     }
 
@@ -45,17 +44,19 @@ class CycleSearchAlgorithm<V>(graph: Graph<V>) {
         stack.push(vertexIndex)
         while (stack.isNotEmpty()) {
             val currentVertexIndex = stack.pop()
-            vertexStatusArray[currentVertexIndex] = VertexStatus.IN_PROCESSING
-            for (neighbourEdge in adjacencyList[currentVertexIndex - 1]) {
+
+            for (neighbourEdge in adjacencyList[currentVertexIndex]) {
                 precedingVertexIndicesArray[neighbourEdge.destinationVertexIndex] = currentVertexIndex
-                if (vertexStatusArray[neighbourEdge.destinationVertexIndex] == VertexStatus.IN_PROCESSING) {
-                    val cycleEndVertexIndex = neighbourEdge.destinationVertexIndex
-                    return Pair(precedingVertexIndicesArray, cycleEndVertexIndex)
-                } else if (vertexStatusArray[neighbourEdge.destinationVertexIndex] == VertexStatus.NOT_VISITED) {
+                if (vertexStatusArray[neighbourEdge.destinationVertexIndex] == VertexStatus.NOT_VISITED) {
+                    precedingVertexIndicesArray[neighbourEdge.destinationVertexIndex] = currentVertexIndex
                     stack.push(neighbourEdge.destinationVertexIndex)
                 }
+                else if (vertexStatusArray[neighbourEdge.destinationVertexIndex] == VertexStatus.VISITED) {
+                    val cycleEndVertexIndex = neighbourEdge.destinationVertexIndex
+                    return Pair(precedingVertexIndicesArray, cycleEndVertexIndex)
+                }
             }
-            vertexStatusArray[currentVertexIndex] = VertexStatus.PROCESSED
+            vertexStatusArray[currentVertexIndex] = VertexStatus.VISITED
         }
         return Pair(null, -1)
     }
