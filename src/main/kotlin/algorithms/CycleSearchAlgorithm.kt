@@ -12,64 +12,57 @@ class CycleSearchAlgorithm<V>(graph: UndirectedGraph<V>) {
         VISITED,
     }
 
-    fun outputTheCycleForVertex(vertexIndex: Int) {
-        val (precedingVertexIndicesArray, cycleEndVertexIndex) =
-            getListOfVerticesForTheCycle(
-                vertexIndex,
-            )
-        if (precedingVertexIndicesArray == null) {
-            println("There are no cycles for a given vertex in the graph")
-            return
-        }
-
-        val vertexIndicesForTheCycleArray: MutableList<Int> = mutableListOf()
-        vertexIndicesForTheCycleArray.add(cycleEndVertexIndex)
+    fun printCycleForVertex(vertexIndex: Int) {
+        val (parentVertexIndicesArray, cycleEndVertexIndex) =
+            findCycleForVertex(vertexIndex)
+        val vertexIndicesForCycleArray: MutableList<Int> = mutableListOf()
         var currVertexIndex = cycleEndVertexIndex
-        do {
-            currVertexIndex = precedingVertexIndicesArray[currVertexIndex]
-            vertexIndicesForTheCycleArray.add(currVertexIndex)
-        } while (cycleEndVertexIndex != precedingVertexIndicesArray[currVertexIndex])
-        if (vertexIndicesForTheCycleArray.indexOf(vertexIndex) == -1) {
+
+        if (parentVertexIndicesArray == null) {
             println("There are no cycles for a given vertex in the graph")
             return
         }
-        vertexIndicesForTheCycleArray.reverse()
+        vertexIndicesForCycleArray.add(cycleEndVertexIndex)
+        do {
+            currVertexIndex = parentVertexIndicesArray[currVertexIndex]
+            vertexIndicesForCycleArray.add(currVertexIndex)
+        } while (cycleEndVertexIndex != parentVertexIndicesArray[currVertexIndex])
+        if (vertexIndicesForCycleArray.indexOf(vertexIndex) == -1) {
+            println("There are no cycles for a given vertex in the graph")
+            return
+        }
+        vertexIndicesForCycleArray.reverse()
 
         val sb = StringBuilder()
-        vertexIndicesForTheCycleArray.forEach { sb.append("$it ") }
+        vertexIndicesForCycleArray.forEach { sb.append("$it ") }
         println(sb)
     }
 
-    private fun getListOfVerticesForTheCycle(vertexIndex: Int): Pair<Array<Int>?, Int> {
+    private fun findCycleForVertex(vertexIndex: Int): Pair<Array<Int>?, Int> {
         val stack = Stack<Int>()
-        val vertexStatusArray = Array(vertexCount) { VertexStatus.NOT_VISITED }
-        val precedingVertexIndicesArray = Array(vertexCount) { -1 } // initialize array with -1
+        val visitedOrNotArray = Array(vertexCount) { VertexStatus.NOT_VISITED }
+        val parentVertexIndicesArray = Array(vertexCount) { -1 } // initialize array with -1
         var prevVertexIndex: Int = -1
 
         stack.push(vertexIndex)
         while (stack.isNotEmpty()) {
             val currentVertexIndex = stack.pop()
-//            if (vertexStatusArray[currentVertexIndex] == VertexStatus.VISITED) {
-//                continue
-//            }
-
             for (neighbourEdge in adjacencyList[currentVertexIndex]) {
-                if (neighbourEdge.destinationVertexIndex == prevVertexIndex) {
+                val neighbourVertexIndex = neighbourEdge.destinationVertexIndex
+                if (neighbourVertexIndex == prevVertexIndex) {
                     continue
                 }
-                precedingVertexIndicesArray[neighbourEdge.destinationVertexIndex] = currentVertexIndex
-                if (vertexStatusArray[neighbourEdge.destinationVertexIndex] == VertexStatus.NOT_VISITED) {
-                    precedingVertexIndicesArray[neighbourEdge.destinationVertexIndex] = currentVertexIndex
-                    stack.push(neighbourEdge.destinationVertexIndex)
-                }
-                else if (vertexStatusArray[neighbourEdge.destinationVertexIndex] == VertexStatus.VISITED) {
-                    val cycleEndVertexIndex = neighbourEdge.destinationVertexIndex
-                    return Pair(precedingVertexIndicesArray, cycleEndVertexIndex)
+                parentVertexIndicesArray[neighbourVertexIndex] = currentVertexIndex
+                if (visitedOrNotArray[neighbourVertexIndex] == VertexStatus.NOT_VISITED) {
+                    parentVertexIndicesArray[neighbourVertexIndex] = currentVertexIndex
+                    stack.push(neighbourVertexIndex)
+                } else if (visitedOrNotArray[neighbourVertexIndex] == VertexStatus.VISITED) {
+                    return parentVertexIndicesArray to neighbourVertexIndex   // neighbourVertexIndex is the end of cycle
                 }
             }
             prevVertexIndex = currentVertexIndex
-            vertexStatusArray[currentVertexIndex] = VertexStatus.VISITED
+            visitedOrNotArray[currentVertexIndex] = VertexStatus.VISITED
         }
-        return Pair(null, -1)
+        return null to -1
     }
 }
