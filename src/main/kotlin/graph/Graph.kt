@@ -1,5 +1,7 @@
 package graph
 
+import org.jetbrains.research.ictl.louvain.getPartition
+
 abstract class Graph<V> {
     protected open val vertexValues: ArrayList<V> = arrayListOf()
     protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
@@ -9,6 +11,7 @@ abstract class Graph<V> {
     abstract fun adjacencyList(): AdjacencyList
 
     abstract fun svsEdgesList(): List<SourceVertexStoringEdge>
+
     fun vertexValue(vertexIndex: Int): V {
         return vertexValues[vertexIndex]
     }
@@ -61,8 +64,7 @@ abstract class Graph<V> {
 
     abstract fun minimumSpanningForest(): Graph<V>
 
-    fun partition(){
-
+    fun partition(): Map<Int, Int> {
+        return getPartition(svsEdgesList(), 1)
     }
-
 }
