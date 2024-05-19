@@ -3,15 +3,18 @@ package algorithms
 import Graph
 import java.util.PriorityQueue
 
-class DijkstraShortestPathAlgorithm<V>(graph: Graph<V>) {
+class DijkstraAlgorithm<V>(graph: Graph<V>) {
     private val verticesCount = graph.getVerticesCount()
     private val adjacencyList = graph.getTheAdjacencyList()
 
-    fun findShortestPathDijkstra(startVertexIndex: Int, endVertexIndex: Int) {
-        val visited = BooleanArray(verticesCount)
-        val comparator = Comparator<Pair<Int, Int>> { a, b ->
-            a.second.compareTo(b.second)
-        }
+    fun findShortestPathDijkstra(
+        startVertexIndex: Int,
+        endVertexIndex: Int,
+    ) {
+        val comparator =
+            Comparator<Pair<Int, Int>> { a, b ->
+                a.second.compareTo(b.second)
+            }
         val queue = PriorityQueue(comparator)
 
         val maxInt = Int.MAX_VALUE
@@ -30,12 +33,11 @@ class DijkstraShortestPathAlgorithm<V>(graph: Graph<V>) {
                 // negative weight handler
 
                 // ниже начинается ужас, но пока у меня не получается от него избавиться
-                val potentialWeight: Int = distances[currentVertexIndex]?.let {it + weightOfNeighbourEdge} ?: 0
+                val potentialWeight: Int = distances[currentVertexIndex]?.let { it + weightOfNeighbourEdge } ?: 0
                 if (distances[neighbourVertexIndex]!! > potentialWeight) {
                     distances[neighbourVertexIndex] = potentialWeight
                     queue.add((neighbourVertexIndex to distances[neighbourVertexIndex]) as Pair<Int, Int>)
                 }
-
             }
         }
         if (distances[endVertexIndex] == maxInt) {
