@@ -1,20 +1,13 @@
 package graph
 
 import algorithms.BellmanFordAlgorithm
+import algorithms.BoruvkaSAlgorithm
 import algorithms.FindBridgesAlgorithm
 
-class UndirectedGraph<V>(
-    private val svsEdgesList: ArrayList<SourceVertexStoringEdge> = arrayListOf(),
-    override val vertexValues: ArrayList<V> = arrayListOf(),
-) : Graph<V>() {
-
-    init {
-        require(svsEdgesList.size == vertexValues.size) {
-            "vertexValues size isn't equal adjacencyList's vertices count"
-        }
-    }
-
+class UndirectedGraph<V>() : Graph<V>() {
     private var verticesCount: Int = 0
+    private var svsEdgesList: ArrayList<SourceVertexStoringEdge> = arrayListOf()
+    override var vertexValues: ArrayList<V> = arrayListOf()
 
     fun svsEdgesList(): List<SourceVertexStoringEdge> {
         return svsEdgesList.toList()
@@ -110,5 +103,16 @@ class UndirectedGraph<V>(
 
     override fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>> {
         throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
+    }
+
+    override fun minimumSpanningForest(): UndirectedGraph<V> {
+        val boruvkaSAlgorithm = BoruvkaSAlgorithm(svsEdgesList, verticesCount)
+        return UndirectedGraph(boruvkaSAlgorithm.boruvkaSAlgo(), vertexValues)
+    }
+
+    private constructor(svsEdgesList: ArrayList<SourceVertexStoringEdge>, vertexValues: ArrayList<V>) : this() {
+        this.svsEdgesList = svsEdgesList
+        this.verticesCount = vertexValues.size
+        this.vertexValues = vertexValues
     }
 }

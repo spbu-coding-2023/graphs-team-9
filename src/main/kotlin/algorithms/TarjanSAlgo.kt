@@ -7,10 +7,10 @@ class TarjanSAlgo(private val adjacencyList: DirectedAdjacencyList) {
     private val stronglyConnectedComponents: ArrayList<ArrayList<Int>> = arrayListOf()
     private var order = 0
     private val verticesStack = Stack<Int>()
-    private val verticesCount = adjacencyList.getVerticesCount()
+    private val verticesCount = adjacencyList.verticesCount()
     private val orders = IntArray(verticesCount) { -1 }
     private val prevs = IntArray(verticesCount) { -1 }
-    private val edgesNotCheckedCounts = IntArray(verticesCount) { v -> adjacencyList.getOutgoingEdgesCount(v) }
+    private val edgesNotCheckedCounts = IntArray(verticesCount) { v -> adjacencyList.outgoingEdgesCount(v) }
     private val leastIndLinks = IntArray(verticesCount) { -1 }
     private val verticesStackAffiliations = BooleanArray(verticesCount) { false }
 
@@ -24,10 +24,10 @@ class TarjanSAlgo(private val adjacencyList: DirectedAdjacencyList) {
     }
 
     private fun dfs(startVertex: Int) {
-        val dfsStack = Stack<Int>()
-        dfsStack.add(startVertex)
-        while (dfsStack.isNotEmpty()) {
-            val curVertex = dfsStack.pop()
+        var nextVertex = startVertex
+        while (nextVertex != -1) {
+            val curVertex = nextVertex
+            nextVertex = -1
             if (orders[curVertex] == -1) {
                 orders[curVertex] = order
                 leastIndLinks[curVertex] = order++
@@ -37,10 +37,10 @@ class TarjanSAlgo(private val adjacencyList: DirectedAdjacencyList) {
             var shouldCheckAdjacentVertex = false
             while (edgesNotCheckedCounts[curVertex] != 0 && !shouldCheckAdjacentVertex) {
                 val edgeOrdinalNumber = --edgesNotCheckedCounts[curVertex]
-                val adjacentVertex = adjacencyList.getEdge(curVertex, edgeOrdinalNumber).destinationVertexIndex
+                val adjacentVertex = adjacencyList.getEdge(curVertex, edgeOrdinalNumber).target()
                 if (orders[adjacentVertex] == -1) {
                     prevs[adjacentVertex] = curVertex
-                    dfsStack.push(adjacentVertex)
+                    nextVertex = adjacentVertex
                     shouldCheckAdjacentVertex = true
                 } else {
                     if (verticesStackAffiliations[adjacentVertex]) {
@@ -58,7 +58,7 @@ class TarjanSAlgo(private val adjacencyList: DirectedAdjacencyList) {
                 val prevVertex = prevs[curVertex]
                 if (prevVertex != -1) {
                     leastIndLinks[prevVertex] = minOf(leastIndLinks[prevVertex], leastIndLinks[curVertex])
-                    dfsStack.push(prevVertex)
+                    nextVertex = prevVertex
                 }
             }
         }

@@ -76,4 +76,8 @@ open class DirectedGraph<V>(
         val tarjanSAlgo = TarjanSAlgo(this.adjacencyList())
         return tarjanSAlgo.tarjanSAlgo()
     }
+
+    override fun minimumSpanningForest(): DirectedGraph<V> {
+        throw UnsupportedOperationException("minimumSpanningForest() hasn't implemented for directed graphs")
+    }
 }
