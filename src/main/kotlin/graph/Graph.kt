@@ -49,6 +49,8 @@ abstract class Graph<V> {
         weight: Number,
     )
 
+    abstract fun findBridges(): MutableSet<Set<Int>>
+
     abstract fun shortestPathByBFAlgorithm(
         start: V,
         end: V,

@@ -1,6 +1,7 @@
 package graph
 
 import algorithms.BellmanFordAlgorithm
+import algorithms.FindBridgesAlgorithm
 
 class UndirectedGraph<V>(
     private val svsEdgesList: ArrayList<SourceVertexStoringEdge> = arrayListOf(),
@@ -70,6 +71,11 @@ class UndirectedGraph<V>(
             vertexIndicesMap[value] = verticesCount++
         }
         vertexValues.add(value)
+    }
+
+    override fun findBridges(): MutableSet<Set<Int>> {
+        val algo = FindBridgesAlgorithm(adjacencyList())
+        return algo.findBridges()
     }
 
     override fun shortestPathByBFAlgorithm(
