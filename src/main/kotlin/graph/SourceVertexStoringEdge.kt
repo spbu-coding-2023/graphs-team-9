@@ -1,5 +1,7 @@
 package graph
 
+import org.jetbrains.research.ictl.louvain.Link
+
 open class SourceVertexStoringEdge(
     private val source: Int,
     target: Int,

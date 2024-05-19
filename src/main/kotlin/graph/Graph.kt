@@ -8,6 +8,7 @@ abstract class Graph<V> {
 
     abstract fun adjacencyList(): AdjacencyList
 
+    abstract fun svsEdgesList(): List<SourceVertexStoringEdge>
     fun vertexValue(vertexIndex: Int): V {
         return vertexValues[vertexIndex]
     }
@@ -59,4 +60,9 @@ abstract class Graph<V> {
     abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
 
     abstract fun minimumSpanningForest(): Graph<V>
+
+    fun partition(){
+
+    }
+
 }
