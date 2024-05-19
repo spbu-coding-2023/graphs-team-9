@@ -29,6 +29,10 @@ class CycleSearchAlgorithm<V>(graph: UndirectedGraph<V>) {
             currVertexIndex = precedingVertexIndicesArray[currVertexIndex]
             vertexIndicesForTheCycleArray.add(currVertexIndex)
         } while (cycleEndVertexIndex != precedingVertexIndicesArray[currVertexIndex])
+        if (vertexIndicesForTheCycleArray.indexOf(vertexIndex) == -1) {
+            println("There are no cycles for a given vertex in the graph")
+            return
+        }
         vertexIndicesForTheCycleArray.reverse()
 
         val sb = StringBuilder()
