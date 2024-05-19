@@ -99,7 +99,7 @@ class UndirectedGraph<V>() : Graph<V>() {
         throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
     }
 
-    override fun minimumSpanningForest(): Graph<V> {
+    override fun minimumSpanningForest(): UndirectedGraph<V> {
         val boruvkaSAlgorithm = BoruvkaSAlgorithm(svsEdgesList, verticesCount)
         return UndirectedGraph(boruvkaSAlgorithm.boruvkaSAlgo(), vertexValues)
     }

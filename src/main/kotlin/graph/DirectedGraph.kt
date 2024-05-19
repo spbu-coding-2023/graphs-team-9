@@ -73,7 +73,7 @@ open class DirectedGraph<V>(
         return tarjanSAlgo.tarjanSAlgo()
     }
 
-    override fun minimumSpanningForest(): Graph<V> {
+    override fun minimumSpanningForest(): DirectedGraph<V> {
         throw UnsupportedOperationException("minimumSpanningForest() hasn't implemented for directed graphs")
     }
 }
