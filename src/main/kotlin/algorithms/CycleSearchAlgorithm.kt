@@ -40,12 +40,19 @@ class CycleSearchAlgorithm<V>(graph: UndirectedGraph<V>) {
         val stack = Stack<Int>()
         val vertexStatusArray = Array(vertexCount) { VertexStatus.NOT_VISITED }
         val precedingVertexIndicesArray = Array(vertexCount) { -1 } // initialize array with -1
+        var prevVertexIndex: Int = -1
 
         stack.push(vertexIndex)
         while (stack.isNotEmpty()) {
             val currentVertexIndex = stack.pop()
+//            if (vertexStatusArray[currentVertexIndex] == VertexStatus.VISITED) {
+//                continue
+//            }
 
             for (neighbourEdge in adjacencyList[currentVertexIndex]) {
+                if (neighbourEdge.destinationVertexIndex == prevVertexIndex) {
+                    continue
+                }
                 precedingVertexIndicesArray[neighbourEdge.destinationVertexIndex] = currentVertexIndex
                 if (vertexStatusArray[neighbourEdge.destinationVertexIndex] == VertexStatus.NOT_VISITED) {
                     precedingVertexIndicesArray[neighbourEdge.destinationVertexIndex] = currentVertexIndex
@@ -56,6 +63,7 @@ class CycleSearchAlgorithm<V>(graph: UndirectedGraph<V>) {
                     return Pair(precedingVertexIndicesArray, cycleEndVertexIndex)
                 }
             }
+            prevVertexIndex = currentVertexIndex
             vertexStatusArray[currentVertexIndex] = VertexStatus.VISITED
         }
         return Pair(null, -1)
