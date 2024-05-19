@@ -8,17 +8,25 @@ class ExtremelyFastAlgorithm(private val adjacencyList: UndirectedAdjacencyList)
     private val verticesCount = adjacencyList.verticesCount()
     private val basis: Int = ceil(sqrt(verticesCount.toDouble())).toInt()
     private val groups: Int = 3 * basis
+    private val closenessCentrality = DoubleArray(groups)
+    private val arrayOfSuperVertices: MutableList<List<Int>> = mutableListOf()
+    private val result = DoubleArray(verticesCount) { 0.0 }
 
     fun getKeyVertices(): DoubleArray {
-        val result = DoubleArray(verticesCount) { 0.0 }
+        buildTable()
         for (idGroup in 0 until groups) {
-            val superVertex = buildSuperVertex(idGroup)
-            val sizeSuperVertex = superVertex.size
-            val contentOfSuperVertex = superVertex.toList()
-            val closenessCentrality = calculateCC(superVertex)
-            for (vertex in contentOfSuperVertex) result[vertex] += closenessCentrality / sizeSuperVertex
+            for (vertex in arrayOfSuperVertices[idGroup]) result[vertex] += closenessCentrality[idGroup] / arrayOfSuperVertices[idGroup].size
         }
         return result
+    }
+
+    private fun buildTable() {
+        for (idGroup in 0 until groups) {
+            val superVertex = buildSuperVertex(idGroup)
+            arrayOfSuperVertices.add(superVertex.toList())
+            val cc = calculateCC(superVertex)
+            closenessCentrality[idGroup] = cc
+        }
     }
 
     private fun buildSuperVertex(idTest: Int): MutableList<Int> {
@@ -37,7 +45,7 @@ class ExtremelyFastAlgorithm(private val adjacencyList: UndirectedAdjacencyList)
     }
 
     private fun calculateCC(superVertex: MutableList<Int>): Double {
-        var closenessCentrality = 0L
+        var ccForGroup = 0L
         val ccForVertex = LongArray(verticesCount) { 0 }
         val visited = BooleanArray(verticesCount) { false }
         for (vertex in superVertex) visited[vertex] = true
@@ -50,16 +58,16 @@ class ExtremelyFastAlgorithm(private val adjacencyList: UndirectedAdjacencyList)
                         visited[neighbour] = true
                         neighbours.add(neighbour)
                         ccForVertex[neighbour] = ccForVertex[vertex] + 1
-                        closenessCentrality += ccForVertex[neighbour]
+                        ccForGroup += ccForVertex[neighbour]
                     }
                 }
             }
             superVertex.clear()
             for (el in neighbours) superVertex.add(el)
         }
-        return when (closenessCentrality) {
+        return when (ccForGroup) {
             0L -> 0.0
-            else -> (1 / closenessCentrality.toDouble())
+            else -> (1 / ccForGroup.toDouble())
         }
     }
 }
