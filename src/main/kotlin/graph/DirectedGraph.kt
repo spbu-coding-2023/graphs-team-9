@@ -40,6 +40,10 @@ open class DirectedGraph<V>(
         vertexValues.add(value)
     }
 
+    override fun findBridges(): MutableSet<Set<Int>> {
+        throw UnsupportedOperationException("findBridges() hasn't implemented for directed graphs")
+    }
+
     override fun shortestPathByBFAlgorithm(
         start: V,
         end: V,

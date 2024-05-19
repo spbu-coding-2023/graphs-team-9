@@ -2,6 +2,7 @@ package graph
 
 import algorithms.BellmanFordAlgorithm
 import algorithms.BoruvkaSAlgorithm
+import algorithms.FindBridgesAlgorithm
 
 class UndirectedGraph<V>() : Graph<V>() {
     private var verticesCount: Int = 0
@@ -63,6 +64,11 @@ class UndirectedGraph<V>() : Graph<V>() {
             vertexIndicesMap[value] = verticesCount++
         }
         vertexValues.add(value)
+    }
+
+    override fun findBridges(): MutableSet<Set<Int>> {
+        val algo = FindBridgesAlgorithm(adjacencyList())
+        return algo.findBridges()
     }
 
     override fun shortestPathByBFAlgorithm(
