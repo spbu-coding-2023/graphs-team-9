@@ -18,13 +18,14 @@ class FindBridgesAlgorithmTest {
 
     @AfterEach
     fun end() {
+        graph.makeItLighterAndImmutable()
+        result = graph.findBridges()
         assertEquals(expectedResult, result)
     }
 
 //
     @Test
     fun `graph is empty`() {
-        result = graph.findBridges()
         expectedResult = mutableSetOf()
     }
 
@@ -34,7 +35,6 @@ class FindBridgesAlgorithmTest {
         graph.addVertex(0)
         graph.addVertex(1)
         graph.addVertex(2)
-        result = graph.findBridges()
         expectedResult = mutableSetOf()
     }
 
@@ -51,7 +51,6 @@ class FindBridgesAlgorithmTest {
         graph.addEdge(1, 3)
         graph.addEdge(0, 2)
         graph.addEdge(2, 3)
-        result = graph.findBridges()
         expectedResult = mutableSetOf()
     }
 
@@ -77,7 +76,6 @@ class FindBridgesAlgorithmTest {
         graph.addEdge(7, 6)
         graph.addEdge(5, 6)
         graph.addEdge(3, 4)
-        result = graph.findBridges()
         expectedResult = mutableSetOf(setOf(3, 4))
     }
 
@@ -92,7 +90,6 @@ class FindBridgesAlgorithmTest {
         graph.addEdge(0, 1)
         graph.addEdge(1, 2)
         graph.addEdge(2, 3)
-        result = graph.findBridges()
         expectedResult = mutableSetOf(setOf(0, 1), setOf(1, 2), setOf(2, 3))
     }
 
@@ -106,7 +103,6 @@ class FindBridgesAlgorithmTest {
         graph.addVertex(3)
         graph.addEdge(0, 1)
         graph.addEdge(2, 3)
-        result = graph.findBridges()
         expectedResult = mutableSetOf(setOf(0, 1), setOf(2, 3))
     }
 }
