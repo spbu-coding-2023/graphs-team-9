@@ -17,6 +17,17 @@ open class DirectedGraph<V>(
         return adjacencyList
     }
 
+    override fun svsEdgesList(): List<SourceVertexStoringEdge> {
+        val svsEdgesList = ArrayList<SourceVertexStoringEdge>()
+        for (vertex in 0 until adjacencyList.verticesCount()) {
+            for (outgoingEdgeSInd in 0 until adjacencyList.outgoingEdgesCount(vertex)) {
+                val edge = adjacencyList.getEdge(vertex, outgoingEdgeSInd)
+                svsEdgesList.add(SourceVertexStoringEdge(vertex, edge.target(), edge.label(), edge.weight().toDouble()))
+            }
+        }
+        return svsEdgesList
+    }
+
     override fun verticesCount(): Int {
         return adjacencyList.verticesCount()
     }
