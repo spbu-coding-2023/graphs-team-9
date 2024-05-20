@@ -1,24 +1,25 @@
 package algorithms
 
-import Graph
+import graph.Graph
 import java.util.PriorityQueue
 
 class DijkstraAlgorithm<V>(graph: Graph<V>) {
-    private val verticesCount = graph.getVerticesCount()
-    private val adjacencyList = graph.getTheAdjacencyList()
+    private val verticesCount = graph.verticesCount()
+    private val adjacencyList = graph.adjacencyList()
+    // handling negative weights
 
-    fun findShortestPathDijkstra(
+    fun shortestPathByDijkstraAlgorithm(
         startVertexIndex: Int,
         endVertexIndex: Int,
     ) {
         val comparator =
-            Comparator<Pair<Int, Int>> { a, b ->
-                a.second.compareTo(b.second)
+            Comparator<Pair<Int, Number>> { a, b ->
+                a.second.toInt().compareTo(b.second.toInt())
             }
         val queue = PriorityQueue(comparator)
 
         val maxInt = Int.MAX_VALUE
-        val distances: MutableMap<Int, Int> = mutableMapOf()
+        val distances = HashMap<Int, Number>(verticesCount)
         for (toVertexNumber in 1..verticesCount) {
             distances[toVertexNumber] = maxInt
         }
@@ -27,16 +28,15 @@ class DijkstraAlgorithm<V>(graph: Graph<V>) {
         queue.add(startVertexIndex to 0)
         while (queue.isNotEmpty()) {
             val currentVertexIndex = queue.remove().first
-            for (neighbourEdge in adjacencyList[currentVertexIndex]) {
-                val neighbourVertexIndex = neighbourEdge.destinationVertexIndex
-                val weightOfNeighbourEdge: Int = neighbourEdge.weight as Int
-                // negative weight handler
+            for (ordinalNumber in 0 until adjacencyList.outgoingEdgesCount(currentVertexIndex)) {
+                val neighbourEdge = adjacencyList.getEdge(currentVertexIndex, ordinalNumber)
+                val neighbourVertexIndex = neighbourEdge.target()
+                val weightOfNeighbourEdge: Number = neighbourEdge.weight()
 
-                // ниже начинается ужас, но пока у меня не получается от него избавиться
-                val potentialWeight: Int = distances[currentVertexIndex]?.let { it + weightOfNeighbourEdge } ?: 0
-                if (distances[neighbourVertexIndex]!! > potentialWeight) {
-                    distances[neighbourVertexIndex] = potentialWeight
-                    queue.add((neighbourVertexIndex to distances[neighbourVertexIndex]) as Pair<Int, Int>)
+                val potentialWeight: Int = distances[currentVertexIndex] as Int + weightOfNeighbourEdge.toInt()
+                if (distances[neighbourVertexIndex] as Int > potentialWeight) {
+                    distances[neighbourVertexIndex] = potentialWeight as Number
+                    queue.add((neighbourVertexIndex to distances[neighbourVertexIndex]) as Pair<Int, Number>)
                 }
             }
         }
