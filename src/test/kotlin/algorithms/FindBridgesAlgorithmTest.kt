@@ -29,7 +29,7 @@ class FindBridgesAlgorithmTest {
         expectedResult = mutableSetOf()
     }
 
-//  1   2   3
+//  0   1   2
     @Test
     fun `no edges in graph`() {
         graph.addVertex(0)
