@@ -7,6 +7,7 @@ abstract class Graph<V> {
     protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
     protected var isAbleToAdd = true
     protected var hasNegativeWeights = false
+    internal var weighted: Boolean = false
 
     abstract fun adjacencyList(): AdjacencyList
 
@@ -19,6 +20,8 @@ abstract class Graph<V> {
     abstract fun verticesCount(): Int
 
     abstract fun addVertex(value: V)
+
+    fun isWeighted(): Boolean = weighted
 
     fun makeItLighterAndImmutable() {
         vertexIndicesMap = hashMapOf()
