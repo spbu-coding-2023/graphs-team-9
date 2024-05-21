@@ -32,7 +32,7 @@ abstract class Graph<V> {
         firstVertexValue: V,
         secondVertexValue: V,
         label: String = "",
-        weight: Int = 1,
+        weight: Double = 1.0,
     ) {
         require(isAbleToAdd) {
             "Not able to add edges when graph is immutable"
@@ -53,7 +53,7 @@ abstract class Graph<V> {
         firstVertexInd: Int,
         secondVertexInd: Int,
         label: String,
-        weight: Number,
+        weight: Double,
     )
 
     abstract fun findBridges(): MutableSet<Set<Int>>

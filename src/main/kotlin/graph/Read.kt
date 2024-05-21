@@ -31,7 +31,7 @@ class Read(name: String) {
     private fun readEdges(graph: Graph<String>, edgesCount: Int) {
         for (vertex in 0 until edgesCount) {
             val (source, target, label, weight) = reader.readLine().split(", ")
-            graph.addEdge(source, target, label, weight.toInt())
+            graph.addEdge(source, target, label, weight.toDouble())
         }
     }
 

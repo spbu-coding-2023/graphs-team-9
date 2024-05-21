@@ -29,7 +29,7 @@ class UndirectedGraph<V>() : Graph<V>() {
         firstVertexInd: Int,
         secondVertexInd: Int,
         label: String,
-        weight: Number,
+        weight: Double,
     ) {
         require(!isEdgeContained(firstVertexInd, secondVertexInd)) {
             "Duplicated edges are not allowed"
@@ -39,7 +39,7 @@ class UndirectedGraph<V>() : Graph<V>() {
                 firstVertexInd,
                 secondVertexInd,
                 label,
-                weight.toDouble(),
+                weight,
             ),
         )
     }
