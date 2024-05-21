@@ -3,8 +3,9 @@ package graph
 import java.io.BufferedWriter
 import java.io.FileWriter
 
-class Write<V>(private val graph: Graph<V>, private val name: String) {
+class Write<V>(private val graph: Graph<V>, name: String) {
     private val verticesCount = graph.verticesCount()
+    private val isGraphWeighted = graph.isWeighted()
     private val writer = BufferedWriter(FileWriter("$name.csv"))
 
     init {
@@ -16,7 +17,6 @@ class Write<V>(private val graph: Graph<V>, private val name: String) {
         val undirectedGraph = UndirectedGraph<V>()
         val directedGraph = DirectedGraph<V>()
         var isGraphDirected = false
-        val isGraphWeighted = graph.isWeighted()
         when (graph::class) {
             undirectedGraph::class -> writer.write("Undirected, ")
             directedGraph::class -> {
@@ -31,7 +31,7 @@ class Write<V>(private val graph: Graph<V>, private val name: String) {
         writer.write("$verticesCount")
 
         writeVertices()
-        writeEdges(isGraphDirected, isGraphWeighted)
+        writeEdges(isGraphDirected)
     }
 
     private fun writeVertices() {
@@ -43,7 +43,6 @@ class Write<V>(private val graph: Graph<V>, private val name: String) {
 
     private fun writeEdges(
         isGraphDirected: Boolean,
-        isGraphWeighted: Boolean,
     ) {
         when (isGraphDirected) {
             true -> {
