@@ -11,7 +11,6 @@ open class EdgeVM(
     val target: VertexVM,
     val edge: Edge,
 ) {
-    open val multiplicator: Float = 1f
     val isLoop: Boolean = (source === target)
     private var weightVisibilityS = mutableStateOf(false)
     private var labelVisibilityS = mutableStateOf(false)
@@ -50,17 +49,17 @@ open class EdgeVM(
     ): Pair<Pair<Dp, Dp>, Pair<Dp, Dp>> {
         val sourceCoordinates: Pair<Dp, Dp> =
             when (sourceSide) {
-                Side.Top -> Pair(source.x * multiplicator, source.y - source.size * 0.9f)
-                Side.Right -> Pair(source.x + source.size * 0.9f, source.y * multiplicator)
-                Side.Bottom -> Pair(source.x * multiplicator, source.y + source.size * 0.9f)
-                Side.Left -> Pair(source.x - source.size * 0.9f, source.y * multiplicator)
+                Side.Top -> Pair(source.x, source.y - source.size * 0.9f)
+                Side.Right -> Pair(source.x + source.size * 0.9f, source.y)
+                Side.Bottom -> Pair(source.x, source.y + source.size * 0.9f)
+                Side.Left -> Pair(source.x - source.size * 0.9f, source.y)
             }
         val targetCoordinates: Pair<Dp, Dp> =
             when (targetSide) {
-                Side.Top -> Pair(target.x * multiplicator, target.y - target.size * 0.9f)
-                Side.Right -> Pair(target.x + target.size * 0.9f, target.y * multiplicator)
-                Side.Bottom -> Pair(target.x * multiplicator, target.y + target.size * 0.9f)
-                Side.Left -> Pair(target.x - target.size * 0.9f, target.y * multiplicator)
+                Side.Top -> Pair(target.x, target.y - target.size * 0.9f)
+                Side.Right -> Pair(target.x + target.size * 0.9f, target.y)
+                Side.Bottom -> Pair(target.x, target.y + target.size * 0.9f)
+                Side.Left -> Pair(target.x - target.size * 0.9f, target.y)
             }
         return Pair(sourceCoordinates, targetCoordinates)
     }
