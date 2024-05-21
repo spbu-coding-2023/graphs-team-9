@@ -21,8 +21,8 @@ fun vertexView(viewModel: VertexVM) {
     Box(
         modifier =
             Modifier
-                .size(viewModel.size * 2)
-                .offset(viewModel.x, viewModel.y)
+                .size(viewModel.size * 2 )
+                .offset(viewModel.x - viewModel.size, viewModel.y - viewModel.size)
                 .background(viewModel.color, shape = CircleShape)
                 .border(
                     width = viewModel.size / 10,
@@ -54,7 +54,7 @@ fun vertexView(viewModel: VertexVM) {
         Text(
             modifier =
                 Modifier
-                    .offset(viewModel.x, viewModel.y - viewModel.size + 5.dp),
+                    .offset(viewModel.x - viewModel.size, viewModel.y - viewModel.size - 25.dp),
             text = text,
         )
     }
