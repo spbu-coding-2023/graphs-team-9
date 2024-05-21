@@ -16,54 +16,53 @@ class Write<V>(private val graph: Graph<V>, private val name: String) {
         val undirectedGraph = UndirectedGraph<V>()
         val directedGraph = DirectedGraph<V>()
         var isGraphDirected = false
+        val isGraphWeighted = graph.isWeighted()
         when (graph::class) {
-            undirectedGraph::class -> {
-                writer.write("Undirected, ")
-                writer.write("$verticesCount, ${graph.svsEdgesList().size}, ")
-            }
+            undirectedGraph::class -> writer.write("Undirected, ")
             directedGraph::class -> {
                 writer.write("Directed, ")
-                var edgesCount = 0
-                val adjacencyList = graph.adjacencyList()
-                for (vertex in 0 until verticesCount) edgesCount += adjacencyList.outgoingEdgesCount(vertex)
-                writer.write("$verticesCount, $edgesCount, ")
                 isGraphDirected = true
             }
         }
-        when (graph.isWeighted()) {
-            true -> writer.write("Weighted")
-            else -> writer.write("Unweighted")
+        when (isGraphWeighted) {
+            true -> writer.write("Weighted, ")
+            else -> writer.write("Unweighted, ")
         }
-        writer.newLine()
+        writer.write("$verticesCount")
 
         writeVertices()
-        writeEdges(isGraphDirected)
+        writeEdges(isGraphDirected, isGraphWeighted)
     }
 
     private fun writeVertices() {
         for (vertex in 0 until verticesCount) {
-            writer.write("${graph.vertexValue(vertex)}")
             writer.newLine()
+            writer.write("${graph.vertexValue(vertex)}")
         }
     }
 
-    private fun writeEdges(isGraphDirected: Boolean) {
+    private fun writeEdges(
+        isGraphDirected: Boolean,
+        isGraphWeighted: Boolean,
+    ) {
         when (isGraphDirected) {
             true -> {
                 val adjacencyList = graph.adjacencyList()
                 for (vertex in 0 until verticesCount) {
                     for (idEdge in 0 until adjacencyList.outgoingEdgesCount(vertex)) {
                         val edge = adjacencyList.getEdge(vertex, idEdge)
-                        writer.write("${vertex}, ${edge.target()}, ${edge.label()}, ${edge.weight()}")
                         writer.newLine()
+                        writer.write("${graph.vertexValue(vertex)}, ${graph.vertexValue(edge.target())}, ${edge.label()}")
+                        if (isGraphWeighted) writer.write(", ${edge.weight()}")
                     }
                 }
             }
             else -> {
                 val svsEdgesList = graph.svsEdgesList()
                 for (edge in svsEdgesList) {
-                    writer.write("${edge.source()}, ${edge.target()}, ${edge.label()}, ${edge.weight()}")
                     writer.newLine()
+                    writer.write("${graph.vertexValue(edge.source())}, ${graph.vertexValue(edge.target())}, ${edge.label()}")
+                    if (isGraphWeighted) writer.write(", ${edge.weight()}")
                 }
             }
         }

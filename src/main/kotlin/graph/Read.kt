@@ -13,25 +13,42 @@ class Read(name: String) {
     }
 
     private fun readData(): Graph<String> {
-        val (type, verticesCount, edgesCount, weight) = reader.readLine().split(", ")
+        val (type, weight, verticesCount) = reader.readLine().split(", ")
         val graph = createGraph(type)
         if (weight == "Weighted") graph.weighted = true
+        val isGraphWeighted = graph.isWeighted()
 
         readVertices(graph, verticesCount.toInt())
-        readEdges(graph, edgesCount.toInt())
+        readEdges(graph, isGraphWeighted)
         return graph
     }
 
-    private fun readVertices(graph: Graph<String>, verticesCount: Int) {
+    private fun readVertices(
+        graph: Graph<String>,
+        verticesCount: Int,
+    ) {
         for (vertex in 0 until verticesCount) {
-            graph.addVertex(reader.readLine().replace("\n", ""))
+            graph.addVertex(reader.readLine())
         }
     }
 
-    private fun readEdges(graph: Graph<String>, edgesCount: Int) {
-        for (vertex in 0 until edgesCount) {
-            val (source, target, label, weight) = reader.readLine().split(", ")
-            graph.addEdge(source, target, label, weight.toDouble())
+    private fun readEdges(
+        graph: Graph<String>,
+        isGraphWeighted: Boolean,
+    ) {
+        var line = reader.readLine()
+        while (line != null) {
+            when (isGraphWeighted) {
+                true -> {
+                    val (source, target, label, weight) = line.split(", ")
+                    graph.addEdge(source, target, label, weight.toDouble())
+                }
+                else -> {
+                    val (source, target, label) = line.split(", ")
+                    graph.addEdge(source, target, label)
+                }
+            }
+            line = reader.readLine()
         }
     }
 
