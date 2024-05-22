@@ -4,7 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Density
 import graph.Edge
+import java.lang.Math.pow
 
 open class EdgeVM(
     val source: VertexVM,
@@ -66,20 +68,25 @@ open class EdgeVM(
     }
 
     fun computeCoordinates(): Pair<Pair<Dp, Dp>, Pair<Dp, Dp>> {
+        val zeroes = Pair(Pair(0.dp,0.dp), Pair(0.dp, 0.dp))
         if (!isLoop) {
             val horizontalRelativePosition = target.x - source.x
             val verticalRelativePosition = target.y - source.y
-            return if (abs(horizontalRelativePosition) >= abs(verticalRelativePosition)) {
+            return  if (abs(horizontalRelativePosition) >= abs(verticalRelativePosition)) {
                 if (horizontalRelativePosition >= 0.dp) {
-                    makeCoordinatesBySide(Side.Right, Side.Left)
+                    val coordinates = makeCoordinatesBySide(Side.Right, Side.Left)
+                    if (coordinates.second.first > coordinates.first.first + 5.dp) coordinates else zeroes
                 } else {
-                    makeCoordinatesBySide(Side.Left, Side.Right)
+                    val coordinates = makeCoordinatesBySide(Side.Left, Side.Right)
+                    if (coordinates.first.first > coordinates.second.first + 5.dp) coordinates else zeroes
                 }
             } else {
                 if (verticalRelativePosition >= 0.dp) {
-                    makeCoordinatesBySide(Side.Bottom, Side.Top)
+                    val coordinates = makeCoordinatesBySide(Side.Bottom, Side.Top)
+                    if (coordinates.second.second > coordinates.first.second + 5.dp) coordinates else zeroes
                 } else {
-                    makeCoordinatesBySide(Side.Top, Side.Bottom)
+                    val coordinates = makeCoordinatesBySide(Side.Top, Side.Bottom)
+                    if (coordinates.first.second > coordinates.second.second + 5.dp) coordinates else zeroes
                 }
             }
         }
