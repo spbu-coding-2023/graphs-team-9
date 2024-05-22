@@ -1,5 +1,6 @@
 package algorithms.layout
 
+import graph.AdjacencyList
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -122,31 +123,46 @@ class FA2Utils() {
 
     fun applyAttraction(
         vertices: List<Vertex>,
-        edges: List<Edge>,
+        adjacencyList: AdjacencyList,
         distributedAttraction: Boolean,
         coefficient: Double,
         edgeWeightInfluence: Double,
     ) {
         when (edgeWeightInfluence) {
             0.0 -> {
-                for (edge in edges) {
-                    linAttraction(vertices[edge.sourceVertex], vertices[edge.targetVertex], 1.0, distributedAttraction, coefficient)
+                for (sourceVertexIndex in 0 until adjacencyList.verticesCount()) {
+                    for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
+                        val targetVertexIndex = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex).target()
+                        linAttraction(vertices[sourceVertexIndex], vertices[targetVertexIndex], 1.0, distributedAttraction, coefficient)
+                    }
                 }
             }
             1.0 -> {
-                for (edge in edges) {
-                    linAttraction(vertices[edge.sourceVertex], vertices[edge.targetVertex], edge.weight, distributedAttraction, coefficient)
+                for (sourceVertexIndex in 0 until adjacencyList.verticesCount()) {
+                    for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
+                        val outgoingEdge = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex)
+                        linAttraction(
+                            vertices[sourceVertexIndex],
+                            vertices[outgoingEdge.target()],
+                            outgoingEdge.weight().toDouble(),
+                            distributedAttraction,
+                            coefficient,
+                        )
+                    }
                 }
             }
             else -> {
-                for (edge in edges) {
-                    linAttraction(
-                        vertices[edge.sourceVertex],
-                        vertices[edge.targetVertex],
-                        edge.weight.pow(edgeWeightInfluence),
-                        distributedAttraction,
-                        coefficient,
-                    )
+                for (sourceVertexIndex in 0 until adjacencyList.verticesCount()) {
+                    for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
+                        val outgoingEdge = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex)
+                        linAttraction(
+                            vertices[sourceVertexIndex],
+                            vertices[outgoingEdge.target()],
+                            outgoingEdge.weight().toDouble().pow(edgeWeightInfluence),
+                            distributedAttraction,
+                            coefficient,
+                        )
+                    }
                 }
             }
         }
