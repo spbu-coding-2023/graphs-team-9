@@ -47,12 +47,6 @@ class ForceAtlas2<V>(
             outboundAttCompensation = massSum / vertices.size
         }
 
-        val barnesHutTimer = Timer("BarnesHut Approximation")
-        val repulsionTimer = Timer("Repulsion forces")
-        val gravityTimer = Timer("Gravitational forces")
-        val attractionTimer = Timer("Attraction forces")
-        val applyForcesTimer = Timer("AdjustSpeedAndApplyForces step")
-
         for (i in 0 until iterations) {
             vertices.forEach { vertex ->
                 vertex.oldDx = vertex.dx
@@ -63,45 +57,23 @@ class ForceAtlas2<V>(
 
             // Barnes Hut optimization
             if (barnesHutOptimize) {
-                barnesHutTimer.start()
                 val rootRegion = Region(vertices)
                 rootRegion.buildSubRegions()
-                barnesHutTimer.stop()
             }
 
             // Charge repulsion forces
-            repulsionTimer.start()
             if (barnesHutOptimize) {
                 val rootRegion = Region(vertices)
                 rootRegion.applyForceOnNodes(vertices, barnesHutTheta, scalingRatio)
             } else {
                 utils.applyRepulsion(vertices, scalingRatio)
             }
-            repulsionTimer.stop()
 
-            // Gravitational forces
-            gravityTimer.start()
             utils.applyGravity(vertices, gravity, scalingRatio, strongGravityMode)
-            gravityTimer.stop()
-
-            attractionTimer.start()
             utils.applyAttraction(vertices, adjacencyList, outboundAttractionDistribution, outboundAttCompensation, edgeWeightInfluence)
-            attractionTimer.stop()
-
-            // Adjust speeds and apply forces
-            applyForcesTimer.start()
             val (newSpeed, newSpeedEfficiency) = adjustSpeedAndApplyForces(vertices, speed, speedEfficiency, jitterTolerance)
             speed = newSpeed
             speedEfficiency = newSpeedEfficiency
-            applyForcesTimer.stop()
-        }
-
-        if (verbose) {
-            if (barnesHutOptimize) barnesHutTimer.display()
-            repulsionTimer.display()
-            gravityTimer.display()
-            attractionTimer.display()
-            applyForcesTimer.display()
         }
         return vertices.map { it.x to it.y }
     }
