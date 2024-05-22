@@ -1,10 +1,12 @@
 package algorithms.layout
 
 import graph.AdjacencyList
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class FA2Utils() {
+object LayoutUtils {
     fun linRepulsion(
         vertex1: Vertex,
         vertex2: Vertex,
@@ -13,7 +15,6 @@ class FA2Utils() {
         val xDist = vertex1.x - vertex2.x
         val yDist = vertex1.y - vertex2.y
         val distanceSquared = xDist * xDist + yDist * yDist
-
         if (distanceSquared > 0) {
             val factor = coefficient * vertex1.mass * vertex2.mass / distanceSquared
             vertex1.dx += xDist * factor
@@ -31,7 +32,6 @@ class FA2Utils() {
         val xDist = vertex.x - region.massCenterX
         val yDist = vertex.y - region.massCenterY
         val distanceSquared = xDist * xDist + yDist * yDist
-
         if (distanceSquared > 0) {
             val factor = coefficient * vertex.mass * region.mass / distanceSquared
             vertex.dx += xDist * factor
@@ -46,7 +46,6 @@ class FA2Utils() {
         val xDist = vertex.x
         val yDist = vertex.y
         val distanceSquared = sqrt(xDist * xDist + yDist * yDist)
-
         if (distanceSquared > 0) {
             val factor = vertex.mass * g / distanceSquared
             vertex.dx -= xDist * factor
@@ -61,7 +60,6 @@ class FA2Utils() {
     ) {
         val xDist = vertex.x
         val yDist = vertex.y
-
         if (xDist != 0.0 && yDist != 0.0) {
             val factor = coefficient * vertex.mass * g
             vertex.dx -= xDist * factor
@@ -91,7 +89,7 @@ class FA2Utils() {
     }
 
     fun applyRepulsion(
-        vertices: List<Vertex>,
+        vertices: ArrayList<Vertex>,
         coefficient: Double,
     ) {
         for ((i, vertex1) in vertices.withIndex()) {
@@ -105,7 +103,7 @@ class FA2Utils() {
     }
 
     fun applyGravity(
-        vertices: List<Vertex>,
+        vertices: ArrayList<Vertex>,
         gravity: Double,
         scalingRatio: Double,
         useStrongGravity: Boolean = false,
@@ -122,43 +120,42 @@ class FA2Utils() {
     }
 
     fun applyAttraction(
-        vertices: List<Vertex>,
+        vertices: ArrayList<Vertex>,
         adjacencyList: AdjacencyList,
         distributedAttraction: Boolean,
         coefficient: Double,
         edgeWeightInfluence: Double,
     ) {
-        when (edgeWeightInfluence) {
-            0.0 -> {
-                for (sourceVertexIndex in 0 until adjacencyList.verticesCount()) {
-                    for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
-                        val targetVertexIndex = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex).target()
-                        linAttraction(vertices[sourceVertexIndex], vertices[targetVertexIndex], 1.0, distributedAttraction, coefficient)
-                    }
-                }
-            }
-            1.0 -> {
-                for (sourceVertexIndex in 0 until adjacencyList.verticesCount()) {
-                    for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
-                        val outgoingEdge = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex)
+        for (sourceVertexIndex in 0 until adjacencyList.verticesCount()) {
+            for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
+                val outgoingEdge = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex)
+                val targetVertexIndex = outgoingEdge.target()
+                val outgoingEdgeWeight = outgoingEdge.weight().toDouble()
+                when (edgeWeightInfluence) {
+                    0.0 -> {
                         linAttraction(
                             vertices[sourceVertexIndex],
-                            vertices[outgoingEdge.target()],
-                            outgoingEdge.weight().toDouble(),
+                            vertices[targetVertexIndex],
+                            1.0,
                             distributedAttraction,
                             coefficient,
                         )
                     }
-                }
-            }
-            else -> {
-                for (sourceVertexIndex in 0 until adjacencyList.verticesCount()) {
-                    for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
-                        val outgoingEdge = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex)
+
+                    1.0 -> {
                         linAttraction(
                             vertices[sourceVertexIndex],
-                            vertices[outgoingEdge.target()],
-                            outgoingEdge.weight().toDouble().pow(edgeWeightInfluence),
+                            vertices[targetVertexIndex],
+                            outgoingEdgeWeight,
+                            distributedAttraction,
+                            coefficient,
+                        )
+                    }
+                    else -> {
+                        linAttraction(
+                            vertices[sourceVertexIndex],
+                            vertices[targetVertexIndex],
+                            outgoingEdgeWeight.pow(edgeWeightInfluence),
                             distributedAttraction,
                             coefficient,
                         )
@@ -166,5 +163,66 @@ class FA2Utils() {
                 }
             }
         }
+    }
+
+    fun adjustSpeedAndApplyForces(
+        vertices: ArrayList<Vertex>,
+        speed: Double,
+        speedEfficiency: Double,
+        jitterTolerance: Double,
+    ): Pair<Double, Double> {
+        var totalSwinging = 0.0
+        var totalEffectiveTraction = 0.0
+        vertices.forEach { vertex ->
+            val swinging = sqrt((vertex.oldDx - vertex.dx).pow(2) + (vertex.oldDy - vertex.dy).pow(2))
+            totalSwinging += vertex.mass * swinging
+            val effectiveTraction = 0.5 * sqrt((vertex.oldDx + vertex.dx).pow(2) + (vertex.oldDy + vertex.dy).pow(2))
+            totalEffectiveTraction += vertex.mass * effectiveTraction
+        }
+
+        val estimatedOptimalJitterTolerance = .05 * sqrt(vertices.size.toDouble())
+        val minJT = sqrt(estimatedOptimalJitterTolerance)
+        val maxJT = sqrt(estimatedOptimalJitterTolerance)
+        val jt =
+            jitterTolerance *
+                max(
+                    minJT,
+                    min(
+                        maxJT,
+                        estimatedOptimalJitterTolerance * totalEffectiveTraction / (
+                            vertices.size * vertices.size
+                        ),
+                    ),
+                )
+        val minSpeedEfficiency = 0.05
+        var newSpeedEfficiency = speedEfficiency
+        if ((totalEffectiveTraction > 2.0) && (totalSwinging / totalEffectiveTraction > 2.0)) {
+            if (newSpeedEfficiency > minSpeedEfficiency) {
+                newSpeedEfficiency *= 0.5
+            }
+        }
+
+        val targetSpeed =
+            if (totalSwinging == 0.0) {
+                Double.MAX_VALUE
+            } else {
+                jt * newSpeedEfficiency * totalEffectiveTraction / totalSwinging
+            }
+
+        if ((totalSwinging > jt * totalEffectiveTraction) && (newSpeedEfficiency > minSpeedEfficiency)) {
+            newSpeedEfficiency *= 0.7
+        } else if (speed < 1000) {
+            newSpeedEfficiency *= 1.3
+        }
+
+        val maxRise = 0.5
+        val newSpeed = speed + min(targetSpeed - speed, maxRise * speed)
+        vertices.forEach {
+            val swinging = it.mass * sqrt((it.oldDx - it.dx).pow(2) + (it.oldDy - it.dy).pow(2))
+            val factor = speed / (1.0 + sqrt(speed * swinging))
+            it.x += (it.dx * factor)
+            it.y += (it.dy * factor)
+        }
+        return newSpeed to minSpeedEfficiency
     }
 }

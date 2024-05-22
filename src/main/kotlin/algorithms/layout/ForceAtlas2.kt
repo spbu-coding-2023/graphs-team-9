@@ -9,7 +9,6 @@ import kotlin.random.Random
 * https://github.com/bhargavchippada/forceatlas2/tree/master
 * GPL-3.0 license
  */
-
 class ForceAtlas2<V>(
     private val outboundAttractionDistribution: Boolean = true,
     private val edgeWeightInfluence: Double = 1.0,
@@ -20,16 +19,16 @@ class ForceAtlas2<V>(
     private val strongGravityMode: Boolean = false,
     private val gravity: Double = 1.0,
 ) {
-    private val utils = FA2Utils()
+    private val utils = LayoutUtils
 
-    fun forceAtlas2(
+    fun layout(
         graph: Graph<V>,
         iterations: Int = 100,
     ): List<Pair<Double, Double>> {
+        val adjacencyList: AdjacencyList = graph.adjacencyList()
         var speed = 1.0
         var speedEfficiency = 1.0
 
-        val adjacencyList: AdjacencyList = graph.adjacencyList()
         val vertices = ArrayList<Vertex>()
         for (vertexIndex in 0 until graph.verticesCount()) {
             val mass: Double = 1.0 + adjacencyList.outgoingEdgesCount(vertexIndex).toDouble()
@@ -46,7 +45,7 @@ class ForceAtlas2<V>(
             outboundAttCompensation = massSum / vertices.size
         }
 
-        for (i in 0 until iterations) {
+        repeat(iterations) {
             vertices.forEach { vertex ->
                 vertex.oldDx = vertex.dx
                 vertex.oldDy = vertex.dy
@@ -54,23 +53,17 @@ class ForceAtlas2<V>(
                 vertex.dy = 0.0
             }
 
-            // Barnes Hut optimization
-            if (barnesHutOptimize) {
-                val rootRegion = Region(vertices)
-                rootRegion.buildSubRegions()
-            }
+            if (barnesHutOptimize) Region(vertices).buildSubRegions()
 
-            // Charge repulsion forces
             if (barnesHutOptimize) {
-                val rootRegion = Region(vertices)
-                rootRegion.applyForceOnNodes(vertices, barnesHutTheta, scalingRatio)
+                Region(vertices).applyForceOnNodes(vertices, barnesHutTheta, scalingRatio)
             } else {
                 utils.applyRepulsion(vertices, scalingRatio)
             }
 
             utils.applyGravity(vertices, gravity, scalingRatio, strongGravityMode)
             utils.applyAttraction(vertices, adjacencyList, outboundAttractionDistribution, outboundAttCompensation, edgeWeightInfluence)
-            val (newSpeed, newSpeedEfficiency) = adjustSpeedAndApplyForces(vertices, speed, speedEfficiency, jitterTolerance)
+            val (newSpeed, newSpeedEfficiency) = utils.adjustSpeedAndApplyForces(vertices, speed, speedEfficiency, jitterTolerance)
             speed = newSpeed
             speedEfficiency = newSpeedEfficiency
         }
