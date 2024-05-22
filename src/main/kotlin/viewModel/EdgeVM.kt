@@ -15,7 +15,8 @@ open class EdgeVM(
     private var weightVisibilityS = mutableStateOf(false)
     private var labelVisibilityS = mutableStateOf(false)
     private var colorS = mutableStateOf(Color.Black)
-
+    private var specialColor = Color.Blue
+    
     var weightVisibility: Boolean
         get() = weightVisibilityS.value
         set(visibility) {
@@ -29,7 +30,7 @@ open class EdgeVM(
         }
 
     var color: Color
-        get() = colorS.value
+        get() = if (source.pathPosition == target.pathPosition - 1) specialColor else colorS.value
         set(color) {
             colorS.value = color
         }

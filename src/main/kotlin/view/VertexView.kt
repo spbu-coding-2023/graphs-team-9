@@ -21,7 +21,7 @@ fun vertexView(viewModel: VertexVM) {
     Box(
         modifier =
             Modifier
-                .size(viewModel.size * 2 )
+                .size(viewModel.size * 2)
                 .offset(viewModel.x - viewModel.size, viewModel.y - viewModel.size)
                 .background(viewModel.color, shape = CircleShape)
                 .border(
