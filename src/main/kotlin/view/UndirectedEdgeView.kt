@@ -43,7 +43,7 @@ fun undirectedEdgeView(viewModel: EdgeVM) {
             val arcVertRadius = viewModel.target.size.toPx() * 0.6f
             rotate(30f, Offset(coordinates.first.first.toPx(), coordinates.first.second.toPx())) {
                 drawArc(
-                    color = Color.Black,
+                    color = viewModel.color,
                     startAngle = 70f,
                     sweepAngle = 230f,
                     useCenter = false,

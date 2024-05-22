@@ -44,19 +44,7 @@ fun directedEdgeView(viewModel: EdgeVM) {
             ) {
                 drawPath(
                     arrowPath,
-                    Color.Black
-                )
-                println(
-                    atan(
-                        (endCoordinates.second.toPx() - startCoordinates.second.toPx())
-                                / (endCoordinates.first.toPx() - startCoordinates.first.toPx())
-                    )
-                )
-                println(
-                    atan(
-                        ((endCoordinates.first.toPx() - startCoordinates.first.toPx())
-                                / (endCoordinates.second.toPx() - startCoordinates.second.toPx()))
-                    )
+                    viewModel.color
                 )
             }
             drawLine(
@@ -75,7 +63,7 @@ fun directedEdgeView(viewModel: EdgeVM) {
             val arcVertRadius = viewModel.target.size.toPx() * 0.6f
             rotate(30f, Offset(coordinates.first.first.toPx(), coordinates.first.second.toPx())) {
                 drawArc(
-                    color = Color.Black,
+                    color = viewModel.color,
                     startAngle = 70f,
                     sweepAngle = 230f,
                     useCenter = false,

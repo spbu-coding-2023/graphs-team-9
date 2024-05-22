@@ -11,13 +11,13 @@ class VertexVM(
     x: Dp = 0.dp,
     y: Dp = 0.dp,
     size: Dp = 0.dp,
-    color: Color = Color.White,
 ) {
     private var xStrategyBasedS = mutableStateOf(x)
     private var yStrategyBasedS = mutableStateOf(y)
     private var sizeS = mutableStateOf(size)
-    private var colorS = mutableStateOf(color)
-    private var insideDataVisibilityS = mutableStateOf(false)
+    private var colorS = mutableStateOf(Color.White)
+    private var pathPositionS = mutableStateOf(0)
+    private var insideDataVisibilityS = mutableStateOf(true)
     private var outsideDataVisibilityS = mutableStateOf(false)
     private var xOffsetS = mutableStateOf(0.dp)
     private var yOffsetS = mutableStateOf(0.dp)
@@ -44,6 +44,12 @@ class VertexVM(
         get() = colorS.value
         set(color) {
             colorS.value = color
+        }
+
+    var pathPosition : Int
+        get() = pathPositionS.value
+        set(position) {
+            pathPositionS.value = position
         }
 
     var insideDataVisibility: Boolean
