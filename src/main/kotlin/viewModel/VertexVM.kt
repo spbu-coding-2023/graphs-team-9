@@ -5,18 +5,19 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.random.Random
 
 class VertexVM(
     val data: String,
     x: Dp = 0.dp,
     y: Dp = 0.dp,
-    size: Dp = 0.dp,
+    size: Dp = 25.dp,
 ) {
     private var xStrategyBasedS = mutableStateOf(x)
     private var yStrategyBasedS = mutableStateOf(y)
     private var sizeS = mutableStateOf(size)
     private var colorS = mutableStateOf(Color.White)
-    private var pathPositionS = mutableStateOf(-2)
+    private var pathPositionsS = mutableStateOf(arrayListOf<Int>())
     private var insideDataVisibilityS = mutableStateOf(false)
     private var outsideDataVisibilityS = mutableStateOf(false)
     private var xOffsetS = mutableStateOf(0.dp)
@@ -46,10 +47,10 @@ class VertexVM(
             colorS.value = color
         }
 
-    var pathPosition : Int
-        get() = pathPositionS.value
+    var pathPositions: ArrayList<Int>
+        get() = pathPositionsS.value
         set(position) {
-            pathPositionS.value = position
+            pathPositionsS.value = position
         }
 
     var insideDataVisibility: Boolean

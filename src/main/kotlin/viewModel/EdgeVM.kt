@@ -4,11 +4,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.Density
 import graph.Edge
-import java.lang.Math.pow
 
-open class EdgeVM(
+
+abstract class EdgeVM(
     val source: VertexVM,
     val target: VertexVM,
     val edge: Edge,
@@ -16,9 +15,9 @@ open class EdgeVM(
     val isLoop: Boolean = (source === target)
     private var weightVisibilityS = mutableStateOf(false)
     private var labelVisibilityS = mutableStateOf(false)
-    private var colorS = mutableStateOf(Color.Black)
-    private var specialColor = Color.Blue
-    
+    protected val basicColor = Color.Black
+    protected var specialColor = Color.Blue
+
     var weightVisibility: Boolean
         get() = weightVisibilityS.value
         set(visibility) {
@@ -31,12 +30,19 @@ open class EdgeVM(
             labelVisibilityS.value = visibility
         }
 
-    var color: Color
-        get() = if (source.pathPosition == target.pathPosition - 1) specialColor else colorS.value
-        set(color) {
-            colorS.value = color
+    val color: Color
+        get(): Color {
+            for (sourcePathPosition in source.pathPositions) {
+                for (targetPathPosition in target.pathPositions) {
+                    if (shouldColorEdge(sourcePathPosition, targetPathPosition)) {
+                        return specialColor
+                    }
+                }
+            }
+            return basicColor
         }
 
+    abstract fun shouldColorEdge(sourcePathPosition: Int, targetPathPosition: Int): Boolean
     private fun abs(dp: Dp): Dp {
         if (dp > 0.dp) {
             return dp

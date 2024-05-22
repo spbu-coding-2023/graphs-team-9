@@ -14,9 +14,10 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.dp
 import viewModel.EdgeVM
+import viewModel.UndirectedEdgeVM
 
 @Composable
-fun undirectedEdgeView(viewModel: EdgeVM) {
+fun undirectedEdgeView(viewModel: UndirectedEdgeVM) {
     val coordinates = viewModel.computeCoordinates()
     Canvas(
         modifier = Modifier.fillMaxSize(),

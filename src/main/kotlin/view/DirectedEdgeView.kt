@@ -15,10 +15,11 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.rotateRad
 import androidx.compose.ui.unit.dp
+import viewModel.DirectedEdgeVM
 import kotlin.math.atan
 import viewModel.EdgeVM
 @Composable
-fun directedEdgeView(viewModel: EdgeVM) {
+fun directedEdgeView(viewModel: DirectedEdgeVM) {
     val coordinates = viewModel.computeCoordinates()
     Canvas(
         modifier = Modifier.fillMaxSize(),
