@@ -19,7 +19,6 @@ class ForceAtlas2<V>(
     private val scalingRatio: Double = 2.0,
     private val strongGravityMode: Boolean = false,
     private val gravity: Double = 1.0,
-    private val verbose: Boolean = true,
 ) {
     private val utils = FA2Utils()
 
