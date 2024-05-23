@@ -63,18 +63,26 @@ abstract class Graph<V> {
         endVertexValue: V,
     ): ArrayList<Int> {
         require(!this.hasNegativeWeights) {
-            "Graph contains negative weights of edges"
+            "Graph must not contain negative edges"
+        }
+        require(startVertexValue != endVertexValue) {
+            "Enter 2 different vertices"
         }
         val algo = DijkstraAlgorithm<V>(this.adjacencyList())
         var startVertexIndex = -1
         var endVertexIndex = -1
         when (isAbleToAdd) {
             true -> {
-                require(vertexIndicesMap[startVertexValue] != null || vertexIndicesMap[endVertexValue] != null) {
-                    "Vertices can not be null"
+                try {
+                    startVertexIndex = vertexIndicesMap.getValue(startVertexValue)
+                } catch (e: NoSuchElementException) {
+                    throw NoSuchElementException("There is no vertex $startVertexValue in the graph")
                 }
-                startVertexIndex = vertexIndicesMap.getValue(startVertexValue)
-                endVertexIndex = vertexIndicesMap.getValue(endVertexValue)
+                try {
+                    endVertexIndex = vertexIndicesMap.getValue(endVertexValue)
+                } catch (e: NoSuchElementException) {
+                    throw NoSuchElementException("There is no vertex $endVertexValue in the graph")
+                }
             }
             false -> {
                 for (vertexIndex in 0 until verticesCount()) {
