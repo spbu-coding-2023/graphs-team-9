@@ -9,8 +9,8 @@ class UndirectedGraph<V>() : Graph<V>() {
     private var svsEdgesList: ArrayList<SourceVertexStoringEdge> = arrayListOf()
     override var vertexValues: ArrayList<V> = arrayListOf()
 
-    fun svsEdgesList(): List<SourceVertexStoringEdge> {
-        return svsEdgesList.toList()
+    override fun svsEdgesList(): List<SourceVertexStoringEdge> {
+        return svsEdgesList
     }
 
     override fun adjacencyList(): UndirectedAdjacencyList {

@@ -1,6 +1,7 @@
 package graph
 
 import algorithms.DijkstraAlgorithm
+import org.jetbrains.research.ictl.louvain.getPartition
 
 abstract class Graph<V> {
     protected open val vertexValues: ArrayList<V> = arrayListOf()
@@ -9,6 +10,8 @@ abstract class Graph<V> {
     protected var hasNegativeWeights = false
 
     abstract fun adjacencyList(): AdjacencyList
+
+    abstract fun svsEdgesList(): List<SourceVertexStoringEdge>
 
     fun vertexValue(vertexIndex: Int): V {
         return vertexValues[vertexIndex]
@@ -100,4 +103,8 @@ abstract class Graph<V> {
     abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
 
     abstract fun minimumSpanningForest(): Graph<V>
+
+    fun partition(): Map<Int, Int> {
+        return getPartition(svsEdgesList(), 1)
+    }
 }
