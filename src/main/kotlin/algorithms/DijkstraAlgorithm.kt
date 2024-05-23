@@ -3,7 +3,7 @@ package algorithms
 import graph.AdjacencyList
 import java.util.PriorityQueue
 
-class DijkstraAlgorithm<V>(private val adjacencyList: AdjacencyList) {
+class DijkstraAlgorithm(private val adjacencyList: AdjacencyList) {
     private val verticesCount = adjacencyList.verticesCount()
 
     private fun extractPathArray(

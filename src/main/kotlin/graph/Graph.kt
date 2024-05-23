@@ -71,7 +71,7 @@ abstract class Graph<V> {
         require(startVertexValue != endVertexValue) {
             "Enter 2 different vertices"
         }
-        val algo = DijkstraAlgorithm<V>(this.adjacencyList())
+        val algo = DijkstraAlgorithm(this.adjacencyList())
         var startVertexIndex = -1
         var endVertexIndex = -1
         when (isAbleToAdd) {
