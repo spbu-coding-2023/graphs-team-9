@@ -15,7 +15,7 @@ class ExtremelyFastAlgorithm(private val adjacencyList: UndirectedAdjacencyList)
     fun getKeyVertices(): DoubleArray {
         buildTable()
         for (idGroup in 0 until groups) {
-            for (vertex in arrayOfSuperVertices[idGroup]) result[vertex] += closenessCentrality[idGroup] / arrayOfSuperVertices[idGroup].size
+            for (vertex in arrayOfSuperVertices[idGroup]) result[vertex] += closenessCentrality[idGroup]
         }
         return result
     }
