@@ -24,20 +24,20 @@ class DijkstraAlgorithm<V>(private val adjacencyList: AdjacencyList) {
         startVertexIndex: Int,
         endVertexIndex: Int,
     ): ArrayList<Int> {
+        val maxInt = Int.MAX_VALUE
         val comparator =
-            Comparator<Pair<Int, Number>> { a, b ->
-                a.second.toInt().compareTo(b.second.toInt())
+            Comparator<Pair<Int, Int>> { a, b ->
+                a.second.compareTo(b.second)
             }
         val queue = PriorityQueue(comparator)
         val parents = IntArray(verticesCount)
-        parents[startVertexIndex] = -1
 
-        val maxInt = Int.MAX_VALUE
-        val distances = HashMap<Int, Number>(verticesCount)
-        for (toVertexNumber in 1..verticesCount) {
+        val distances = HashMap<Int, Int>(verticesCount)
+        for (toVertexNumber in 1 .. verticesCount) {
             distances[toVertexNumber] = maxInt
         }
         distances[startVertexIndex] = 0
+        parents[startVertexIndex] = -1
 
         queue.add(startVertexIndex to 0)
         while (queue.isNotEmpty()) {
@@ -47,10 +47,11 @@ class DijkstraAlgorithm<V>(private val adjacencyList: AdjacencyList) {
                 val neighbourVertexIndex = neighbourEdge.target()
                 val weightOfNeighbourEdge: Number = neighbourEdge.weight()
 
-                val potentialWeight: Int = distances[currentVertexIndex] as Int + weightOfNeighbourEdge.toInt()
-                if (distances[neighbourVertexIndex] as Int > potentialWeight) {
-                    distances[neighbourVertexIndex] = potentialWeight as Number
-                    queue.add((neighbourVertexIndex to distances[neighbourVertexIndex]) as Pair<Int, Number>)
+                val toNeighbourVertexDistance = distances.getValue(neighbourVertexIndex)
+                val potentialWeight: Int = distances.getValue(currentVertexIndex) + weightOfNeighbourEdge.toInt()
+                if (toNeighbourVertexDistance > potentialWeight) {
+                    distances[neighbourVertexIndex] = potentialWeight
+                    queue.add(neighbourVertexIndex to toNeighbourVertexDistance)
                     parents[neighbourVertexIndex] = currentVertexIndex
                 }
             }
