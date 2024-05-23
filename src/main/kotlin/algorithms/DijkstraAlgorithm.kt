@@ -1,22 +1,29 @@
 package algorithms
 
-import graph.Graph
+import graph.AdjacencyList
 import java.util.PriorityQueue
 
-class DijkstraAlgorithm<V>(graph: Graph<V>) {
-    private val verticesCount = graph.verticesCount()
-    private val adjacencyList = graph.adjacencyList()
-    // handling negative weights
+class DijkstraAlgorithm<V>(private val adjacencyList: AdjacencyList) {
+    private val verticesCount = adjacencyList.verticesCount()
 
-    fun shortestPathByDijkstraAlgorithm(
+    private fun extractPathArray(
+        endVertexIndex: Int,
+        parentsArray: IntArray,
+    ): ArrayList<Int> {
+        TODO()
+    }
+
+    fun findShortestPath(
         startVertexIndex: Int,
         endVertexIndex: Int,
-    ) {
+    ): ArrayList<Int> {
         val comparator =
             Comparator<Pair<Int, Number>> { a, b ->
                 a.second.toInt().compareTo(b.second.toInt())
             }
         val queue = PriorityQueue(comparator)
+        val parents = IntArray(verticesCount)
+        parents[startVertexIndex] = -1
 
         val maxInt = Int.MAX_VALUE
         val distances = HashMap<Int, Number>(verticesCount)
@@ -37,13 +44,14 @@ class DijkstraAlgorithm<V>(graph: Graph<V>) {
                 if (distances[neighbourVertexIndex] as Int > potentialWeight) {
                     distances[neighbourVertexIndex] = potentialWeight as Number
                     queue.add((neighbourVertexIndex to distances[neighbourVertexIndex]) as Pair<Int, Number>)
+                    parents[neighbourVertexIndex] = currentVertexIndex
                 }
             }
         }
-        if (distances[endVertexIndex] == maxInt) {
+
+        require(distances[endVertexIndex] != maxInt) {
             println("Vertex $endVertexIndex is unreachable from vertex $startVertexIndex")
-            return
         }
-        println("Vertex Distance from Source to end is ${distances[endVertexIndex]}")
+        return extractPathArray(endVertexIndex, parents)
     }
 }
