@@ -10,7 +10,14 @@ class DijkstraAlgorithm<V>(private val adjacencyList: AdjacencyList) {
         endVertexIndex: Int,
         parentsArray: IntArray,
     ): ArrayList<Int> {
-        TODO()
+        val pathArray = ArrayList<Int>()
+        var currVertexIndex = endVertexIndex
+        do {
+            pathArray.add(currVertexIndex)
+            currVertexIndex = parentsArray[currVertexIndex]
+        } while (currVertexIndex != -1)
+        pathArray.reverse()
+        return pathArray
     }
 
     fun findShortestPath(
