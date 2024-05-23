@@ -33,7 +33,7 @@ class DijkstraAlgorithm<V>(private val adjacencyList: AdjacencyList) {
         val parents = IntArray(verticesCount)
 
         val distances = HashMap<Int, Int>(verticesCount)
-        for (toVertexNumber in 1 .. verticesCount) {
+        for (toVertexNumber in 0 until verticesCount) {
             distances[toVertexNumber] = maxInt
         }
         distances[startVertexIndex] = 0
