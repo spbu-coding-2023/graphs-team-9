@@ -1,5 +1,8 @@
-package graph
+package io
 
+import graph.DirectedGraph
+import graph.Graph
+import graph.UndirectedGraph
 import java.io.BufferedWriter
 import java.io.FileWriter
 
