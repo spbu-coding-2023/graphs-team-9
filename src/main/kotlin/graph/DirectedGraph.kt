@@ -36,7 +36,7 @@ open class DirectedGraph<V>(
         firstVertexInd: Int,
         secondVertexInd: Int,
         label: String,
-        weight: Number,
+        weight: Double,
     ) {
         adjacencyList.addEdge(firstVertexInd, secondVertexInd, label, weight)
     }
