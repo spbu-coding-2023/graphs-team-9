@@ -92,8 +92,11 @@ abstract class Graph<V> {
                     if (vertexValue(vertexIndex) == startVertexValue) startVertexIndex = vertexIndex
                     if (vertexValue(vertexIndex) == endVertexValue) endVertexIndex = vertexIndex
                 }
-                require(startVertexIndex != -1 || endVertexIndex != -1) {
-                    "Vertices can not be null"
+                require(startVertexIndex != -1) {
+                    "There is no vertex $startVertexValue in the graph"
+                }
+                require(endVertexIndex != -1) {
+                    "There is no vertex $endVertexValue in the graph"
                 }
             }
         }
