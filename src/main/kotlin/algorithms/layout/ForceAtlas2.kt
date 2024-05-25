@@ -10,6 +10,7 @@ import kotlin.random.Random
 * GPL-3.0 license
  */
 class ForceAtlas2<V>(
+    private val adjacencyList: AdjacencyList,
     private val outboundAttractionDistribution: Boolean = true,
     private val edgeWeightInfluence: Double = 1.0,
     private val jitterTolerance: Double = 1.0,
@@ -22,15 +23,13 @@ class ForceAtlas2<V>(
     private val utils = LayoutUtils
 
     fun layout(
-        graph: Graph<V>,
         iterations: Int = 100,
-    ): List<VertexInterface> {
-        val adjacencyList: AdjacencyList = graph.adjacencyList()
+    ): ArrayList<VertexInterface> {
         var speed = 1.0
         var speedEfficiency = 1.0
 
         val vertices = ArrayList<Vertex>()
-        for (vertexIndex in 0 until graph.verticesCount()) {
+        for (vertexIndex in 0 until adjacencyList.verticesCount()) {
             val mass: Double = 1.0 + adjacencyList.outgoingEdgesCount(vertexIndex).toDouble()
             val (x, y) = Pair(Random.nextDouble(-1.0, 1.0), Random.nextDouble(-1.0, 1.0))
             vertices.add(Vertex(mass = mass, x = x, y = y))
