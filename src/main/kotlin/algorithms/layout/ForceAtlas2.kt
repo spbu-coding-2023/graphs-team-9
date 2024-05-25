@@ -24,7 +24,7 @@ class ForceAtlas2<V>(
     fun layout(
         graph: Graph<V>,
         iterations: Int = 100,
-    ): List<Pair<Double, Double>> {
+    ): List<VertexInterface> {
         val adjacencyList: AdjacencyList = graph.adjacencyList()
         var speed = 1.0
         var speedEfficiency = 1.0
@@ -67,6 +67,6 @@ class ForceAtlas2<V>(
             speed = newSpeed
             speedEfficiency = newSpeedEfficiency
         }
-        return vertices.map { it.x to it.y }
+        return vertices
     }
 }

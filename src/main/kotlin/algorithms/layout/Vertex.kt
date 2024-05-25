@@ -6,6 +6,6 @@ class Vertex(
     var oldDy: Double = 0.0,
     var dx: Double = 0.0,
     var dy: Double = 0.0,
-    var x: Double = 0.0,
-    var y: Double = 0.0,
-)
+    override var x: Double,
+    override var y: Double,
+) : VertexInterface
