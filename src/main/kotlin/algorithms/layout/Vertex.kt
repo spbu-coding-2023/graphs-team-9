@@ -7,5 +7,5 @@ class Vertex(
     var dx: Double = 0.0,
     var dy: Double = 0.0,
     var y: Double = 0.0,
-    var x: Double = 0.0
+    var x: Double = 0.0,
 )
