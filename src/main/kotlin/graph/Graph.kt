@@ -1,7 +1,6 @@
 package graph
 
 import algorithms.layout.ForceAtlas2
-import algorithms.layout.VertexInterface
 import org.jetbrains.research.ictl.louvain.getPartition
 
 abstract class Graph<V> {
@@ -62,9 +61,16 @@ abstract class Graph<V> {
         end: V,
     ): MutableList<Int>?
 
-    fun layout(): ArrayList<VertexInterface> {
-        val algo = ForceAtlas2<Int>(this.adjacencyList())
-        return algo.layout()
+    fun layout(
+        iterations: Int = 100,
+        randomStartPositionsMode: Boolean = false,
+        scalingRatio: Double = 2.0,
+        gravity: Double = 1.0,
+        strongGravityMode: Boolean = true,
+        edgeWeightInfluence: Double = 1.0,
+    ): List<Pair<Double, Double>> {
+        val algo = ForceAtlas2(this.adjacencyList())
+        return algo.layout(iterations, randomStartPositionsMode, scalingRatio, gravity, strongGravityMode, edgeWeightInfluence)
     }
 
     abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
