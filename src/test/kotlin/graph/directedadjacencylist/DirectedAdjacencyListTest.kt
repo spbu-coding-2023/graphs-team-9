@@ -108,9 +108,10 @@ class DirectedAdjacencyListTest {
         fun `add edge in not empty adjacency list`() {
             adjacencyList.addVertex()
             adjacencyList.addVertex()
+            adjacencyList.addVertex()
             adjacencyList.addEdge(0, 1, "", 1.0)
-            adjacencyList.addEdge(1, 0, "label", 2.0)
-            val expectedResult = Edge(0, "label", 2.0)
+            adjacencyList.addEdge(1, 2, "label", 2.0)
+            val expectedResult = Edge(2, "label", 2.0)
             val result = adjacencyList.adjacencyList()[1]
             assertEquals(1, result.size)
             val edge = result[0]
@@ -130,6 +131,21 @@ class DirectedAdjacencyListTest {
             val result = adjacencyList.adjacencyList()[0]
             assertEquals(2, result.size)
             val edge = result[1]
+            assertEquals(expectedResult.target(), edge.target())
+            assertEquals(expectedResult.label(), edge.label())
+            assertEquals(expectedResult.weight(), edge.weight())
+        }
+
+        @Test
+        fun `add inverted edge is not an error`() {
+            adjacencyList.addVertex()
+            adjacencyList.addVertex()
+            adjacencyList.addEdge(0, 1, "", 1.0)
+            adjacencyList.addEdge(1, 0, "label", 2.0)
+            val expectedResult = Edge(0, "label", 2.0)
+            val result = adjacencyList.adjacencyList()[1]
+            assertEquals(1, result.size)
+            val edge = result[0]
             assertEquals(expectedResult.target(), edge.target())
             assertEquals(expectedResult.label(), edge.label())
             assertEquals(expectedResult.weight(), edge.weight())
