@@ -109,7 +109,6 @@ object LayoutUtils {
                 val targetVertexIndex = outgoingEdge.target()
                 val outgoingEdgeWeight = outgoingEdge.weight().toDouble()
                 linAttraction(vertices[sourceVertexIndex], vertices[targetVertexIndex], outgoingEdgeWeight, coefficient)
-
             }
         }
     }
@@ -173,5 +172,72 @@ object LayoutUtils {
             it.y += (it.dy * factor)
         }
         return newSpeed to minSpeedEfficiency
+    }
+
+    private fun linAttraction(
+        vertex1: Vertex,
+        vertex2: Vertex,
+        e: Double,
+        distributedAttraction: Boolean,
+        coefficient: Double = 0.0,
+    ) {
+        val xDist = vertex1.x - vertex2.x
+        val yDist = vertex1.y - vertex2.y
+        val factor =
+            if (!distributedAttraction) {
+                -coefficient * e
+            } else {
+                -coefficient * e / vertex1.mass
+            }
+        vertex1.dx += xDist * factor
+        vertex1.dy += yDist * factor
+        vertex2.dx -= xDist * factor
+        vertex2.dy -= yDist * factor
+    }
+
+    fun applyAttraction(
+        vertices: ArrayList<Vertex>,
+        adjacencyList: AdjacencyList,
+        distributedAttraction: Boolean,
+        coefficient: Double,
+        edgeWeightInfluence: Double,
+    ) {
+        for (sourceVertexIndex in 0 until adjacencyList.verticesCount()) {
+            for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
+                val outgoingEdge = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex)
+                val targetVertexIndex = outgoingEdge.target()
+                val outgoingEdgeWeight = outgoingEdge.weight().toDouble()
+                when (edgeWeightInfluence) {
+                    0.0 -> {
+                        linAttraction(
+                            vertices[sourceVertexIndex],
+                            vertices[targetVertexIndex],
+                            1.0,
+                            distributedAttraction,
+                            coefficient,
+                        )
+                    }
+
+                    1.0 -> {
+                        linAttraction(
+                            vertices[sourceVertexIndex],
+                            vertices[targetVertexIndex],
+                            outgoingEdgeWeight,
+                            distributedAttraction,
+                            coefficient,
+                        )
+                    }
+                    else -> {
+                        linAttraction(
+                            vertices[sourceVertexIndex],
+                            vertices[targetVertexIndex],
+                            outgoingEdgeWeight.pow(edgeWeightInfluence),
+                            distributedAttraction,
+                            coefficient,
+                        )
+                    }
+                }
+            }
+        }
     }
 }

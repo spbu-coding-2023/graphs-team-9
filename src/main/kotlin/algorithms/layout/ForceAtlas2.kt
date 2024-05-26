@@ -11,16 +11,18 @@ import kotlin.random.Random
 
 class ForceAtlas2(
     private val adjacencyList: AdjacencyList,
-    private val strongGravityMode: Boolean = true,
 ) {
     private val verticesCount = adjacencyList.verticesCount()
     private val utils = LayoutUtils
+    private val outboundAttractionDistribution: Boolean = true
 
     fun layout(
-        iterations: Int = 1,
+        iterations: Int = 100,
         randomStartPositionsMode: Boolean = false,
-        scalingRatio: Double = 0.1,
-        gravity: Double = 0.1,
+        scalingRatio: Double = 2.0,
+        gravity: Double = 1.0,
+        strongGravityMode: Boolean = true,
+        edgeWeightInfluence: Double = 1.0,
     ): List<Pair<Double, Double>> {
         var speed = 1.0
         var speedEfficiency = 1.0
@@ -52,7 +54,7 @@ class ForceAtlas2(
 
             utils.applyRepulsion(vertices, scalingRatio)
             utils.applyGravity(vertices, gravity, scalingRatio, strongGravityMode)
-            utils.applyAttraction(vertices, adjacencyList, outboundAttCompensation)
+            utils.applyAttraction(vertices, adjacencyList, outboundAttractionDistribution, outboundAttCompensation, edgeWeightInfluence)
             val (newSpeed, newSpeedEfficiency) = utils.adjustSpeedAndApplyForces(vertices, speed, speedEfficiency)
             speed = newSpeed
             speedEfficiency = newSpeedEfficiency
