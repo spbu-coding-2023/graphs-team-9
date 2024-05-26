@@ -43,12 +43,12 @@ class DirectedAdjacencyListTest {
         }
 
         @Test
-        fun `0 vertices`() {
+        fun `zero vertices`() {
             assertEquals(0, adjacencyList.verticesCount())
         }
 
         @Test
-        fun `more than 0 vertices`() {
+        fun `more than zero vertices`() {
             adjacencyList.addVertex()
             assertEquals(1, adjacencyList.verticesCount())
         }
@@ -56,11 +56,6 @@ class DirectedAdjacencyListTest {
 
     @Nested
     inner class InitializationTests {
-
-        @BeforeEach
-        fun setup() {
-            adjacencyList = DALForTests()
-        }
 
         @Test
         fun `initialize with 0 vertices`() {
@@ -74,34 +69,6 @@ class DirectedAdjacencyListTest {
             assertEquals(arrayListOf(arrayListOf(), arrayListOf(), arrayListOf()), adjacencyList.adjacencyList())
         }
     }
-
-//    @Nested
-//    inner class AddEdgeToTheAdjacencyListTests {
-//
-//        @BeforeEach
-//        fun setup() {
-//            adjacencyList = DALForTests()
-//        }
-//
-//        @Test
-//        fun `add edge in empty adjacency list`() {
-//            adjacencyList.addVertex()
-//            adjacencyList.addVertex()
-//            adjacencyList.addEdgeToTheAdjacencyList(0, 1, "", 1.0)
-//            assertEquals(arrayListOf(arrayListOf(Edge( 1, "", 1.0)), arrayListOf()),
-//                adjacencyList.adjacencyList())
-//        }
-//
-//        @Test
-//        fun `add edge in not empty adjacency list`() {
-//            adjacencyList.addVertex()
-//            adjacencyList.addVertex()
-//            adjacencyList.addEdge(0, 1, "", 1.0)
-//            adjacencyList.addEdge(1, 0, "label", 2.0)
-//            assertEquals(arrayListOf(arrayListOf(Edge( 1, "", 1.0)),
-//                arrayListOf(Edge( 0, "label", 2.0))), adjacencyList.adjacencyList())
-//        }
-//    }
 
     @Nested
     inner class AddEdgeTests {
@@ -128,8 +95,13 @@ class DirectedAdjacencyListTest {
             adjacencyList.addVertex()
             adjacencyList.addVertex()
             adjacencyList.addEdge(0, 1, "", 1.0)
-            assertEquals(arrayListOf(arrayListOf(Edge( 1, "", 1.0)), arrayListOf()),
-                adjacencyList.adjacencyList())
+            val expectedResult = Edge(1, "", 1.0)
+            val result = adjacencyList.adjacencyList()[0]
+            assertEquals(1, result.size)
+            val edge = result[0]
+            assertEquals(expectedResult.target(), edge.target())
+            assertEquals(expectedResult.label(), edge.label())
+            assertEquals(expectedResult.weight(), edge.weight())
         }
 
         @Test
@@ -138,8 +110,29 @@ class DirectedAdjacencyListTest {
             adjacencyList.addVertex()
             adjacencyList.addEdge(0, 1, "", 1.0)
             adjacencyList.addEdge(1, 0, "label", 2.0)
-            assertEquals(arrayListOf(arrayListOf(Edge( 1, "", 1.0)),
-                arrayListOf(Edge( 0, "label", 2.0))), adjacencyList.adjacencyList())
+            val expectedResult = Edge(0, "label", 2.0)
+            val result = adjacencyList.adjacencyList()[1]
+            assertEquals(1, result.size)
+            val edge = result[0]
+            assertEquals(expectedResult.target(), edge.target())
+            assertEquals(expectedResult.label(), edge.label())
+            assertEquals(expectedResult.weight(), edge.weight())
+        }
+
+        @Test
+        fun `add several edges to one vertex`() {
+            adjacencyList.addVertex()
+            adjacencyList.addVertex()
+            adjacencyList.addVertex()
+            adjacencyList.addEdge(0, 1, "", 1.0)
+            adjacencyList.addEdge(0, 2, "label", 2.0)
+            val expectedResult = Edge(2, "label", 2.0)
+            val result = adjacencyList.adjacencyList()[0]
+            assertEquals(2, result.size)
+            val edge = result[1]
+            assertEquals(expectedResult.target(), edge.target())
+            assertEquals(expectedResult.label(), edge.label())
+            assertEquals(expectedResult.weight(), edge.weight())
         }
 
         @Test
@@ -200,11 +193,15 @@ class DirectedAdjacencyListTest {
         }
 
         @Test
-        fun `edge with index=zero`() {
+        fun `edge with index = zero`() {
             adjacencyList.addVertex()
             adjacencyList.addVertex()
             adjacencyList.addEdge(0, 1, "", 1.0)
-            assertEquals(Edge(1, "", 1.0), adjacencyList.getEdge(0, 0))
+            val expectedResult = Edge(1, "", 1.0)
+            val result = adjacencyList.getEdge(0, 0)
+            assertEquals(expectedResult.target(), result.target())
+            assertEquals(expectedResult.label(), result.label())
+            assertEquals(expectedResult.weight(), result.weight())
         }
 
         @Test
@@ -214,7 +211,11 @@ class DirectedAdjacencyListTest {
             adjacencyList.addVertex()
             adjacencyList.addEdge(0, 1, "", 1.0)
             adjacencyList.addEdge(0, 2, "label", 2.0)
-            assertEquals(Edge(2, "label", 2.0), adjacencyList.getEdge(0, 1))
+            val expectedResult = Edge(2, "label", 2.0)
+            val result = adjacencyList.getEdge(0, 1)
+            assertEquals(expectedResult.target(), result.target())
+            assertEquals(expectedResult.label(), result.label())
+            assertEquals(expectedResult.weight(), result.weight())
         }
     }
 }
