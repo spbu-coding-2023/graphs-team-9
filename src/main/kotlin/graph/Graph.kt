@@ -14,6 +14,9 @@ abstract class Graph<V> {
     abstract fun svsEdgesList(): List<SourceVertexStoringEdge>
 
     fun vertexValue(vertexIndex: Int): V {
+        require(vertexIndex < vertexValues.size && 0 <= vertexIndex) {
+            "Vertex with index $vertexIndex doesn't exist"
+        }
         return vertexValues[vertexIndex]
     }
 
