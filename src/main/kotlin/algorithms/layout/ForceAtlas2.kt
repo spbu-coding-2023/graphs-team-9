@@ -1,7 +1,6 @@
 package algorithms.layout
 
 import graph.AdjacencyList
-import graph.Graph
 import kotlin.random.Random
 
 /*
@@ -9,41 +8,40 @@ import kotlin.random.Random
 * https://github.com/bhargavchippada/forceatlas2/tree/master
 * GPL-3.0 license
  */
-class ForceAtlas2<V>(
+
+class ForceAtlas2(
     private val adjacencyList: AdjacencyList,
-    private val outboundAttractionDistribution: Boolean = true,
-    private val edgeWeightInfluence: Double = 1.0,
-    private val jitterTolerance: Double = 1.0,
-    private val barnesHutOptimize: Boolean = false,
-    private val barnesHutTheta: Double = 1.2,
-    private val scalingRatio: Double = 2.0,
-    private val strongGravityMode: Boolean = false,
-    private val gravity: Double = 1.0,
+    private val strongGravityMode: Boolean = true,
 ) {
+    private val verticesCount = adjacencyList.verticesCount()
     private val utils = LayoutUtils
 
     fun layout(
-        iterations: Int = 100,
-    ): ArrayList<VertexInterface> {
+        iterations: Int = 1,
+        randomStartPositionsMode: Boolean = false,
+        scalingRatio: Double = 0.1,
+        gravity: Double = 0.1,
+    ): List<Pair<Double, Double>> {
         var speed = 1.0
         var speedEfficiency = 1.0
-
         val vertices = ArrayList<Vertex>()
-        for (vertexIndex in 0 until adjacencyList.verticesCount()) {
+        val delta = 2.0 / verticesCount
+        for (vertexIndex in 0 until verticesCount) {
             val mass: Double = 1.0 + adjacencyList.outgoingEdgesCount(vertexIndex).toDouble()
-            val (x, y) = Pair(Random.nextDouble(-1.0, 1.0), Random.nextDouble(-1.0, 1.0))
-            vertices.add(Vertex(mass = mass, x = x, y = y))
-        }
-
-        var outboundAttCompensation = 1.0
-        if (outboundAttractionDistribution) {
-            var massSum = 0.0
-            vertices.forEach {
-                massSum += it.mass
+            if (randomStartPositionsMode) {
+                val (x, y) = Pair(Random.nextDouble(-1.0, 1.0), Random.nextDouble(-1.0, 1.0))
+                vertices.add(Vertex(mass = mass, x = x, y = y))
+            } else {
+                val (x, y) = -1.0 + vertexIndex * delta to -1.0 + vertexIndex * 2 * delta
+                vertices.add(Vertex(mass = mass, x = x, y = y))
             }
-            outboundAttCompensation = massSum / vertices.size
         }
 
+        val outboundAttCompensation = 1.0
+        var massSum = 0.0
+        vertices.forEach {
+            massSum += it.mass
+        }
         repeat(iterations) {
             vertices.forEach { vertex ->
                 vertex.oldDx = vertex.dx
@@ -52,20 +50,13 @@ class ForceAtlas2<V>(
                 vertex.dy = 0.0
             }
 
-            if (barnesHutOptimize) Region(vertices).buildSubRegions()
-
-            if (barnesHutOptimize) {
-                Region(vertices).applyForceOnNodes(vertices, barnesHutTheta, scalingRatio)
-            } else {
-                utils.applyRepulsion(vertices, scalingRatio)
-            }
-
+            utils.applyRepulsion(vertices, scalingRatio)
             utils.applyGravity(vertices, gravity, scalingRatio, strongGravityMode)
-            utils.applyAttraction(vertices, adjacencyList, outboundAttractionDistribution, outboundAttCompensation, edgeWeightInfluence)
-            val (newSpeed, newSpeedEfficiency) = utils.adjustSpeedAndApplyForces(vertices, speed, speedEfficiency, jitterTolerance)
+            utils.applyAttraction(vertices, adjacencyList, outboundAttCompensation)
+            val (newSpeed, newSpeedEfficiency) = utils.adjustSpeedAndApplyForces(vertices, speed, speedEfficiency)
             speed = newSpeed
             speedEfficiency = newSpeedEfficiency
         }
-        return vertices
+        return vertices.map { it.x to it.y }
     }
 }

@@ -7,10 +7,10 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 object LayoutUtils {
-    fun linRepulsion(
+    private fun linRepulsion(
         vertex1: Vertex,
         vertex2: Vertex,
-        coefficient: Double = 0.0,
+        coefficient: Double = 0.01,
     ) {
         val xDist = vertex1.x - vertex2.x
         val yDist = vertex1.y - vertex2.y
@@ -21,21 +21,6 @@ object LayoutUtils {
             vertex1.dy += yDist * factor
             vertex2.dx -= xDist * factor
             vertex2.dy -= yDist * factor
-        }
-    }
-
-    fun linRepulsionRegion(
-        vertex: Vertex,
-        region: Region,
-        coefficient: Double = 0.0,
-    ) {
-        val xDist = vertex.x - region.massCenterX
-        val yDist = vertex.y - region.massCenterY
-        val distanceSquared = xDist * xDist + yDist * yDist
-        if (distanceSquared > 0) {
-            val factor = coefficient * vertex.mass * region.mass / distanceSquared
-            vertex.dx += xDist * factor
-            vertex.dy += yDist * factor
         }
     }
 
@@ -71,17 +56,11 @@ object LayoutUtils {
         vertex1: Vertex,
         vertex2: Vertex,
         e: Double,
-        distributedAttraction: Boolean,
         coefficient: Double = 0.0,
     ) {
         val xDist = vertex1.x - vertex2.x
         val yDist = vertex1.y - vertex2.y
-        val factor =
-            if (!distributedAttraction) {
-                -coefficient * e
-            } else {
-                -coefficient * e / vertex1.mass
-            }
+        val factor = -coefficient * e / vertex1.mass
         vertex1.dx += xDist * factor
         vertex1.dy += yDist * factor
         vertex2.dx -= xDist * factor
@@ -122,45 +101,15 @@ object LayoutUtils {
     fun applyAttraction(
         vertices: ArrayList<Vertex>,
         adjacencyList: AdjacencyList,
-        distributedAttraction: Boolean,
         coefficient: Double,
-        edgeWeightInfluence: Double,
     ) {
         for (sourceVertexIndex in 0 until adjacencyList.verticesCount()) {
             for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
                 val outgoingEdge = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex)
                 val targetVertexIndex = outgoingEdge.target()
                 val outgoingEdgeWeight = outgoingEdge.weight().toDouble()
-                when (edgeWeightInfluence) {
-                    0.0 -> {
-                        linAttraction(
-                            vertices[sourceVertexIndex],
-                            vertices[targetVertexIndex],
-                            1.0,
-                            distributedAttraction,
-                            coefficient,
-                        )
-                    }
+                linAttraction(vertices[sourceVertexIndex], vertices[targetVertexIndex], outgoingEdgeWeight, coefficient)
 
-                    1.0 -> {
-                        linAttraction(
-                            vertices[sourceVertexIndex],
-                            vertices[targetVertexIndex],
-                            outgoingEdgeWeight,
-                            distributedAttraction,
-                            coefficient,
-                        )
-                    }
-                    else -> {
-                        linAttraction(
-                            vertices[sourceVertexIndex],
-                            vertices[targetVertexIndex],
-                            outgoingEdgeWeight.pow(edgeWeightInfluence),
-                            distributedAttraction,
-                            coefficient,
-                        )
-                    }
-                }
             }
         }
     }
@@ -169,7 +118,6 @@ object LayoutUtils {
         vertices: ArrayList<Vertex>,
         speed: Double,
         speedEfficiency: Double,
-        jitterTolerance: Double,
     ): Pair<Double, Double> {
         var totalSwinging = 0.0
         var totalEffectiveTraction = 0.0
@@ -183,8 +131,9 @@ object LayoutUtils {
         val estimatedOptimalJitterTolerance = .05 * sqrt(vertices.size.toDouble())
         val minJT = sqrt(estimatedOptimalJitterTolerance)
         val maxJT = sqrt(estimatedOptimalJitterTolerance)
+        // 0.1 is jitterTolerance
         val jt =
-            jitterTolerance *
+            0.1 *
                 max(
                     minJT,
                     min(
