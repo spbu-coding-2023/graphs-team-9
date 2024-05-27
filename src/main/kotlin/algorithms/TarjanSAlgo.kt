@@ -48,17 +48,16 @@ class TarjanSAlgo(private val adjacencyList: DirectedAdjacencyList) {
                     }
                 }
             }
-            if (shouldCheckAdjacentVertex) {
-                break
-            }
-            if (edgesNotCheckedCounts[curVertex] == 0) {
-                if (orders[curVertex] == leastIndLinks[curVertex]) {
-                    createStronglyConnectedComponent(curVertex)
-                }
-                val prevVertex = prevs[curVertex]
-                if (prevVertex != -1) {
-                    leastIndLinks[prevVertex] = minOf(leastIndLinks[prevVertex], leastIndLinks[curVertex])
-                    nextVertex = prevVertex
+            if (!shouldCheckAdjacentVertex) {
+                if (edgesNotCheckedCounts[curVertex] == 0) {
+                    if (orders[curVertex] == leastIndLinks[curVertex]) {
+                        createStronglyConnectedComponent(curVertex)
+                    }
+                    val prevVertex = prevs[curVertex]
+                    if (prevVertex != -1) {
+                        leastIndLinks[prevVertex] = minOf(leastIndLinks[prevVertex], leastIndLinks[curVertex])
+                        nextVertex = prevVertex
+                    }
                 }
             }
         }
