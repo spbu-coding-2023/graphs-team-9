@@ -22,7 +22,7 @@ open class DirectedGraph<V>(
         for (vertex in 0 until adjacencyList.verticesCount()) {
             for (outgoingEdgeSInd in 0 until adjacencyList.outgoingEdgesCount(vertex)) {
                 val edge = adjacencyList.getEdge(vertex, outgoingEdgeSInd)
-                svsEdgesList.add(SourceVertexStoringEdge(vertex, edge.target(), edge.label(), edge.weight().toDouble()))
+                svsEdgesList.add(SourceVertexStoringEdge(vertex, edge.target(), edge.label(), edge.weight()))
             }
         }
         return svsEdgesList

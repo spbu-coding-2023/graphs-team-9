@@ -1,5 +1,6 @@
 package graph
 
+import algorithms.DijkstraAlgorithm
 import org.jetbrains.research.ictl.louvain.getPartition
 
 abstract class Graph<V> {
@@ -62,6 +63,48 @@ abstract class Graph<V> {
         start: V,
         end: V,
     ): MutableList<Int>?
+
+    fun shortestPathByDijkstra(
+        startVertexValue: V,
+        endVertexValue: V,
+    ): ArrayList<Int> {
+        require(!this.hasNegativeWeights) {
+            "Graph must not contain negative edges"
+        }
+        require(startVertexValue != endVertexValue) {
+            "Enter 2 different vertices"
+        }
+        val algo = DijkstraAlgorithm(this.adjacencyList())
+        var startVertexIndex = -1
+        var endVertexIndex = -1
+        when (isAbleToAdd) {
+            true -> {
+                try {
+                    startVertexIndex = vertexIndicesMap.getValue(startVertexValue)
+                } catch (e: NoSuchElementException) {
+                    throw NoSuchElementException("There is no vertex $startVertexValue in the graph")
+                }
+                try {
+                    endVertexIndex = vertexIndicesMap.getValue(endVertexValue)
+                } catch (e: NoSuchElementException) {
+                    throw NoSuchElementException("There is no vertex $endVertexValue in the graph")
+                }
+            }
+            false -> {
+                for (vertexIndex in 0 until verticesCount()) {
+                    if (vertexValue(vertexIndex) == startVertexValue) startVertexIndex = vertexIndex
+                    if (vertexValue(vertexIndex) == endVertexValue) endVertexIndex = vertexIndex
+                }
+                require(startVertexIndex != -1) {
+                    "There is no vertex $startVertexValue in the graph"
+                }
+                require(endVertexIndex != -1) {
+                    "There is no vertex $endVertexValue in the graph"
+                }
+            }
+        }
+        return algo.findShortestPath(startVertexIndex, endVertexIndex)
+    }
 
     abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
 

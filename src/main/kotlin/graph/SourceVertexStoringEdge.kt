@@ -13,6 +13,6 @@ open class SourceVertexStoringEdge(
     }
 
     override fun weight(): Double {
-        return super.weight().toDouble()
+        return super.weight()
     }
 }
