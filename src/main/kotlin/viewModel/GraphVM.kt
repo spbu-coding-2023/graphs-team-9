@@ -1,7 +1,9 @@
 package viewModel
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import graph.Graph
@@ -12,19 +14,26 @@ import kotlin.random.Random
 abstract class GraphVM (
     private val graph: Graph
 ) {
-    val vertices: Array<VertexVM>
-    private val vertexDefaultSize: Dp = 10.dp + (1000.dp / (graph.verticesCount() + 24))
-
-    init {
-        var i = 0
-        val coordinates = graph.layout()
-        val vertices = Array(graph.verticesCount()) {
-            VertexVM(graph.vertexValue(i), coordinates[i].first.dp, coordinates[i++].second.dp)
-        }
-        this.vertices = vertices
-    }
-
+    private val standardWidth = 1024
+    private val standardHeight = 736
+    private val widthState = mutableStateOf(standardWidth)
+    private val heightState = mutableStateOf(standardHeight)
+    private val vertexDefaultSize = mutableStateOf(10.dp + (1000.dp / (graph.verticesCount() + 24)))
+    var vertices =
+        Array(graph.verticesCount()) { i -> VertexVM(graph.vertexValue(i), 0.dp, 0.dp, vertexDefaultSize.value) }
+    private val unscaledCoordinates = graph.layout()
     abstract val edges: List<EdgeVM>
+    var height: Int
+        get() = heightState.value
+        set(height) {
+            heightState.value = height
+        }
+
+    var width: Int
+        get() = widthState.value
+        set(width) {
+            widthState.value = width
+        }
 
     private val partitionAvailabilityS = mutableStateOf(true)
     private val keyVerticesAvailabilityS = mutableStateOf(true)
@@ -97,7 +106,10 @@ abstract class GraphVM (
     }
 
     fun changeVerticesSizes() {
-        TODO()
+        if (keyVerticesAvailability) {
+            val ratios = graph.keyVertices()
+            vertices.forEachIndexed { i, vertex -> vertex.size *= (2 * ratios[i]).toFloat()}
+        }
     }
 
     fun drawMSF() {
@@ -156,7 +168,7 @@ abstract class GraphVM (
     }
 
     fun resetSizes() {
-        vertices.forEach { it.size = vertexDefaultSize }
+        vertices.forEach { it.size = vertexDefaultSize.value }
     }
 
     fun removePaths() {
@@ -165,5 +177,15 @@ abstract class GraphVM (
 
     fun resetLayout() {
         vertices.forEach { it.removeOffset() }
+    }
+
+    fun layout() {
+        val newVertexDefaultSize: Dp =
+            10.dp + (1000.dp * (heightState.value * widthState.value) / (1024 * 736) / (graph.verticesCount() + 24))
+        vertices.forEachIndexed { i, vertex ->
+            vertex.x = unscaledCoordinates[i].first.dp * width; vertex.y =
+            unscaledCoordinates[i].second.dp * height; vertex.size *= newVertexDefaultSize / vertexDefaultSize.value
+        }
+        vertexDefaultSize.value = newVertexDefaultSize
     }
 }
