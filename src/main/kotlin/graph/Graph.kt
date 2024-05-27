@@ -68,8 +68,8 @@ abstract class Graph {
     ): MutableList<Int>?
 
     fun shortestPathByDijkstra(
-        startVertexValue: V,
-        endVertexValue: V,
+        startVertexValue: String,
+        endVertexValue: String,
     ): ArrayList<Int> {
         require(!this.hasNegativeWeights) {
             "Graph must not contain negative edges"
