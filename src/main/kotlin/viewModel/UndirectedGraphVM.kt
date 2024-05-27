@@ -1,14 +1,16 @@
 package viewModel
 
 import graph.Graph
+import graph.UndirectedGraph
 
 class UndirectedGraphVM(
-    graph: Graph,
+    graph: UndirectedGraph,
 ) : GraphVM(graph) {
+    override val edges : List<UndirectedEdgeVM>
         init {
             this.stronglyConnectedComponentsAvailability = false
+            val edges = arrayListOf<UndirectedEdgeVM>()
+            graph.svsEdgesList().forEach { edges.add(UndirectedEdgeVM(vertices[it.source()], vertices[it.target()], it)) }
+            this.edges = edges
         }
-            override val edges = List(graph.svsEdgesList().size){i ->
-                val edge = graph.svsEdgesList()[i]
-                UndirectedEdgeVM(vertices[edge.source()], vertices[edge.target()], edge)}
 }

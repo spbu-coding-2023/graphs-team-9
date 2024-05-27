@@ -26,7 +26,7 @@ fun undirectedEdgeView(viewModel: UndirectedEdgeVM) {
             val startCoordinates = coordinates.first
             val endCoordinates = coordinates.second
             drawLine(
-                color = Color.Black,
+                color = viewModel.color,
                 start =
                     Offset(
                         startCoordinates.first.toPx(),

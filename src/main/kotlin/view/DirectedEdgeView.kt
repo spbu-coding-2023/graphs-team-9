@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.drawscope.rotateRad
 import androidx.compose.ui.unit.dp
 import viewModel.DirectedEdgeVM
 import kotlin.math.atan
-import viewModel.EdgeVM
 @Composable
 fun directedEdgeView(viewModel: DirectedEdgeVM) {
     val coordinates = viewModel.computeCoordinates()

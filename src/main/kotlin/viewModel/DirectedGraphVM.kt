@@ -1,9 +1,10 @@
 package viewModel
 
+import graph.DirectedGraph
 import graph.Graph
 
 class DirectedGraphVM(
-    graph: Graph,
+    graph: DirectedGraph,
 ) : GraphVM(graph) {
 
     override val edges: List<DirectedEdgeVM>
