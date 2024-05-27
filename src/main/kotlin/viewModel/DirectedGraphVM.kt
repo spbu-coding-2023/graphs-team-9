@@ -1,5 +1,6 @@
 package viewModel
 
+import androidx.compose.runtime.mutableStateOf
 import graph.DirectedGraph
 import graph.Graph
 
@@ -8,11 +9,9 @@ class DirectedGraphVM(
 ) : GraphVM(graph) {
 
     override val edges: List<DirectedEdgeVM>
-
     init {
         this.mfsAvailability = false
         this.bridgesAvailability = false
-        this.keyVerticesAvailability = false
         val edges = arrayListOf<DirectedEdgeVM>()
         for (source in 0 until graph.verticesCount()) {
             for (outgoingEdge in 0 until graph.adjacencyList().outgoingEdgesCount(source)) {

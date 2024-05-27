@@ -8,14 +8,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Window
 import viewModel.BackButtonVM
 import viewModel.GraphVM
+import viewModel.UndirectedGraphVM
 
 @Composable
 fun analyzerView(
     graphVM: GraphVM,
-    backButtonVM: BackButtonVM
+    backButtonVM: BackButtonVM,
 ) {
+
     Column(
         modifier = Modifier.padding(10.dp).fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -52,9 +55,11 @@ fun analyzerView(
                         if (currentStronglyConnectedComponentsAvailability) {
                             graphVM.stronglyConnectedComponentsAvailability = false
                         }
+                        graphVM.partitionAvailability = false
                         backButtonVM.onClick = {
                             graphVM.resetVertexColors()
                             graphVM.stronglyConnectedComponentsAvailability = currentStronglyConnectedComponentsAvailability
+                            graphVM.partitionAvailability = true
                             backButtonVM.setSavedActionAsOnClick()
                         }
 
@@ -73,8 +78,10 @@ fun analyzerView(
                     {
                         graphVM.changeVerticesSizes()
                         backButtonVM.saveCurrentAction()
+                        graphVM.keyVerticesAvailability = false
                         backButtonVM.onClick = {
                             graphVM.resetSizes()
+                            graphVM.keyVerticesAvailability = true
                             backButtonVM.setSavedActionAsOnClick()
                         }
                     }
@@ -90,13 +97,28 @@ fun analyzerView(
             enabled = graphVM.mfsAvailability,
             onClick = (
                     {
-                        TODO()
-//                        graphVM.changeVerticesSizes()
-//                        backButtonVM.saveCurrentAction()
-//                        backButtonVM.onClick = {
-//                            graphVM.resetSizes()
-//                            backButtonVM.setSavedActionAsOnClick()
-//                        }
+                        graphVM.colorMSFEdges()
+                        backButtonVM.saveCurrentAction()
+                        val currentCyclesAvailability = graphVM.cyclesAvailability
+                        if (currentCyclesAvailability) {
+                            graphVM.cyclesAvailability = false
+                        }
+                        val currentBridgesAvailability = graphVM.bridgesAvailability
+                        if (currentBridgesAvailability) {
+                            graphVM.bridgesAvailability = false
+                        }
+                        val currentShortestPathAvailability = graphVM.shortestPathAvailability
+                        if (currentShortestPathAvailability) {
+                            graphVM.shortestPathAvailability = false
+                        }
+                        graphVM.mfsAvailability = false
+                        backButtonVM.onClick = {
+                            graphVM.removePaths()
+                            graphVM.cyclesAvailability = currentCyclesAvailability
+                            graphVM.bridgesAvailability = currentBridgesAvailability
+                            graphVM.shortestPathAvailability = currentShortestPathAvailability
+                            backButtonVM.setSavedActionAsOnClick()
+                        }
                     }
                     )
         ) {
@@ -110,6 +132,9 @@ fun analyzerView(
             enabled = graphVM.shortestPathAvailability,
             onClick = (
                     {
+
+                        TODO()
+                        graphVM.colorShortestPath("","")
                         val currentCyclesAvailability = graphVM.cyclesAvailability
                         if (currentCyclesAvailability) {
                             graphVM.cyclesAvailability = false
@@ -118,14 +143,19 @@ fun analyzerView(
                         if (currentBridgesAvailability) {
                             graphVM.bridgesAvailability = false
                         }
-                        TODO()
-                        graphVM.colorShortestPath("","")
+                        val currentMfsAvailability= graphVM.mfsAvailability
+                        if (currentMfsAvailability) {
+                            graphVM.mfsAvailability = false
+                        }
+                        graphVM.shortestPathAvailability = false
                         backButtonVM.saveCurrentAction()
                         backButtonVM.onClick = {
                             graphVM.removePaths()
-                            backButtonVM.setSavedActionAsOnClick()
                             graphVM.cyclesAvailability = currentCyclesAvailability
                             graphVM.bridgesAvailability = currentBridgesAvailability
+                            graphVM.mfsAvailability = currentMfsAvailability
+                            graphVM.shortestPathAvailability = true
+                            backButtonVM.setSavedActionAsOnClick()
                         }
                     }
                     )
@@ -140,16 +170,19 @@ fun analyzerView(
             enabled = graphVM.stronglyConnectedComponentsAvailability,
             onClick = (
                     {
+                        graphVM.colorStronglyConnectedComponents()
                         val currentPartitionAvailability = graphVM.partitionAvailability
                         if (currentPartitionAvailability) {
                             graphVM.partitionAvailability = false
                         }
-                        graphVM.colorStronglyConnectedComponents()
+                        graphVM.stronglyConnectedComponentsAvailability = false
                         backButtonVM.saveCurrentAction()
                         backButtonVM.onClick = {
                             graphVM.resetVertexColors()
-                            backButtonVM.setSavedActionAsOnClick()
                             graphVM.partitionAvailability = currentPartitionAvailability
+                            graphVM.stronglyConnectedComponentsAvailability = true
+                            backButtonVM.setSavedActionAsOnClick()
+
                         }
                     }
                     )
@@ -164,6 +197,10 @@ fun analyzerView(
             enabled = graphVM.cyclesAvailability,
             onClick = (
                     {
+
+                        TODO()
+                        graphVM.colorCycles("")
+                        backButtonVM.saveCurrentAction()
                         val currentShortestPathAvailability = graphVM.shortestPathAvailability
                         if (currentShortestPathAvailability) {
                             graphVM.shortestPathAvailability = false
@@ -172,14 +209,18 @@ fun analyzerView(
                         if (currentBridgesAvailability) {
                             graphVM.bridgesAvailability = false
                         }
-                        TODO()
-                        graphVM.colorCycles("")
-                        backButtonVM.saveCurrentAction()
+                        val currentMfsAvailability= graphVM.mfsAvailability
+                        if (currentMfsAvailability) {
+                            graphVM.mfsAvailability = false
+                        }
+                        graphVM.cyclesAvailability = false
                         backButtonVM.onClick = {
                             graphVM.removePaths()
-                            backButtonVM.setSavedActionAsOnClick()
                             graphVM.shortestPathAvailability = currentShortestPathAvailability
                             graphVM.bridgesAvailability = currentBridgesAvailability
+                            graphVM.mfsAvailability = currentMfsAvailability
+                            graphVM.cyclesAvailability = true
+                            backButtonVM.setSavedActionAsOnClick()
                         }
                     }
                     )
@@ -194,6 +235,8 @@ fun analyzerView(
             enabled = graphVM.bridgesAvailability,
             onClick = (
                     {
+                        graphVM.colorBridges()
+                        backButtonVM.saveCurrentAction()
                         val currentShortestPathAvailability = graphVM.shortestPathAvailability
                         if (currentShortestPathAvailability) {
                             graphVM.shortestPathAvailability = false
@@ -202,13 +245,18 @@ fun analyzerView(
                         if (currentCyclesAvailability) {
                             graphVM.cyclesAvailability = false
                         }
-                        graphVM.colorBridges()
-                        backButtonVM.saveCurrentAction()
+                        val currentMfsAvailability= graphVM.mfsAvailability
+                        if (currentMfsAvailability) {
+                            graphVM.mfsAvailability = false
+                        }
+                        graphVM.bridgesAvailability = false
                         backButtonVM.onClick = {
                             graphVM.removePaths()
-                            backButtonVM.setSavedActionAsOnClick()
                             graphVM.shortestPathAvailability = currentShortestPathAvailability
                             graphVM.cyclesAvailability = currentCyclesAvailability
+                            graphVM.mfsAvailability = currentMfsAvailability
+                            graphVM.bridgesAvailability = true
+                            backButtonVM.setSavedActionAsOnClick()
                         }
                     }
                     )
