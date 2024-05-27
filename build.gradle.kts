@@ -17,6 +17,8 @@ repositories {
     google()
 }
 
+val exposedVersion: String by project
+val sqliteJdbcVersion: String by project
 dependencies {
     // Use the Kotlin JUnit 5 integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -36,6 +38,14 @@ dependencies {
     implementation(compose.desktop.currentOs)
 
     compileOnly("org.jetbrains.dokka:dokka-core:1.9.20")
+
+    // JetBrains Exposed
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+
+    // JDBC Sqlite
+    implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
 }
 
 compose.desktop {
