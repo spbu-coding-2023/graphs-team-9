@@ -1,9 +1,10 @@
 package graph.undirectedgraph
 
-import graph.*
+import graph.SourceVertexStoringEdge
+import graph.UndirectedGraph
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -23,7 +24,6 @@ class UndirectedGraphTest {
 
     @Nested
     inner class SecondaryConstructorTests {
-
         @Test
         fun `source doesn't exist`() {
             svsEdgesList.add(SourceVertexStoringEdge(1, 0, "", 1.0))
@@ -70,7 +70,6 @@ class UndirectedGraphTest {
 
     @Nested
     inner class SVSEdgesListTests {
-
         @Test
         fun `svsEdgesList is empty`() {
             assertEquals(svsEdgesList, UndirectedGraph(svsEdgesList, vertexValues).svsEdgesList())
@@ -87,7 +86,6 @@ class UndirectedGraphTest {
 
     @Nested
     inner class AdjacencyListTests {
-
         @Test
         fun `empty list`() {
             graph = UndirectedGraph(svsEdgesList, vertexValues)
@@ -144,7 +142,6 @@ class UndirectedGraphTest {
 
     @Nested
     inner class VerticesCountTests {
-
         @Test
         fun `zero vertices`() {
             graph = UndirectedGraph(svsEdgesList, vertexValues)
@@ -161,7 +158,6 @@ class UndirectedGraphTest {
 
     @Nested
     inner class IsWeightedTests {
-
         @Test
         fun `not weighted`() {
             graph = UndirectedGraph(svsEdgesList, vertexValues)
@@ -178,7 +174,6 @@ class UndirectedGraphTest {
 
     @Nested
     inner class AddVertexTests {
-
         @Test
         fun `graph is immutable`() {
             graph = UndirectedGraph(svsEdgesList, vertexValues)
@@ -221,7 +216,6 @@ class UndirectedGraphTest {
 
     @Nested
     inner class VertexValueTest {
-
         @Test
         fun `index of vertex is zero`() {
             vertexValues = arrayListOf("0")
@@ -251,7 +245,7 @@ class UndirectedGraphTest {
             vertexValues = arrayListOf("0")
             graph = UndirectedGraph(svsEdgesList, vertexValues)
 
-            assertFailsWith<IllegalArgumentException> { graph.vertexValue(- 1) }
+            assertFailsWith<IllegalArgumentException> { graph.vertexValue(-1) }
         }
     }
 

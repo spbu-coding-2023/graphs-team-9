@@ -12,7 +12,6 @@ class UndirectedAdjacencyListTest {
 
     @Nested
     inner class AddVertexTests {
-
         @BeforeEach
         fun setup() {
             adjacencyList = UALForTests()
@@ -36,7 +35,6 @@ class UndirectedAdjacencyListTest {
 
     @Nested
     inner class VerticesCountTests {
-
         @BeforeEach
         fun setup() {
             adjacencyList = UALForTests()
@@ -56,7 +54,6 @@ class UndirectedAdjacencyListTest {
 
     @Nested
     inner class InitializationTests {
-
         @Test
         fun `initialize with 0 vertices`() {
             adjacencyList = UALForTests(0)
@@ -72,7 +69,6 @@ class UndirectedAdjacencyListTest {
 
     @Nested
     inner class AddEdgeTests {
-
         @BeforeEach
         fun setup() {
             adjacencyList = UALForTests()
@@ -185,7 +181,6 @@ class UndirectedAdjacencyListTest {
 
     @Nested
     inner class OutgoingEdgesCountTests {
-
         @BeforeEach
         fun setup() {
             adjacencyList = UALForTests()
@@ -214,7 +209,6 @@ class UndirectedAdjacencyListTest {
 
     @Nested
     inner class GetEdgeTests {
-
         @BeforeEach
         fun setup() {
             adjacencyList = UALForTests()
@@ -222,13 +216,13 @@ class UndirectedAdjacencyListTest {
 
         @Test
         fun `source not in adjacency list`() {
-            assertFailsWith<IllegalArgumentException>{ adjacencyList.getEdge(0, 1) }
+            assertFailsWith<IllegalArgumentException> { adjacencyList.getEdge(0, 1) }
         }
 
         @Test
         fun `edge doesn't exist`() {
             adjacencyList.addVertex()
-            assertFailsWith<IllegalArgumentException>{ adjacencyList.getEdge(0, 0) }
+            assertFailsWith<IllegalArgumentException> { adjacencyList.getEdge(0, 0) }
         }
 
         @Test

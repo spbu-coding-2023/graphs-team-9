@@ -1,4 +1,4 @@
-package graph.SourceVertexStoringEdge
+package graph.sourcevertexstoringedge
 
 import graph.SourceVertexStoringEdge
 import org.junit.jupiter.api.Test

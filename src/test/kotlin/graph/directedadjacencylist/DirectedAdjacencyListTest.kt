@@ -12,7 +12,6 @@ class DirectedAdjacencyListTest {
 
     @Nested
     inner class AddVertexTests {
-
         @BeforeEach
         fun setup() {
             adjacencyList = DALForTests()
@@ -36,7 +35,6 @@ class DirectedAdjacencyListTest {
 
     @Nested
     inner class VerticesCountTests {
-
         @BeforeEach
         fun setup() {
             adjacencyList = DALForTests()
@@ -56,7 +54,6 @@ class DirectedAdjacencyListTest {
 
     @Nested
     inner class InitializationTests {
-
         @Test
         fun `initialize with 0 vertices`() {
             adjacencyList = DALForTests(0)
@@ -72,7 +69,6 @@ class DirectedAdjacencyListTest {
 
     @Nested
     inner class AddEdgeTests {
-
         @BeforeEach
         fun setup() {
             adjacencyList = DALForTests()
@@ -162,7 +158,6 @@ class DirectedAdjacencyListTest {
 
     @Nested
     inner class OutgoingEdgesCountTests {
-
         @BeforeEach
         fun setup() {
             adjacencyList = DALForTests()
@@ -191,7 +186,6 @@ class DirectedAdjacencyListTest {
 
     @Nested
     inner class GetEdgeTests {
-
         @BeforeEach
         fun setup() {
             adjacencyList = DALForTests()
@@ -199,13 +193,13 @@ class DirectedAdjacencyListTest {
 
         @Test
         fun `source not in adjacency list`() {
-            assertFailsWith<IllegalArgumentException>{ adjacencyList.getEdge(0, 1) }
+            assertFailsWith<IllegalArgumentException> { adjacencyList.getEdge(0, 1) }
         }
 
         @Test
         fun `edge doesn't exist`() {
             adjacencyList.addVertex()
-            assertFailsWith<IllegalArgumentException>{ adjacencyList.getEdge(0, 0) }
+            assertFailsWith<IllegalArgumentException> { adjacencyList.getEdge(0, 0) }
         }
 
         @Test

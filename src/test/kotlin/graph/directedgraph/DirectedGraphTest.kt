@@ -5,8 +5,8 @@ import graph.DirectedGraph
 import graph.Edge
 import graph.SourceVertexStoringEdge
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -19,7 +19,6 @@ class DirectedGraphTest {
 
     @Nested
     inner class InitializationTests {
-
         @Test
         fun `size of vertex values list more than amount of vertices in adjacency list`() {
             adjacencyList = DirectedAdjacencyList()
@@ -51,7 +50,6 @@ class DirectedGraphTest {
 
     @Nested
     inner class AdjacencyListTests {
-
         @Test
         fun `empty list`() {
             adjacencyList = DirectedAdjacencyList()
@@ -135,10 +133,11 @@ class DirectedGraphTest {
             adjacencyList.addEdge(0, 1, "", 1.0)
             adjacencyList.addEdge(0, 2, "label", 2.0)
             graph = DirectedGraph(adjacencyList, vertexValues)
-            expectedResult = arrayListOf(
-                SourceVertexStoringEdge(0, 1, "", 1.0),
-                SourceVertexStoringEdge(0, 2, "label", 2.0)
-            )
+            expectedResult =
+                arrayListOf(
+                    SourceVertexStoringEdge(0, 1, "", 1.0),
+                    SourceVertexStoringEdge(0, 2, "label", 2.0),
+                )
             result = graph.svsEdgesList()
 
             assertEquals(expectedResult.size, result.size)
@@ -161,10 +160,11 @@ class DirectedGraphTest {
             adjacencyList.addEdge(0, 1, "", 1.0)
             adjacencyList.addEdge(1, 0, "label", 2.0)
             graph = DirectedGraph(adjacencyList, vertexValues)
-            expectedResult = arrayListOf(
-                SourceVertexStoringEdge(0, 1, "", 1.0),
-                SourceVertexStoringEdge(1, 0, "label", 2.0)
-            )
+            expectedResult =
+                arrayListOf(
+                    SourceVertexStoringEdge(0, 1, "", 1.0),
+                    SourceVertexStoringEdge(1, 0, "label", 2.0),
+                )
             result = graph.svsEdgesList()
 
             assertEquals(expectedResult.size, result.size)
@@ -183,7 +183,6 @@ class DirectedGraphTest {
 
     @Nested
     inner class VerticesCountTests {
-
         @Test
         fun `zero vertices`() {
             adjacencyList = DirectedAdjacencyList()
@@ -203,7 +202,6 @@ class DirectedGraphTest {
 
     @Nested
     inner class IsWeightedTests {
-
         @Test
         fun `not weighted`() {
             adjacencyList = DirectedAdjacencyList()
@@ -224,7 +222,6 @@ class DirectedGraphTest {
 
     @Nested
     inner class AddVertexTests {
-
         @Test
         fun `graph is immutable`() {
             adjacencyList = DirectedAdjacencyList()
@@ -275,7 +272,6 @@ class DirectedGraphTest {
 
     @Nested
     inner class VertexValueTest {
-
         @Test
         fun `index of vertex is zero`() {
             adjacencyList = DirectedAdjacencyList(1)
@@ -309,7 +305,7 @@ class DirectedGraphTest {
             vertexValues = arrayListOf("0")
             graph = DirectedGraph(adjacencyList, vertexValues)
 
-            assertFailsWith<IllegalArgumentException> { graph.vertexValue(- 1) }
+            assertFailsWith<IllegalArgumentException> { graph.vertexValue(-1) }
         }
     }
 
