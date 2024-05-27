@@ -14,8 +14,8 @@ import kotlin.test.assertFailsWith
 
 class DirectedGraphTest {
     private lateinit var adjacencyList: DirectedAdjacencyList
-    private lateinit var vertexValues: ArrayList<Int>
-    private lateinit var graph: DirectedGraph<Int>
+    private lateinit var vertexValues: ArrayList<String>
+    private lateinit var graph: DirectedGraph
 
     @Nested
     inner class InitializationTests {
@@ -23,7 +23,7 @@ class DirectedGraphTest {
         @Test
         fun `size of vertex values list more than amount of vertices in adjacency list`() {
             adjacencyList = DirectedAdjacencyList()
-            vertexValues = arrayListOf(0, 1)
+            vertexValues = arrayListOf("0", "1")
             assertFailsWith<IllegalArgumentException> { DirectedGraph(adjacencyList, vertexValues) }
         }
 
@@ -44,7 +44,7 @@ class DirectedGraphTest {
         @Test
         fun `size of vertex values list equal to amount of vertices in adjacency list and more than zero`() {
             adjacencyList = DirectedAdjacencyList(2)
-            vertexValues = arrayListOf(0, 1)
+            vertexValues = arrayListOf("0", "1")
             assertNotNull(DirectedGraph(adjacencyList, vertexValues))
         }
     }
@@ -63,7 +63,7 @@ class DirectedGraphTest {
         @Test
         fun `list with one vertex`() {
             adjacencyList = DirectedAdjacencyList(1)
-            vertexValues = arrayListOf(0)
+            vertexValues = arrayListOf("0")
             graph = DirectedGraph(adjacencyList, vertexValues)
             assertEquals(adjacencyList, graph.adjacencyList())
         }
@@ -71,7 +71,7 @@ class DirectedGraphTest {
         @Test
         fun `list with more than one vertices`() {
             adjacencyList = DirectedAdjacencyList(3)
-            vertexValues = arrayListOf(0, 1, 2)
+            vertexValues = arrayListOf("0", "1", "2")
             graph = DirectedGraph(adjacencyList, vertexValues)
             assertEquals(adjacencyList, graph.adjacencyList())
         }
@@ -80,7 +80,7 @@ class DirectedGraphTest {
         fun `list with one edge`() {
             adjacencyList = DirectedAdjacencyList(2)
             adjacencyList.addEdge(0, 1, "", 1.0)
-            vertexValues = arrayListOf(0, 1)
+            vertexValues = arrayListOf("0", "1")
             graph = DirectedGraph(adjacencyList, vertexValues)
             assertEquals(adjacencyList, graph.adjacencyList())
         }
@@ -88,7 +88,7 @@ class DirectedGraphTest {
         @Test
         fun `list with more than one edges`() {
             adjacencyList = DirectedAdjacencyList(3)
-            vertexValues = arrayListOf(0, 1, 2)
+            vertexValues = arrayListOf("0", "1", "2")
             adjacencyList.addEdge(0, 1, "label", 1.0)
             adjacencyList.addEdge(1, 0, "laba", 3.0)
             adjacencyList.addEdge(0, 2, "", 2.0)
@@ -105,7 +105,7 @@ class DirectedGraphTest {
         @Test
         fun `empty svs list`() {
             adjacencyList = DirectedAdjacencyList(1)
-            vertexValues = arrayListOf(0)
+            vertexValues = arrayListOf("0")
             graph = DirectedGraph(adjacencyList, vertexValues)
             expectedResult = arrayListOf()
             result = graph.svsEdgesList()
@@ -115,7 +115,7 @@ class DirectedGraphTest {
         @Test
         fun `svs list with more than zero edges`() {
             adjacencyList = DirectedAdjacencyList(2)
-            vertexValues = arrayListOf(0, 1)
+            vertexValues = arrayListOf("0", "1")
             adjacencyList.addEdge(0, 1, "", 1.0)
             graph = DirectedGraph(adjacencyList, vertexValues)
             expectedResult = arrayListOf(SourceVertexStoringEdge(0, 1, "", 1.0))
@@ -131,7 +131,7 @@ class DirectedGraphTest {
         @Test
         fun `svs list with several edges from one vertex`() {
             adjacencyList = DirectedAdjacencyList(3)
-            vertexValues = arrayListOf(0, 1, 2)
+            vertexValues = arrayListOf("0", "1", "2")
             adjacencyList.addEdge(0, 1, "", 1.0)
             adjacencyList.addEdge(0, 2, "label", 2.0)
             graph = DirectedGraph(adjacencyList, vertexValues)
@@ -157,7 +157,7 @@ class DirectedGraphTest {
         @Test
         fun `svs list where inverted edges are two different edges`() {
             adjacencyList = DirectedAdjacencyList(2)
-            vertexValues = arrayListOf(0, 1)
+            vertexValues = arrayListOf("0", "1")
             adjacencyList.addEdge(0, 1, "", 1.0)
             adjacencyList.addEdge(1, 0, "label", 2.0)
             graph = DirectedGraph(adjacencyList, vertexValues)
@@ -195,7 +195,7 @@ class DirectedGraphTest {
         @Test
         fun `more than zero vertices`() {
             adjacencyList = DirectedAdjacencyList(1)
-            vertexValues = arrayListOf(0)
+            vertexValues = arrayListOf("0")
             graph = DirectedGraph(adjacencyList, vertexValues)
             assertEquals(1, graph.verticesCount())
         }
@@ -231,7 +231,7 @@ class DirectedGraphTest {
             vertexValues = arrayListOf()
             graph = DirectedGraph(adjacencyList, vertexValues)
             graph.makeItLighterAndImmutable()
-            assertFailsWith<IllegalArgumentException> { graph.addVertex(0) }
+            assertFailsWith<IllegalArgumentException> { graph.addVertex("0") }
         }
 
         @Test
@@ -239,11 +239,11 @@ class DirectedGraphTest {
             adjacencyList = DirectedAdjacencyList()
             vertexValues = arrayListOf()
             graph = DirectedGraph(adjacencyList, vertexValues)
-            graph.addVertex(0)
+            graph.addVertex("0")
             graph.makeItLighterAndImmutable()
 
             assertEquals(1, graph.adjacencyList().verticesCount())
-            assertEquals(arrayListOf(0), vertexValues)
+            assertEquals(arrayListOf("0"), vertexValues)
         }
 
         @Test
@@ -251,12 +251,12 @@ class DirectedGraphTest {
             adjacencyList = DirectedAdjacencyList()
             vertexValues = arrayListOf()
             graph = DirectedGraph(adjacencyList, vertexValues)
-            graph.addVertex(0)
-            graph.addVertex(1)
+            graph.addVertex("0")
+            graph.addVertex("1")
             graph.makeItLighterAndImmutable()
 
             assertEquals(2, graph.adjacencyList().verticesCount())
-            assertEquals(arrayListOf(0, 1), vertexValues)
+            assertEquals(arrayListOf("0", "1"), vertexValues)
         }
 
         @Test
@@ -264,12 +264,12 @@ class DirectedGraphTest {
             adjacencyList = DirectedAdjacencyList()
             vertexValues = arrayListOf()
             graph = DirectedGraph(adjacencyList, vertexValues)
-            graph.addVertex(0)
-            graph.addVertex(0)
+            graph.addVertex("0")
+            graph.addVertex("0")
             graph.makeItLighterAndImmutable()
 
             assertEquals(1, graph.adjacencyList().verticesCount())
-            assertEquals(arrayListOf(0), vertexValues)
+            assertEquals(arrayListOf("0"), vertexValues)
         }
     }
 
@@ -279,25 +279,25 @@ class DirectedGraphTest {
         @Test
         fun `index of vertex is zero`() {
             adjacencyList = DirectedAdjacencyList(1)
-            vertexValues = arrayListOf(0)
+            vertexValues = arrayListOf("0")
             graph = DirectedGraph(adjacencyList, vertexValues)
 
-            assertEquals(0, graph.vertexValue(0))
+            assertEquals("0", graph.vertexValue(0))
         }
 
         @Test
         fun `index of vertex is more than zero`() {
             adjacencyList = DirectedAdjacencyList(2)
-            vertexValues = arrayListOf(0, 1)
+            vertexValues = arrayListOf("0", "1")
             graph = DirectedGraph(adjacencyList, vertexValues)
 
-            assertEquals(1, graph.vertexValue(1))
+            assertEquals("1", graph.vertexValue(1))
         }
 
         @Test
         fun `index of vertex doesn't exist`() {
             adjacencyList = DirectedAdjacencyList(1)
-            vertexValues = arrayListOf(0)
+            vertexValues = arrayListOf("0")
             graph = DirectedGraph(adjacencyList, vertexValues)
 
             assertFailsWith<IllegalArgumentException> { graph.vertexValue(1) }
@@ -306,7 +306,7 @@ class DirectedGraphTest {
         @Test
         fun `index of vertex is less than zero`() {
             adjacencyList = DirectedAdjacencyList(1)
-            vertexValues = arrayListOf(0)
+            vertexValues = arrayListOf("0")
             graph = DirectedGraph(adjacencyList, vertexValues)
 
             assertFailsWith<IllegalArgumentException> { graph.vertexValue(- 1) }
@@ -317,33 +317,33 @@ class DirectedGraphTest {
     inner class AddEdgeTests {
         private lateinit var expectedResult: Edge
         private lateinit var graphAdList: DirectedAdjacencyList
-        private val graph = DirectedGraph<Int>()
+        private val graph = DirectedGraph()
 
         @Test
         fun `graph is immutable`() {
-            graph.addVertex(0)
-            graph.addVertex(1)
+            graph.addVertex("0")
+            graph.addVertex("1")
             graph.makeItLighterAndImmutable()
-            assertFailsWith<IllegalArgumentException> { graph.addEdge(0, 1) }
+            assertFailsWith<IllegalArgumentException> { graph.addEdge("0", "1") }
         }
 
         @Test
         fun `source isn't in graph`() {
-            graph.addVertex(0)
-            assertFailsWith<IllegalArgumentException> { graph.addEdge(1, 0) }
+            graph.addVertex("0")
+            assertFailsWith<IllegalArgumentException> { graph.addEdge("1", "0") }
         }
 
         @Test
         fun `target isn't in graph`() {
-            graph.addVertex(0)
-            assertFailsWith<IllegalArgumentException> { graph.addEdge(0, 1) }
+            graph.addVertex("0")
+            assertFailsWith<IllegalArgumentException> { graph.addEdge("0", "1") }
         }
 
         @Test
         fun `add edge in empty graph`() {
-            graph.addVertex(0)
-            graph.addVertex(1)
-            graph.addEdge(0, 1, "", -1.0)
+            graph.addVertex("0")
+            graph.addVertex("1")
+            graph.addEdge("0", "1", "", -1.0)
 
             expectedResult = Edge(1, "", -1.0)
             graphAdList = graph.adjacencyList()
@@ -356,11 +356,11 @@ class DirectedGraphTest {
 
         @Test
         fun `add edge in not empty graph`() {
-            graph.addVertex(0)
-            graph.addVertex(1)
-            graph.addVertex(2)
-            graph.addEdge(0, 1, "", -1.0)
-            graph.addEdge(1, 2, "label", 2.0)
+            graph.addVertex("0")
+            graph.addVertex("1")
+            graph.addVertex("2")
+            graph.addEdge("0", "1", "", -1.0)
+            graph.addEdge("1", "2", "label", 2.0)
 
             expectedResult = Edge(2, "label", 2.0)
             graphAdList = graph.adjacencyList()
@@ -373,11 +373,11 @@ class DirectedGraphTest {
 
         @Test
         fun `add several edges to one vertex`() {
-            graph.addVertex(0)
-            graph.addVertex(1)
-            graph.addVertex(2)
-            graph.addEdge(0, 1, "", -1.0)
-            graph.addEdge(0, 2, "label", 1.0)
+            graph.addVertex("0")
+            graph.addVertex("1")
+            graph.addVertex("2")
+            graph.addEdge("0", "1", "", -1.0)
+            graph.addEdge("0", "2", "label", 1.0)
 
             expectedResult = Edge(2, "label", 1.0)
             graphAdList = graph.adjacencyList()
@@ -390,10 +390,10 @@ class DirectedGraphTest {
 
         @Test
         fun `add inverted edge is not an error`() {
-            graph.addVertex(0)
-            graph.addVertex(1)
-            graph.addEdge(0, 1, "", -1.0)
-            graph.addEdge(1, 0, "label", 1.0)
+            graph.addVertex("0")
+            graph.addVertex("1")
+            graph.addEdge("0", "1", "", -1.0)
+            graph.addEdge("1", "0", "label", 1.0)
 
             expectedResult = Edge(0, "label", 1.0)
             graphAdList = graph.adjacencyList()
@@ -406,10 +406,10 @@ class DirectedGraphTest {
 
         @Test
         fun `duplicate edge`() {
-            graph.addVertex(0)
-            graph.addVertex(1)
-            graph.addEdge(0, 1, "", -1.0)
-            assertFailsWith<IllegalArgumentException> { graph.addEdge(0, 1, "label", 1.0) }
+            graph.addVertex("0")
+            graph.addVertex("1")
+            graph.addEdge("0", "1", "", -1.0)
+            assertFailsWith<IllegalArgumentException> { graph.addEdge("0", "1", "label", 1.0) }
         }
     }
 }

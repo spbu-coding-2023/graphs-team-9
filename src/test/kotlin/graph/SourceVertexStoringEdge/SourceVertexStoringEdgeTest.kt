@@ -1,5 +1,6 @@
-package graph
+package graph.SourceVertexStoringEdge
 
+import graph.SourceVertexStoringEdge
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

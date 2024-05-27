@@ -1,18 +1,21 @@
-package graph
+package io
 
+import graph.DirectedGraph
+import graph.Graph
+import graph.UndirectedGraph
 import java.io.BufferedReader
 import java.io.FileReader
 
 class Read(name: String) {
     private val reader = BufferedReader(FileReader("$name.csv"))
 
-    fun getGraph(): Graph<String> {
+    fun getGraph(): Graph {
         val graph = readData()
         reader.close()
         return graph
     }
 
-    private fun readData(): Graph<String> {
+    private fun readData(): Graph {
         val (type, weight, verticesCount) = reader.readLine().split(", ")
         val graph = createGraph(type)
         if (weight == "Weighted") graph.weighted = true
@@ -24,7 +27,7 @@ class Read(name: String) {
     }
 
     private fun readVertices(
-        graph: Graph<String>,
+        graph: Graph,
         verticesCount: Int,
     ) {
         for (vertex in 0 until verticesCount) {
@@ -33,7 +36,7 @@ class Read(name: String) {
     }
 
     private fun readEdges(
-        graph: Graph<String>,
+        graph: Graph,
         isGraphWeighted: Boolean,
     ) {
         var line = reader.readLine()
@@ -52,14 +55,14 @@ class Read(name: String) {
         }
     }
 
-    private fun createGraph(type: String): Graph<String> {
+    private fun createGraph(type: String): Graph {
         when (type) {
             "Undirected" -> {
-                val graph = UndirectedGraph<String>()
+                val graph = UndirectedGraph()
                 return graph
             }
             else -> {
-                val graph = DirectedGraph<String>()
+                val graph = DirectedGraph()
                 return graph
             }
         }

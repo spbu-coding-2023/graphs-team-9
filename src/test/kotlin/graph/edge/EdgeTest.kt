@@ -1,5 +1,6 @@
-package graph
+package graph.edge
 
+import graph.Edge
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
