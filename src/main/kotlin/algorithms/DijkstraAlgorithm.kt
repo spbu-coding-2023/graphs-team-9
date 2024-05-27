@@ -24,31 +24,31 @@ class DijkstraAlgorithm(private val adjacencyList: AdjacencyList) {
         startVertexIndex: Int,
         endVertexIndex: Int,
     ): ArrayList<Int> {
-        val maxInt = Int.MAX_VALUE
+        val maxDouble = Double.MAX_VALUE
         val comparator =
-            Comparator<Pair<Int, Int>> { a, b ->
+            Comparator<Pair<Int, Double>> { a, b ->
                 a.second.compareTo(b.second)
             }
         val queue = PriorityQueue(comparator)
         val parents = IntArray(verticesCount)
 
-        val distances = HashMap<Int, Int>(verticesCount)
+        val distances = HashMap<Int, Double>(verticesCount)
         for (toVertexNumber in 0 until verticesCount) {
-            distances[toVertexNumber] = maxInt
+            distances[toVertexNumber] = maxDouble
         }
-        distances[startVertexIndex] = 0
+        distances[startVertexIndex] = 0.0
         parents[startVertexIndex] = -1
 
-        queue.add(startVertexIndex to 0)
+        queue.add(startVertexIndex to 0.0)
         while (queue.isNotEmpty()) {
             val currentVertexIndex = queue.remove().first
             for (ordinalNumber in 0 until adjacencyList.outgoingEdgesCount(currentVertexIndex)) {
                 val neighbourEdge = adjacencyList.getEdge(currentVertexIndex, ordinalNumber)
                 val neighbourVertexIndex = neighbourEdge.target()
-                val weightOfNeighbourEdge: Number = neighbourEdge.weight()
+                val weightOfNeighbourEdge: Double = neighbourEdge.weight()
 
                 val toNeighbourVertexDistance = distances.getValue(neighbourVertexIndex)
-                val potentialWeight: Int = distances.getValue(currentVertexIndex) + weightOfNeighbourEdge.toInt()
+                val potentialWeight: Double = distances.getValue(currentVertexIndex) + weightOfNeighbourEdge
                 if (toNeighbourVertexDistance > potentialWeight) {
                     distances[neighbourVertexIndex] = potentialWeight
                     queue.add(neighbourVertexIndex to toNeighbourVertexDistance)
@@ -57,7 +57,7 @@ class DijkstraAlgorithm(private val adjacencyList: AdjacencyList) {
             }
         }
 
-        require(distances[endVertexIndex] != maxInt) {
+        require(distances[endVertexIndex] != maxDouble) {
             println("Vertex $endVertexIndex is unreachable from vertex $startVertexIndex")
         }
         return extractPathArray(endVertexIndex, parents)
