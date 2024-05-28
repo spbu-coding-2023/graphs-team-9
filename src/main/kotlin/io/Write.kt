@@ -6,7 +6,7 @@ import graph.UndirectedGraph
 import java.io.BufferedWriter
 import java.io.FileWriter
 
-class Write<V>(private val graph: Graph<V>, name: String) {
+class Write(private val graph: Graph, name: String) {
     private val verticesCount = graph.verticesCount()
     private val isGraphWeighted = graph.isWeighted()
     private val writer = BufferedWriter(FileWriter("$name.csv"))
@@ -17,8 +17,8 @@ class Write<V>(private val graph: Graph<V>, name: String) {
     }
 
     private fun writeData() {
-        val undirectedGraph = UndirectedGraph<V>()
-        val directedGraph = DirectedGraph<V>()
+        val undirectedGraph = UndirectedGraph()
+        val directedGraph = DirectedGraph()
         var isGraphDirected = false
         when (graph::class) {
             undirectedGraph::class -> writer.write("Undirected, ")
@@ -40,7 +40,7 @@ class Write<V>(private val graph: Graph<V>, name: String) {
     private fun writeVertices() {
         for (vertex in 0 until verticesCount) {
             writer.newLine()
-            writer.write("${graph.vertexValue(vertex)}")
+            writer.write(graph.vertexValue(vertex))
         }
     }
 

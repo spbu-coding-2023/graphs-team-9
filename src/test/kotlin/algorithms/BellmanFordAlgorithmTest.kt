@@ -14,7 +14,7 @@ class BellmanFordAlgorithmTest {
 
     @Nested
     inner class TestsOnUndirectedGraph {
-        private var undirectedGraph = UndirectedGraph<String>()
+        private var undirectedGraph = UndirectedGraph()
 
 //           u  <- start/end
 //         /   \
@@ -149,7 +149,7 @@ class BellmanFordAlgorithmTest {
 
     @Nested
     inner class TestsOnDirectedGraph {
-        private var directedGraph = DirectedGraph<String>()
+        private var directedGraph = DirectedGraph()
 
 //           u  <- start/end
 //         ↙   ↘

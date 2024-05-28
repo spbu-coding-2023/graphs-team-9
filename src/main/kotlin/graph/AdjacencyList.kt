@@ -18,7 +18,7 @@ abstract class AdjacencyList(initiallyVertexCount: Int = 0) {
         require(source < verticesCount()) {
             "Adjacency list doesn't have vertex with index $source"
         }
-        require(source < verticesCount()) {
+        require(target < verticesCount()) {
             "Adjacency list doesn't have vertex with index $target"
         }
         require(!isEdgeContained(source, target)) {
