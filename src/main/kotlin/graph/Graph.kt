@@ -4,9 +4,9 @@ import algorithms.CycleSearchAlgorithm
 import algorithms.DijkstraAlgorithm
 import org.jetbrains.research.ictl.louvain.getPartition
 
-abstract class Graph<V> {
-    protected open val vertexValues: ArrayList<V> = arrayListOf()
-    protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
+abstract class Graph {
+    protected open val vertexValues: ArrayList<String> = arrayListOf()
+    protected var vertexIndicesMap: HashMap<String, Int> = hashMapOf()
     protected var isAbleToAdd = true
     protected var hasNegativeWeights = false
     internal var weighted: Boolean = false
@@ -15,13 +15,16 @@ abstract class Graph<V> {
 
     abstract fun svsEdgesList(): List<SourceVertexStoringEdge>
 
-    fun vertexValue(vertexIndex: Int): V {
+    fun vertexValue(vertexIndex: Int): String {
+        require(vertexIndex < vertexValues.size && 0 <= vertexIndex) {
+            "Vertex with index $vertexIndex doesn't exist"
+        }
         return vertexValues[vertexIndex]
     }
 
     abstract fun verticesCount(): Int
 
-    abstract fun addVertex(value: V)
+    abstract fun addVertex(value: String)
 
     fun isWeighted(): Boolean = weighted
 
@@ -31,8 +34,8 @@ abstract class Graph<V> {
     }
 
     fun addEdge(
-        firstVertexValue: V,
-        secondVertexValue: V,
+        firstVertexValue: String,
+        secondVertexValue: String,
         label: String = "",
         weight: Double = 1.0,
     ) {
@@ -44,7 +47,7 @@ abstract class Graph<V> {
                 ?: throw IllegalArgumentException("Graph doesn't have $firstVertexValue vertex")
         val secondVertexInd =
             vertexIndicesMap[secondVertexValue]
-                ?: throw IllegalArgumentException("Graph doesn't have $firstVertexValue vertex")
+                ?: throw IllegalArgumentException("Graph doesn't have $secondVertexValue vertex")
         if (!hasNegativeWeights && weight < 0) {
             hasNegativeWeights = true
         }
@@ -61,13 +64,13 @@ abstract class Graph<V> {
     abstract fun findBridges(): MutableSet<Set<Int>>
 
     abstract fun shortestPathByBFAlgorithm(
-        start: V,
-        end: V,
+        start: String,
+        end: String,
     ): MutableList<Int>?
 
     fun shortestPathByDijkstra(
-        startVertexValue: V,
-        endVertexValue: V,
+        startVertexValue: String,
+        endVertexValue: String,
     ): ArrayList<Int> {
         require(!this.hasNegativeWeights) {
             "Graph must not contain negative edges"
@@ -131,7 +134,7 @@ abstract class Graph<V> {
 
     abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
 
-    abstract fun minimumSpanningForest(): Graph<V>
+    abstract fun minimumSpanningForest(): Graph
 
     fun partition(): Map<Int, Int> {
         return getPartition(svsEdgesList(), 1)
