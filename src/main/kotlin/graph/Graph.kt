@@ -111,7 +111,7 @@ abstract class Graph {
         return algo.findShortestPath(startVertexIndex, endVertexIndex)
     }
 
-    fun findCyclesForVertex(vertexValue: V): ArrayList<ArrayList<Int>> {
+    fun findCyclesForVertex(vertexValue: String): ArrayList<ArrayList<Int>> {
         var inputVertexIndex = -1
         when (isAbleToAdd) {
             true -> {
