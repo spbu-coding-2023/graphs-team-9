@@ -10,11 +10,12 @@ abstract class EdgeVM(
     val source: VertexVM,
     val target: VertexVM,
     val edge: Edge,
+    private val basicColor : Color = Color.Black,
 ) {
     val isLoop: Boolean = (source === target)
     private var weightVisibilityS = mutableStateOf(false)
     private var labelVisibilityS = mutableStateOf(false)
-    protected val basicColor = Color.Black
+
     protected var specialColor = Color.Blue
 
     var weightVisibility: Boolean

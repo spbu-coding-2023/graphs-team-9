@@ -11,14 +11,30 @@ import kotlin.random.Random
 
 abstract class GraphVM(
     private val graph: Graph,
+    verticesColors: ArrayList<Color>? = null,
+    coordinates: ArrayList<Pair<Double,Double>>? = null,
+    sizes: ArrayList<Dp>? = null,
+    edgesColors: HashMap<Pair<String,String>, Color>? = null,
 ) {
-    private val standardWidth = 1024
-    private val standardHeight = 736
+    init {
+        require(verticesColors == null || verticesColors.size == graph.verticesCount()) {
+            "'verticesColors' size isn't equal verticesCount"
+        }
+        require(coordinates == null || coordinates.size == graph.verticesCount()) {
+            "'coordinates' size isn't equal verticesCount"
+        }
+        require(sizes == null || sizes.size == graph.verticesCount()) {
+            "'sizes' size isn't equal verticesCount"
+        }
+    }
+    val standardWidth = 1024
+    val standardHeight = 736
     private val widthState = mutableStateOf(standardWidth)
     private val heightState = mutableStateOf(standardHeight)
     private val vertexDefaultSize = mutableStateOf(10.dp + (1000.dp / (graph.verticesCount() + 24)))
-    var vertices = Array(graph.verticesCount()) { i -> VertexVM(graph.vertexValue(i), 0.dp, 0.dp, vertexDefaultSize.value) }
-    private val unscaledCoordinates = graph.layout()
+    var vertices = Array(graph.verticesCount()) { i -> VertexVM(graph.vertexValue(i), 0.dp, 0.dp,
+        if (sizes != null) sizes[i] else vertexDefaultSize.value, if (verticesColors != null) verticesColors[i] else Color.White)}
+    private val unscaledCoordinates = coordinates ?: graph.layout()
     abstract val edges: List<EdgeVM>
     var height: Int
         get() = heightState.value
