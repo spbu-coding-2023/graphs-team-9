@@ -6,7 +6,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import graph.Edge
 
-
 abstract class EdgeVM(
     val source: VertexVM,
     val target: VertexVM,
@@ -42,7 +41,11 @@ abstract class EdgeVM(
             return basicColor
         }
 
-    abstract fun shouldColorEdge(sourcePathPosition: Int, targetPathPosition: Int): Boolean
+    abstract fun shouldColorEdge(
+        sourcePathPosition: Int,
+        targetPathPosition: Int,
+    ): Boolean
+
     private fun abs(dp: Dp): Dp {
         if (dp > 0.dp) {
             return dp
@@ -74,11 +77,11 @@ abstract class EdgeVM(
     }
 
     fun computeCoordinates(): Pair<Pair<Dp, Dp>, Pair<Dp, Dp>> {
-        val zeroes = Pair(Pair(0.dp,0.dp), Pair(0.dp, 0.dp))
+        val zeroes = Pair(Pair(0.dp, 0.dp), Pair(0.dp, 0.dp))
         if (!isLoop) {
             val horizontalRelativePosition = target.x - source.x
             val verticalRelativePosition = target.y - source.y
-            return  if (abs(horizontalRelativePosition) >= abs(verticalRelativePosition)) {
+            return if (abs(horizontalRelativePosition) >= abs(verticalRelativePosition)) {
                 if (horizontalRelativePosition >= 0.dp) {
                     val coordinates = makeCoordinatesBySide(Side.Right, Side.Left)
                     if (coordinates.second.first > coordinates.first.first + 5.dp) coordinates else zeroes

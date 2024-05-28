@@ -1,14 +1,12 @@
 package viewModel
 
-import androidx.compose.runtime.mutableStateOf
 import graph.DirectedGraph
-import graph.Graph
 
 class DirectedGraphVM(
     graph: DirectedGraph,
 ) : GraphVM(graph) {
-
     override val edges: List<DirectedEdgeVM>
+
     init {
         this.mfsAvailability = false
         this.bridgesAvailability = false

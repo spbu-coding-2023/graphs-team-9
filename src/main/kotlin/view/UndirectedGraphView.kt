@@ -9,11 +9,15 @@ import vertexView
 import viewModel.UndirectedGraphVM
 
 @Composable
-fun undirectedGraphView(
-    viewModel: UndirectedGraphVM
-) {
-    Box(Modifier.fillMaxSize().onGloballyPositioned { layoutCoordinates ->  viewModel.height = layoutCoordinates.size.height; viewModel.width = layoutCoordinates.size.width }) {
-        viewModel.vertices.forEach { vertexView(it)}
-        viewModel.edges.forEach{ undirectedEdgeView(it)}
+fun undirectedGraphView(viewModel: UndirectedGraphVM) {
+    Box(
+        Modifier.fillMaxSize().onGloballyPositioned {
+                layoutCoordinates ->
+            viewModel.height = layoutCoordinates.size.height
+            viewModel.width = layoutCoordinates.size.width
+        },
+    ) {
+        viewModel.vertices.forEach { vertexView(it) }
+        viewModel.edges.forEach { undirectedEdgeView(it) }
     }
 }

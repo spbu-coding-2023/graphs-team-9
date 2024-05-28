@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.drawscope.rotateRad
 import androidx.compose.ui.unit.dp
 import viewModel.DirectedEdgeVM
 import kotlin.math.atan
+
 @Composable
 fun directedEdgeView(viewModel: DirectedEdgeVM) {
     val coordinates = viewModel.computeCoordinates()
@@ -40,22 +41,24 @@ fun directedEdgeView(viewModel: DirectedEdgeVM) {
                 }
             rotateRad(
                 atan((endCoordinates.second.toPx() - startCoordinates.second.toPx()) / deltaX),
-                Offset(x, y)
+                Offset(x, y),
             ) {
                 drawPath(
                     arrowPath,
-                    viewModel.color
+                    viewModel.color,
                 )
             }
             drawLine(
-                start = Offset(
-                    startCoordinates.first.toPx(),
-                    startCoordinates.second.toPx(),
-                ),
-                end = Offset(
-                    endCoordinates.first.toPx(),
-                    endCoordinates.second.toPx(),
-                ),
+                start =
+                    Offset(
+                        startCoordinates.first.toPx(),
+                        startCoordinates.second.toPx(),
+                    ),
+                end =
+                    Offset(
+                        endCoordinates.first.toPx(),
+                        endCoordinates.second.toPx(),
+                    ),
                 color = viewModel.color,
                 strokeWidth = 3f,
             )
@@ -69,52 +72,51 @@ fun directedEdgeView(viewModel: DirectedEdgeVM) {
                     useCenter = false,
                     size = Size(arcVertRadius * 2, arcVertRadius),
                     topLeft =
-                    Offset(
-                        coordinates.first.first.toPx(),
-                        coordinates.first.second.toPx(),
-                    ),
+                        Offset(
+                            coordinates.first.first.toPx(),
+                            coordinates.first.second.toPx(),
+                        ),
                     style = Stroke(width = 3.dp.toPx()),
                 )
             }
-
         }
     }
     if (viewModel.labelVisibility) {
-        val modifier = if (!viewModel.isLoop) {
-            Modifier
-                .offset(
-                    coordinates.first.first * 0.8f + coordinates.second.first * 0.2f,
-                    coordinates.first.second * 0.8f + coordinates.second.second * 0.2f - 25.dp,
-                )
-                .background(Color.White)
-        }
-        else {
-            Modifier
-                .offset(coordinates.first.first - 40.dp, coordinates.first.second - 10.dp)
-                .background(Color.White)
-        }
+        val modifier =
+            if (!viewModel.isLoop) {
+                Modifier
+                    .offset(
+                        coordinates.first.first * 0.8f + coordinates.second.first * 0.2f,
+                        coordinates.first.second * 0.8f + coordinates.second.second * 0.2f - 25.dp,
+                    )
+                    .background(Color.White)
+            } else {
+                Modifier
+                    .offset(coordinates.first.first - 40.dp, coordinates.first.second - 10.dp)
+                    .background(Color.White)
+            }
         Text(
             modifier = modifier,
             text = viewModel.edge.label(),
         )
     }
     if (viewModel.weightVisibility) {
-        val modifier = if (!viewModel.isLoop) {
-            Modifier
-                .offset(
-                    coordinates.first.first * 0.8f + coordinates.second.first * 0.2f,
-                    coordinates.first.second * 0.8f + coordinates.second.second * 0.2f + 15.dp,
-                )
-                .background(Color.White)
-        }
-        else {
-            Modifier
-                .offset(coordinates.first.first, coordinates.first.second - 15.dp)
-                .background(Color.White)
-        }
+        val modifier =
+            if (!viewModel.isLoop) {
+                Modifier
+                    .offset(
+                        coordinates.first.first * 0.8f + coordinates.second.first * 0.2f,
+                        coordinates.first.second * 0.8f + coordinates.second.second * 0.2f + 15.dp,
+                    )
+                    .background(Color.White)
+            } else {
+                Modifier
+                    .offset(coordinates.first.first, coordinates.first.second - 15.dp)
+                    .background(Color.White)
+            }
         Text(
             modifier = modifier,
-            text = viewModel.edge.weight().toString()
+            text = viewModel.edge.weight().toString(),
         )
     }
 }

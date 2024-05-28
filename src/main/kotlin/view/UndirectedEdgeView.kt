@@ -21,7 +21,6 @@ fun undirectedEdgeView(viewModel: UndirectedEdgeVM) {
     Canvas(
         modifier = Modifier.fillMaxSize(),
     ) {
-
         if (!viewModel.isLoop) {
             val startCoordinates = coordinates.first
             val endCoordinates = coordinates.second
@@ -59,41 +58,41 @@ fun undirectedEdgeView(viewModel: UndirectedEdgeVM) {
         }
     }
     if (viewModel.labelVisibility) {
-        val modifier = if (!viewModel.isLoop) {
-            Modifier
-                .offset(
-                    coordinates.first.first * 0.8f + coordinates.second.first * 0.2f,
-                    coordinates.first.second * 0.8f + coordinates.second.second * 0.2f - 25.dp,
-                )
-                .background(Color.White)
-        }
-        else {
-            Modifier
-                .offset(coordinates.first.first - 40.dp, coordinates.first.second - 10.dp)
-                .background(Color.White)
-        }
+        val modifier =
+            if (!viewModel.isLoop) {
+                Modifier
+                    .offset(
+                        coordinates.first.first * 0.8f + coordinates.second.first * 0.2f,
+                        coordinates.first.second * 0.8f + coordinates.second.second * 0.2f - 25.dp,
+                    )
+                    .background(Color.White)
+            } else {
+                Modifier
+                    .offset(coordinates.first.first - 40.dp, coordinates.first.second - 10.dp)
+                    .background(Color.White)
+            }
         Text(
             modifier = modifier,
             text = viewModel.edge.label(),
         )
     }
     if (viewModel.weightVisibility) {
-        val modifier = if (!viewModel.isLoop) {
-            Modifier
-                .offset(
-                    coordinates.first.first * 0.8f + coordinates.second.first * 0.2f,
-                    coordinates.first.second * 0.8f + coordinates.second.second * 0.2f + 15.dp,
-                )
-                .background(Color.White)
-        }
-        else {
-            Modifier
-                .offset(coordinates.first.first, coordinates.first.second - 15.dp)
-                .background(Color.White)
-        }
+        val modifier =
+            if (!viewModel.isLoop) {
+                Modifier
+                    .offset(
+                        coordinates.first.first * 0.8f + coordinates.second.first * 0.2f,
+                        coordinates.first.second * 0.8f + coordinates.second.second * 0.2f + 15.dp,
+                    )
+                    .background(Color.White)
+            } else {
+                Modifier
+                    .offset(coordinates.first.first, coordinates.first.second - 15.dp)
+                    .background(Color.White)
+            }
         Text(
             modifier = modifier,
-            text = viewModel.edge.weight().toString()
+            text = viewModel.edge.weight().toString(),
         )
     }
 }
