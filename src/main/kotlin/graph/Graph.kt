@@ -3,23 +3,29 @@ package graph
 import algorithms.layout.ForceAtlas2
 import org.jetbrains.research.ictl.louvain.getPartition
 
-abstract class Graph<V> {
-    protected open val vertexValues: ArrayList<V> = arrayListOf()
-    protected var vertexIndicesMap: HashMap<V, Int> = hashMapOf()
+abstract class Graph {
+    protected open val vertexValues: ArrayList<String> = arrayListOf()
+    protected var vertexIndicesMap: HashMap<String, Int> = hashMapOf()
     protected var isAbleToAdd = true
     protected var hasNegativeWeights = false
+    internal var weighted: Boolean = false
 
     abstract fun adjacencyList(): AdjacencyList
 
     abstract fun svsEdgesList(): List<SourceVertexStoringEdge>
 
-    fun vertexValue(vertexIndex: Int): V {
+    fun vertexValue(vertexIndex: Int): String {
+        require(vertexIndex < vertexValues.size && 0 <= vertexIndex) {
+            "Vertex with index $vertexIndex doesn't exist"
+        }
         return vertexValues[vertexIndex]
     }
 
     abstract fun verticesCount(): Int
 
-    abstract fun addVertex(value: V)
+    abstract fun addVertex(value: String)
+
+    fun isWeighted(): Boolean = weighted
 
     fun makeItLighterAndImmutable() {
         vertexIndicesMap = hashMapOf()
@@ -27,10 +33,10 @@ abstract class Graph<V> {
     }
 
     fun addEdge(
-        firstVertexValue: V,
-        secondVertexValue: V,
+        firstVertexValue: String,
+        secondVertexValue: String,
         label: String = "",
-        weight: Int = 1,
+        weight: Double = 1.0,
     ) {
         require(isAbleToAdd) {
             "Not able to add edges when graph is immutable"
@@ -40,7 +46,7 @@ abstract class Graph<V> {
                 ?: throw IllegalArgumentException("Graph doesn't have $firstVertexValue vertex")
         val secondVertexInd =
             vertexIndicesMap[secondVertexValue]
-                ?: throw IllegalArgumentException("Graph doesn't have $firstVertexValue vertex")
+                ?: throw IllegalArgumentException("Graph doesn't have $secondVertexValue vertex")
         if (!hasNegativeWeights && weight < 0) {
             hasNegativeWeights = true
         }
@@ -51,15 +57,16 @@ abstract class Graph<V> {
         firstVertexInd: Int,
         secondVertexInd: Int,
         label: String,
-        weight: Number,
+        weight: Double,
     )
 
     abstract fun findBridges(): MutableSet<Set<Int>>
 
     abstract fun shortestPathByBFAlgorithm(
-        start: V,
-        end: V,
+        start: String,
+        end: String,
     ): MutableList<Int>?
+
 
     fun layout(
         iterations: Int = 100,
@@ -75,7 +82,7 @@ abstract class Graph<V> {
 
     abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
 
-    abstract fun minimumSpanningForest(): Graph<V>
+    abstract fun minimumSpanningForest(): Graph
 
     fun partition(): Map<Int, Int> {
         return getPartition(svsEdgesList(), 1)

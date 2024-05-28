@@ -5,7 +5,7 @@ open class UndirectedAdjacencyList(initiallyVertexCount: Int = 0) : AdjacencyLis
         source: Int,
         target: Int,
         label: String,
-        weight: Number,
+        weight: Double,
     ) {
         adjacencyList[source].add(Edge(target, label, weight))
         adjacencyList[target].add(Edge(source, label, weight))
