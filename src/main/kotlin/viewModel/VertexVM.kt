@@ -11,7 +11,7 @@ class VertexVM(
     x: Dp = 0.dp,
     y: Dp = 0.dp,
     size: Dp = 25.dp,
-    color: Color = Color.White
+    color: Color = Color.White,
 ) {
     private var xStrategyBasedS = mutableStateOf(x)
     private var yStrategyBasedS = mutableStateOf(y)

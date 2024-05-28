@@ -7,9 +7,9 @@ import graph.DirectedGraph
 class DirectedGraphVM(
     graph: DirectedGraph,
     verticesColors: ArrayList<Color>? = null,
-    coordinates: ArrayList<Pair<Double,Double>>? = null,
+    coordinates: ArrayList<Pair<Double, Double>>? = null,
     sizes: ArrayList<Dp>? = null,
-    edgesColors: HashMap<Pair<String,String>, Color>? = null,
+    edgesColors: HashMap<Pair<String, String>, Color>? = null,
 ) : GraphVM(graph, verticesColors, coordinates, sizes, edgesColors) {
     override val edges: List<DirectedEdgeVM>
 
