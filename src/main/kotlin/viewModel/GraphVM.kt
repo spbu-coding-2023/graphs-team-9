@@ -1,9 +1,7 @@
 package viewModel
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import graph.Graph
@@ -11,16 +9,15 @@ import java.util.AbstractMap
 import java.util.TreeMap
 import kotlin.random.Random
 
-abstract class GraphVM (
-    private val graph: Graph
+abstract class GraphVM(
+    private val graph: Graph,
 ) {
     private val standardWidth = 1024
     private val standardHeight = 736
     private val widthState = mutableStateOf(standardWidth)
     private val heightState = mutableStateOf(standardHeight)
     private val vertexDefaultSize = mutableStateOf(10.dp + (1000.dp / (graph.verticesCount() + 24)))
-    var vertices =
-        Array(graph.verticesCount()) { i -> VertexVM(graph.vertexValue(i), 0.dp, 0.dp, vertexDefaultSize.value) }
+    var vertices = Array(graph.verticesCount()) { i -> VertexVM(graph.vertexValue(i), 0.dp, 0.dp, vertexDefaultSize.value) }
     private val unscaledCoordinates = graph.layout()
     abstract val edges: List<EdgeVM>
     var height: Int
@@ -85,12 +82,16 @@ abstract class GraphVM (
             bridgesAvailabilityS.value = availability
         }
 
-    private fun createNewCommunity(colors: AbstractMap<Int, Color>, communityId: Int): Color {
-        val color = Color(
-            Random.nextInt(25, 230),
-            Random.nextInt(25, 230),
-            Random.nextInt(25, 230)
-        )
+    private fun createNewCommunity(
+        colors: AbstractMap<Int, Color>,
+        communityId: Int,
+    ): Color {
+        val color =
+            Color(
+                Random.nextInt(25, 230),
+                Random.nextInt(25, 230),
+                Random.nextInt(25, 230),
+            )
         colors[communityId] = color
         return color
     }
@@ -106,17 +107,28 @@ abstract class GraphVM (
     }
 
     fun changeVerticesSizes() {
-        if (keyVerticesAvailability) {
+        if (keyVerticesAvailabilityS.value) {
             val ratios = graph.keyVertices()
-            vertices.forEachIndexed { i, vertex -> vertex.size *= (2 * ratios[i]).toFloat()}
+            vertices.forEachIndexed { i, vertex -> vertex.size *= (2 * ratios[i]).toFloat() }
         }
     }
 
-    fun drawMSF() {
-        TODO()
+    fun colorMSFEdges() {
+        if (msfAvailabilityS.value) {
+            val msf = graph.minimumSpanningForest()
+            var i = 0
+            msf.svsEdgesList().forEach {
+                vertices[it.source()].pathPositions.add(i)
+                vertices[it.target()].pathPositions.add(++i)
+                i += 2
+            }
+        }
     }
 
-    fun colorShortestPath(start: String, end: String) {
+    fun colorShortestPath(
+        start: String,
+        end: String,
+    ) {
         if (shortestPathAvailabilityS.value) {
             val shortestPath = graph.shortestPathByBFAlgorithm(start, end) ?: TODO()
             for ((i, vertex) in shortestPath.withIndex()) {
@@ -132,13 +144,13 @@ abstract class GraphVM (
                 TODO()
             }
             components.forEach { component ->
-                val color = Color(
-                    Random.nextInt(25, 230),
-                    Random.nextInt(25, 230),
-                    Random.nextInt(25, 230)
-                )
+                val color =
+                    Color(
+                        Random.nextInt(25, 230),
+                        Random.nextInt(25, 230),
+                        Random.nextInt(25, 230),
+                    )
                 component.forEach { vertices[it].color = color }
-
             }
         }
     }
@@ -147,7 +159,10 @@ abstract class GraphVM (
         if (cyclesAvailability) {
             val cycles = graph.cycles(vertex)
             var i = 0
-            cycles.forEach { cycle -> cycle.forEach { vertices[it].pathPositions.add(i++) }; i++ }
+            cycles.forEach { cycle ->
+                cycle.forEach { vertices[it].pathPositions.add(i++) }
+                i++
+            }
         }
     }
 
@@ -183,8 +198,10 @@ abstract class GraphVM (
         val newVertexDefaultSize: Dp =
             10.dp + (1000.dp * (heightState.value * widthState.value) / (1024 * 736) / (graph.verticesCount() + 24))
         vertices.forEachIndexed { i, vertex ->
-            vertex.x = unscaledCoordinates[i].first.dp * width; vertex.y =
-            unscaledCoordinates[i].second.dp * height; vertex.size *= newVertexDefaultSize / vertexDefaultSize.value
+            vertex.x = unscaledCoordinates[i].first.dp * width
+            vertex.y =
+                unscaledCoordinates[i].second.dp * height
+            vertex.size *= newVertexDefaultSize / vertexDefaultSize.value
         }
         vertexDefaultSize.value = newVertexDefaultSize
     }

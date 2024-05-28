@@ -7,7 +7,10 @@ class DirectedEdgeVM(
     target: VertexVM,
     edge: Edge,
 ) : EdgeVM(source, target, edge) {
-    override fun shouldColorEdge(sourcePathPosition: Int, targetPathPosition: Int): Boolean {
+    override fun shouldColorEdge(
+        sourcePathPosition: Int,
+        targetPathPosition: Int,
+    ): Boolean {
         return targetPathPosition - sourcePathPosition == 1
     }
 }

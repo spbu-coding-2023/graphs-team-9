@@ -4,11 +4,10 @@ import androidx.compose.runtime.mutableStateOf
 import java.util.*
 
 class BackButtonVM(
-    onClick: () -> Unit
-)
-{
+    onClick: () -> Unit,
+) {
     private val onClickState = mutableStateOf(onClick)
-    var onClick : () -> Unit
+    var onClick: () -> Unit
         get() {
             return onClickState.value
         }
@@ -29,5 +28,4 @@ class BackButtonVM(
         }
         onClickState.value = {}
     }
-
 }
