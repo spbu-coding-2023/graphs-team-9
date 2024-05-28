@@ -1,26 +1,26 @@
 package algorithms
 
-import graph.Graph
-import kotlin.Int.Companion.MAX_VALUE
+import graph.AdjacencyList
+import kotlin.Double.Companion.MAX_VALUE
 
-class BellmanFordAlgorithm<V>(graph: Graph<V>) {
-    private val verticesCount = graph.getVerticesCount()
-    private val adjacencyList = graph.getTheAdjacencyList()
-    private val pathLengthTable = IntArray(verticesCount) { MAX_VALUE }
+class BellmanFordAlgorithm(private val adjacencyList: AdjacencyList) {
+    private val verticesCount = adjacencyList.verticesCount()
+    private val pathLengthTable = DoubleArray(verticesCount) { MAX_VALUE }
     private val parentsTable = IntArray(verticesCount) { -1 }
 
     private fun buildTables(start: Int) {
-        pathLengthTable[start] = 0
+        pathLengthTable[start] = 0.0
         for (iteration in 0 until verticesCount) {
-            var isTableChanges: Boolean = false
+            var isTableChanges = false
             for (vertex in 0 until verticesCount) {
-                val id = (start + vertex) % verticesCount
-                if (pathLengthTable[id] != MAX_VALUE) {
-                    for (edge in adjacencyList[id]) {
-                        val destination = edge.destinationVertexIndex
-                        if (pathLengthTable[destination] > pathLengthTable[id] + edge.weight.toInt()) {
-                            pathLengthTable[destination] = pathLengthTable[id] + edge.weight.toInt()
-                            parentsTable[destination] = id
+                val source = (start + vertex) % verticesCount
+                if (pathLengthTable[source] != MAX_VALUE) {
+                    for (idEdge in 0 until adjacencyList.outgoingEdgesCount(source)) {
+                        val edge = adjacencyList.getEdge(source, idEdge)
+                        val target = edge.target()
+                        if (pathLengthTable[target] > pathLengthTable[source] + edge.weight()) {
+                            pathLengthTable[target] = pathLengthTable[source] + edge.weight()
+                            parentsTable[target] = source
                             isTableChanges = true
                         }
                     }
