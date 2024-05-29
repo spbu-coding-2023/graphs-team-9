@@ -198,8 +198,7 @@ fun mainButtons() {
                                                                 when (screenState) {
                                                                     Screen.UndirectedGraph ->
                                                                         undirectedGraphVM =
-                                                                            graphVM
-                                                                                as UndirectedGraphVM
+                                                                            graphVM as UndirectedGraphVM
                                                                     else -> directedGraphVM = graphVM as DirectedGraphVM
                                                                 }
                                                                 buttonState = ButtonPressed.None
