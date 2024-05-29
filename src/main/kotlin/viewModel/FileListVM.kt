@@ -7,19 +7,20 @@ import io.ReadResultOfAnalysis
 import view.Screen
 
 class FileListVM(private val file: String) {
-
     fun getGraph(): Graph {
         try {
             return Read("graphs/$file").getGraph()
+        } catch (e: Exception) {
+            throw IllegalArgumentException()
         }
-        catch (e: Exception) { throw IllegalArgumentException() }
     }
 
     fun getGraphVM(): GraphVM {
         try {
             return ReadResultOfAnalysis("graphs/$file").getGraph()
+        } catch (e: Exception) {
+            throw IllegalArgumentException()
         }
-        catch (e: Exception) { throw IllegalArgumentException() }
     }
 
     fun defineGraphType(graph: Graph): Screen {

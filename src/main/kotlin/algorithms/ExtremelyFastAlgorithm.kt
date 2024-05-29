@@ -1,8 +1,8 @@
 package algorithms
 
 import graph.UndirectedAdjacencyList
-import kotlin.math.sqrt
 import kotlin.math.ceil
+import kotlin.math.sqrt
 
 class ExtremelyFastAlgorithm(private val adjacencyList: UndirectedAdjacencyList) {
     private val verticesCount = adjacencyList.verticesCount()

@@ -44,9 +44,7 @@ class Write(private val graph: Graph, name: String) {
         }
     }
 
-    private fun writeEdges(
-        isGraphDirected: Boolean,
-    ) {
+    private fun writeEdges(isGraphDirected: Boolean) {
         when (isGraphDirected) {
             true -> {
                 val adjacencyList = graph.adjacencyList()

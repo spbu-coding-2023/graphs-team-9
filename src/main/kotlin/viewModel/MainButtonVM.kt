@@ -3,7 +3,6 @@ package viewModel
 import view.ButtonPressed
 
 class MainButtonVM(private val currentState: ButtonPressed) {
-
     fun onClick(newState: ButtonPressed): ButtonPressed {
         when (newState) {
             ButtonPressed.ChooseFile -> {

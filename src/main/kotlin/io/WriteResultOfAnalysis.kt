@@ -34,18 +34,22 @@ class WriteResultOfAnalysis(private val graph: GraphVM, name: String) {
     private fun writeVertices() {
         for (vertex in vertices) {
             writer.newLine()
-            writer.write("${vertex.data}, ${vertex.x.toString().substringBeforeLast(".")}, " +
+            writer.write(
+                "${vertex.data}, ${vertex.x.toString().substringBeforeLast(".")}, " +
                     "${vertex.y.toString().substringBeforeLast(".")}, " +
                     "${vertex.size.toString().substringBeforeLast(".")}\n${vertex.color.red}, " +
-                    "${vertex.color.green}, ${vertex.color.blue}")
+                    "${vertex.color.green}, ${vertex.color.blue}",
+            )
         }
     }
 
     private fun writeEdges() {
         for (edge in graph.edges) {
             writer.newLine()
-            writer.write("${edge.source.data}, ${edge.target.data}, ${edge.edge.label()}, ${edge.edge.weight()}\n" +
-                    "${edge.color.red}, ${edge.color.green}, ${edge.color.blue}")
+            writer.write(
+                "${edge.source.data}, ${edge.target.data}, ${edge.edge.label()}, ${edge.edge.weight()}\n" +
+                    "${edge.color.red}, ${edge.color.green}, ${edge.color.blue}",
+            )
         }
     }
 }

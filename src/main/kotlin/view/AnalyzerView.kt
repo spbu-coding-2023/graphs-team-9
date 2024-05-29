@@ -9,20 +9,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import viewModel.BackButtonVM
-import viewModel.GraphVM
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.sp
 import io.WriteResultOfAnalysis
+import viewModel.BackButtonVM
+import viewModel.GraphVM
 
 @Composable
 fun analyzerView(
@@ -42,11 +42,11 @@ fun analyzerView(
             onDismissRequest = { isErrorInShortestPathOccurred = false },
             confirmButton = {
                 Button(
-                    onClick = { isErrorInShortestPathOccurred = false }
+                    onClick = { isErrorInShortestPathOccurred = false },
                 ) {
                     Text("OK", fontSize = 15.sp)
                 }
-            }
+            },
         )
     }
 
@@ -57,11 +57,11 @@ fun analyzerView(
             onDismissRequest = { isErrorInShortestPathOccurred = false },
             confirmButton = {
                 Button(
-                    onClick = { isErrorInShortestPathOccurred = false }
+                    onClick = { isErrorInShortestPathOccurred = false },
                 ) {
                     Text("OK", fontSize = 15.sp)
                 }
-            }
+            },
         )
     }
 
@@ -72,11 +72,11 @@ fun analyzerView(
             onDismissRequest = { isErrorInKeyVerticesOccurred = false },
             confirmButton = {
                 Button(
-                    onClick = { isErrorInKeyVerticesOccurred = false }
+                    onClick = { isErrorInKeyVerticesOccurred = false },
                 ) {
                     Text("OK", fontSize = 15.sp)
                 }
-            }
+            },
         )
     }
 
@@ -116,8 +116,9 @@ fun analyzerView(
                         fileName = text
                         isOKButtonEnabled = "/" !in fileName
                     },
-                    modifier = Modifier
-                        .weight(5f)
+                    modifier =
+                        Modifier
+                            .weight(5f),
                 )
 
                 Spacer(Modifier.weight(1f))
@@ -128,7 +129,8 @@ fun analyzerView(
                     onClick = {
                         WriteResultOfAnalysis(graphVM, fileName)
                         isSaveButtonClicked = false
-                    }) {
+                    },
+                ) {
                     Text("OK")
                 }
             }
@@ -155,7 +157,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "partition")
         }
@@ -176,10 +178,11 @@ fun analyzerView(
                             graphVM.keyVerticesAvailability = true
                             backButtonVM.setSavedActionAsOnClick()
                         }
+                    } catch (e: Exception) {
+                        isErrorInKeyVerticesOccurred = true
                     }
-                    catch (e: Exception) { isErrorInKeyVerticesOccurred = true }
                 }
-                ),
+            ),
         ) {
             Text(text = "key vertices")
         }
@@ -214,7 +217,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "minimum spanning forest")
         }
@@ -250,7 +253,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "shortest path")
         }
@@ -266,8 +269,9 @@ fun analyzerView(
                     onValueChange = { text ->
                         startVertex = text
                     },
-                    modifier = Modifier
-                        .weight(5f)
+                    modifier =
+                        Modifier
+                            .weight(5f),
                 )
 
                 Spacer(Modifier.weight(1f))
@@ -279,8 +283,9 @@ fun analyzerView(
                     onValueChange = { text ->
                         endVertex = text
                     },
-                    modifier = Modifier
-                        .weight(5f)
+                    modifier =
+                        Modifier
+                            .weight(5f),
                 )
 
                 Spacer(Modifier.weight(1f))
@@ -297,11 +302,11 @@ fun analyzerView(
                                 graphVM.removePaths()
                                 backButtonVM.setSavedActionAsOnClick()
                             }
-                        }
-                        catch (e: IllegalArgumentException) {
+                        } catch (e: IllegalArgumentException) {
                             isErrorInShortestPathOccurred = true
                         }
-                    }) {
+                    },
+                ) {
                     Text("OK")
                 }
             }
@@ -328,7 +333,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "strongly connected components")
         }
@@ -365,10 +370,11 @@ fun analyzerView(
                             graphVM.cyclesAvailability = true
                             backButtonVM.setSavedActionAsOnClick()
                         }
+                    } catch (e: Exception) {
+                        isErrorInCyclesPathOccurred = true
                     }
-                    catch (e: Exception) {isErrorInCyclesPathOccurred = true}
                 }
-                ),
+            ),
         ) {
             Text(text = "cycles")
         }
@@ -405,7 +411,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "bridges")
         }

@@ -4,15 +4,20 @@ import kotlin.io.path.Path
 import kotlin.io.path.isDirectory
 import kotlin.io.path.listDirectoryEntries
 
-class TextFieldVM(private var path: String ) {
-
-    fun changePath(file: String, files: List<String> = listOf()): String {
+class TextFieldVM(private var path: String) {
+    fun changePath(
+        file: String,
+        files: List<String> = listOf(),
+    ): String {
         changePathEnterInDirectory(file, files)
         changePathAccordingToExitFromDirectory(file)
         return path
     }
 
-    private fun changePathEnterInDirectory(file: String, files: List<String> = listOf()) {
+    private fun changePathEnterInDirectory(
+        file: String,
+        files: List<String> = listOf(),
+    ) {
         if (file.substringAfterLast("/") == "") {
             if (file.substringBeforeLast("/") in files && file.substringAfterLast(".") != "csv/") {
                 path = "graphs/$file/"
