@@ -12,7 +12,7 @@ import viewModel.DirectedGraphVM
 fun directedGraphView(viewModel: DirectedGraphVM) {
     Box(
         Modifier.fillMaxSize().onGloballyPositioned {
-                layoutCoordinates ->
+            layoutCoordinates ->
             viewModel.height = layoutCoordinates.size.height
             viewModel.width = layoutCoordinates.size.width
         },

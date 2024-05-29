@@ -1,6 +1,11 @@
 package view
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
@@ -59,7 +64,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-            ),
+                ),
         ) {
             Text(text = "partition")
         }
@@ -80,7 +85,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-            ),
+                ),
         ) {
             Text(text = "key vertices")
         }
@@ -115,7 +120,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-            ),
+                ),
         ) {
             Text(text = "minimum spanning forest")
         }
@@ -152,7 +157,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-            ),
+                ),
         ) {
             Text(text = "shortest path")
         }
@@ -178,7 +183,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-            ),
+                ),
         ) {
             Text(text = "strongly connected components")
         }
@@ -215,7 +220,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-            ),
+                ),
         ) {
             Text(text = "cycles")
         }
@@ -251,7 +256,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-            ),
+                ),
         ) {
             Text(text = "bridges")
         }
