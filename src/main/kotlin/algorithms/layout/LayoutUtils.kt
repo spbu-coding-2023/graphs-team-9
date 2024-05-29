@@ -75,7 +75,7 @@ object LayoutUtils {
 
     fun applyRepulsion(
         vertices: ArrayList<Vertex>,
-        coefficient: Double,
+        coefficient: Double = 0.0,
     ) {
         for ((i, vertex1) in vertices.withIndex()) {
             var j = i
@@ -90,8 +90,8 @@ object LayoutUtils {
     fun applyGravity(
         vertices: ArrayList<Vertex>,
         gravity: Double,
-        scalingRatio: Double,
         useStrongGravity: Boolean = false,
+        scalingRatio: Double = 0.0,
     ) {
         if (!useStrongGravity) {
             for (vertex in vertices) {

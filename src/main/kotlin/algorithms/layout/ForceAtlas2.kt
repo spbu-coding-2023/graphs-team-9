@@ -16,26 +16,21 @@ class ForceAtlas2(
     private val outboundAttractionDistribution: Boolean = true
 
     fun layout(
-        iterations: Int = 100,
-        randomStartPositionsMode: Boolean = true,
-        scalingRatio: Double = 15.0, // 15.0 for weighted, 2.0 for unweighted
-        gravity: Double = 2.0, // 2.0 for weighted, 1.0 for unweighted
+        iterations: Int = 500,
+        scalingRatio: Double = 2.0, // 15.0 for weighted, 2.0 for unweighted
+        gravity: Double = 3.0, // 2.0 for weighted, 1.0 for unweighted
         strongGravityMode: Boolean = true,
         edgeWeightInfluence: Double = 1.0,
     ): List<Pair<Double, Double>> {
         var speed = 1.0
         var speedEfficiency = 1.0
         val vertices = ArrayList<Vertex>()
-        val delta = 2.0 / verticesCount
         for (vertexIndex in 0 until verticesCount) {
             val mass: Double = 1.0 + adjacencyList.outgoingEdgesCount(vertexIndex).toDouble()
-            if (randomStartPositionsMode) {
-                val (x, y) = Pair(Random.nextDouble(-1.0, 1.0), Random.nextDouble(-1.0, 1.0))
-                vertices.add(Vertex(mass = mass, x = x, y = y))
-            } else {
-                val (x, y) = -1.0 + vertexIndex * delta to -1.0 + vertexIndex * 2 * delta
-                vertices.add(Vertex(mass = mass, x = x, y = y))
-            }
+            val (x, y) = Pair(Random.nextDouble(-1.0, 1.0), Random.nextDouble(-1.0, 1.0))
+//            val (x, y) = Pair((1..5).random().toDouble(), (1..5).random().toDouble())
+//            val (x, y) = Pair(random(), random())
+            vertices.add(Vertex(mass = mass, x = x, y = y))
         }
 
         val outboundAttCompensation = 1.0
@@ -52,7 +47,7 @@ class ForceAtlas2(
             }
 
             utils.applyRepulsion(vertices, scalingRatio)
-            utils.applyGravity(vertices, gravity, scalingRatio, strongGravityMode)
+            utils.applyGravity(vertices, gravity, strongGravityMode, scalingRatio)
             utils.applyAttraction(vertices, adjacencyList, outboundAttractionDistribution, outboundAttCompensation, edgeWeightInfluence)
             val (newSpeed, newSpeedEfficiency) = utils.adjustSpeedAndApplyForces(vertices, speed, speedEfficiency)
             speed = newSpeed

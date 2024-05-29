@@ -47,7 +47,7 @@ abstract class GraphVM(
         radius: Int,
     ): List<Pair<Double, Double>> {
         val leftOffset = radius / 2
-        val rightOffset = width / 10
+        val rightOffset = width / 18
         val topOffset = radius / 2
         val bottomOffset = radius / 2
         val padding = radius * 2
@@ -77,7 +77,6 @@ abstract class GraphVM(
     ): List<Pair<Double, Double>> {
         TODO()
     }
-
 
     var partitionAvailability: Boolean
         get() = partitionAvailabilityS.value
@@ -235,7 +234,7 @@ abstract class GraphVM(
 
     fun layout() {
         val newVertexDefaultSize: Dp =
-            10.dp + (1000.dp * (heightState.value * widthState.value) / (1024 * 736) / (graph.verticesCount() + 24))
+            10.dp + (1000.dp * (heightState.value * widthState.value) / (1024 * 736) / (graph.verticesCount() + 80))
         val scaledCoordinates =
             makeCoordinatesScaled(unscaledCoordinates, widthState.value, heightState.value, newVertexDefaultSize.value.toInt())
         vertices.forEachIndexed { i, vertex ->
