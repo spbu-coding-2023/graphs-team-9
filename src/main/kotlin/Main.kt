@@ -15,8 +15,8 @@ fun main() =
             onCloseRequest = ::exitApplication,
             title = "Graph Visualizer",
             state =
-                    rememberWindowState(
-                        position = WindowPosition(alignment = Alignment.Center),
+                rememberWindowState(
+                    position = WindowPosition(alignment = Alignment.Center),
                     ),
         ) {
             menu()
