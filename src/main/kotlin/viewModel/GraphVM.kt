@@ -33,6 +33,15 @@ abstract class GraphVM(
     private val widthState = mutableStateOf(standardWidth)
     private val heightState = mutableStateOf(standardHeight)
     private val vertexDefaultSize = mutableStateOf(10.dp + (1000.dp / (graph.verticesCount() + 24)))
+    private val verticesDataVisibilityState = mutableStateOf(false)
+    private val weightsVisibilityState = mutableStateOf(false)
+    private val labelsVisibilityState = mutableStateOf(false)
+    val verticesDataVisibility
+        get() = verticesDataVisibilityState.value
+    val weightVisibility
+        get() = weightsVisibilityState.value
+    val labelsVisibility
+        get() = labelsVisibilityState.value
     var vertices =
         Array(graph.verticesCount()) { i ->
             VertexVM(
@@ -229,5 +238,20 @@ abstract class GraphVM(
             vertex.size *= newVertexDefaultSize / vertexDefaultSize.value
         }
         vertexDefaultSize.value = newVertexDefaultSize
+    }
+
+    fun changeVerticesDataVisibility() {
+        verticesDataVisibilityState.value = !verticesDataVisibilityState.value
+        vertices.forEach { it.insideDataVisibility = verticesDataVisibilityState.value }
+    }
+
+    fun changeWeightsVisibility() {
+        weightsVisibilityState.value = !weightsVisibilityState.value
+        edges.forEach { it.weightVisibility = weightsVisibilityState.value }
+    }
+
+    fun changeLabelsVisibility() {
+        labelsVisibilityState.value = !labelsVisibilityState.value
+        edges.forEach { it.labelVisibility = labelsVisibilityState.value }
     }
 }
