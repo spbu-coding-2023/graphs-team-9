@@ -1,5 +1,6 @@
 package graph
 
+import algorithms.CycleSearchAlgorithm
 import algorithms.DijkstraAlgorithm
 import org.jetbrains.research.ictl.louvain.getPartition
 
@@ -97,6 +98,7 @@ abstract class Graph {
                 for (vertexIndex in 0 until verticesCount()) {
                     if (vertexValue(vertexIndex) == startVertexValue) startVertexIndex = vertexIndex
                     if (vertexValue(vertexIndex) == endVertexValue) endVertexIndex = vertexIndex
+                    break
                 }
                 require(startVertexIndex != -1) {
                     "There is no vertex $startVertexValue in the graph"
@@ -107,6 +109,27 @@ abstract class Graph {
             }
         }
         return algo.findShortestPath(startVertexIndex, endVertexIndex)
+    }
+
+    fun findCyclesForVertex(vertexValue: String): ArrayList<ArrayList<Int>> {
+        var inputVertexIndex = -1
+        when (isAbleToAdd) {
+            true -> {
+                try {
+                    inputVertexIndex = vertexIndicesMap.getValue(vertexValue)
+                } catch (e: NoSuchElementException) {
+                    throw NoSuchElementException("There is no vertex $vertexValue in the graph")
+                }
+            }
+            false -> {
+                for (vertexIndex in 0 until verticesCount()) {
+                    if (vertexValue(vertexIndex) == vertexValue) inputVertexIndex = vertexIndex
+                    break
+                }
+            }
+        }
+        val algo = CycleSearchAlgorithm(this.adjacencyList())
+        return algo.findCyclesForVertex(inputVertexIndex)
     }
 
     abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
