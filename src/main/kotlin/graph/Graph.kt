@@ -67,8 +67,7 @@ abstract class Graph {
         end: String,
     ): MutableList<Int>?
 
-
-    fun layout(
+    fun layoutGraph(
         iterations: Int = 100,
         randomStartPositionsMode: Boolean = false,
         scalingRatio: Double = 2.0,
@@ -77,7 +76,7 @@ abstract class Graph {
         edgeWeightInfluence: Double = 1.0,
     ): List<Pair<Double, Double>> {
         val algo = ForceAtlas2(this.adjacencyList())
-        return algo.layout(iterations, randomStartPositionsMode, scalingRatio, gravity, strongGravityMode, edgeWeightInfluence)
+        return algo.layout()
     }
 
     abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>

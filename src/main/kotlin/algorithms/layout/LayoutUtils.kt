@@ -10,7 +10,7 @@ object LayoutUtils {
     private fun linRepulsion(
         vertex1: Vertex,
         vertex2: Vertex,
-        coefficient: Double = 0.01,
+        coefficient: Double = 0.0,
     ) {
         val xDist = vertex1.x - vertex2.x
         val yDist = vertex1.y - vertex2.y
@@ -56,11 +56,17 @@ object LayoutUtils {
         vertex1: Vertex,
         vertex2: Vertex,
         e: Double,
+        distributedAttraction: Boolean,
         coefficient: Double = 0.0,
     ) {
         val xDist = vertex1.x - vertex2.x
         val yDist = vertex1.y - vertex2.y
-        val factor = -coefficient * e / vertex1.mass
+        val factor =
+            if (!distributedAttraction) {
+                -coefficient * e
+            } else {
+                -coefficient * e / vertex1.mass
+            }
         vertex1.dx += xDist * factor
         vertex1.dy += yDist * factor
         vertex2.dx -= xDist * factor
@@ -101,103 +107,6 @@ object LayoutUtils {
     fun applyAttraction(
         vertices: ArrayList<Vertex>,
         adjacencyList: AdjacencyList,
-        coefficient: Double,
-    ) {
-        for (sourceVertexIndex in 0 until adjacencyList.verticesCount()) {
-            for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
-                val outgoingEdge = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex)
-                val targetVertexIndex = outgoingEdge.target()
-                val outgoingEdgeWeight = outgoingEdge.weight().toDouble()
-                linAttraction(vertices[sourceVertexIndex], vertices[targetVertexIndex], outgoingEdgeWeight, coefficient)
-            }
-        }
-    }
-
-    fun adjustSpeedAndApplyForces(
-        vertices: ArrayList<Vertex>,
-        speed: Double,
-        speedEfficiency: Double,
-    ): Pair<Double, Double> {
-        var totalSwinging = 0.0
-        var totalEffectiveTraction = 0.0
-        vertices.forEach { vertex ->
-            val swinging = sqrt((vertex.oldDx - vertex.dx).pow(2) + (vertex.oldDy - vertex.dy).pow(2))
-            totalSwinging += vertex.mass * swinging
-            val effectiveTraction = 0.5 * sqrt((vertex.oldDx + vertex.dx).pow(2) + (vertex.oldDy + vertex.dy).pow(2))
-            totalEffectiveTraction += vertex.mass * effectiveTraction
-        }
-
-        val estimatedOptimalJitterTolerance = .05 * sqrt(vertices.size.toDouble())
-        val minJT = sqrt(estimatedOptimalJitterTolerance)
-        val maxJT = sqrt(estimatedOptimalJitterTolerance)
-        // 0.1 is jitterTolerance
-        val jt =
-            0.1 *
-                max(
-                    minJT,
-                    min(
-                        maxJT,
-                        estimatedOptimalJitterTolerance * totalEffectiveTraction / (
-                            vertices.size * vertices.size
-                        ),
-                    ),
-                )
-        val minSpeedEfficiency = 0.05
-        var newSpeedEfficiency = speedEfficiency
-        if ((totalEffectiveTraction > 2.0) && (totalSwinging / totalEffectiveTraction > 2.0)) {
-            if (newSpeedEfficiency > minSpeedEfficiency) {
-                newSpeedEfficiency *= 0.5
-            }
-        }
-
-        val targetSpeed =
-            if (totalSwinging == 0.0) {
-                Double.MAX_VALUE
-            } else {
-                jt * newSpeedEfficiency * totalEffectiveTraction / totalSwinging
-            }
-
-        if ((totalSwinging > jt * totalEffectiveTraction) && (newSpeedEfficiency > minSpeedEfficiency)) {
-            newSpeedEfficiency *= 0.7
-        } else if (speed < 1000) {
-            newSpeedEfficiency *= 1.3
-        }
-
-        val maxRise = 0.5
-        val newSpeed = speed + min(targetSpeed - speed, maxRise * speed)
-        vertices.forEach {
-            val swinging = it.mass * sqrt((it.oldDx - it.dx).pow(2) + (it.oldDy - it.dy).pow(2))
-            val factor = speed / (1.0 + sqrt(speed * swinging))
-            it.x += (it.dx * factor)
-            it.y += (it.dy * factor)
-        }
-        return newSpeed to minSpeedEfficiency
-    }
-
-    private fun linAttraction(
-        vertex1: Vertex,
-        vertex2: Vertex,
-        e: Double,
-        distributedAttraction: Boolean,
-        coefficient: Double = 0.0,
-    ) {
-        val xDist = vertex1.x - vertex2.x
-        val yDist = vertex1.y - vertex2.y
-        val factor =
-            if (!distributedAttraction) {
-                -coefficient * e
-            } else {
-                -coefficient * e / vertex1.mass
-            }
-        vertex1.dx += xDist * factor
-        vertex1.dy += yDist * factor
-        vertex2.dx -= xDist * factor
-        vertex2.dy -= yDist * factor
-    }
-
-    fun applyAttraction(
-        vertices: ArrayList<Vertex>,
-        adjacencyList: AdjacencyList,
         distributedAttraction: Boolean,
         coefficient: Double,
         edgeWeightInfluence: Double,
@@ -206,7 +115,7 @@ object LayoutUtils {
             for (outgoingEdgeIndex in 0 until adjacencyList.outgoingEdgesCount(sourceVertexIndex)) {
                 val outgoingEdge = adjacencyList.getEdge(sourceVertexIndex, outgoingEdgeIndex)
                 val targetVertexIndex = outgoingEdge.target()
-                val outgoingEdgeWeight = outgoingEdge.weight().toDouble()
+                val outgoingEdgeWeight = outgoingEdge.weight()
                 when (edgeWeightInfluence) {
                     0.0 -> {
                         linAttraction(
@@ -239,5 +148,64 @@ object LayoutUtils {
                 }
             }
         }
+    }
+
+    fun adjustSpeedAndApplyForces(
+        vertices: ArrayList<Vertex>,
+        speed: Double,
+        speedEfficiency: Double,
+    ): Pair<Double, Double> {
+        var totalSwinging = 0.0
+        var totalEffectiveTraction = 0.0
+        vertices.forEach { vertex ->
+            val swinging = sqrt((vertex.oldDx - vertex.dx).pow(2) + (vertex.oldDy - vertex.dy).pow(2))
+            totalSwinging += vertex.mass * swinging
+            val effectiveTraction = 0.5 * sqrt((vertex.oldDx + vertex.dx).pow(2) + (vertex.oldDy + vertex.dy).pow(2))
+            totalEffectiveTraction += vertex.mass * effectiveTraction
+        }
+
+        val estimatedOptimalJitterTolerance = .05 * sqrt(vertices.size.toDouble())
+        val minJT = sqrt(estimatedOptimalJitterTolerance)
+        val maxJT = sqrt(estimatedOptimalJitterTolerance)
+        val jt =
+            max(
+                minJT,
+                min(
+                    maxJT,
+                    estimatedOptimalJitterTolerance * totalEffectiveTraction / (
+                        vertices.size * vertices.size
+                    ),
+                ),
+            )
+        val minSpeedEfficiency = 0.05
+        var newSpeedEfficiency = speedEfficiency
+        if ((totalEffectiveTraction > 2.0) && (totalSwinging / totalEffectiveTraction > 2.0)) {
+            if (newSpeedEfficiency > minSpeedEfficiency) {
+                newSpeedEfficiency *= 0.5
+            }
+        }
+
+        val targetSpeed =
+            if (totalSwinging == 0.0) {
+                Double.MAX_VALUE
+            } else {
+                jt * newSpeedEfficiency * totalEffectiveTraction / totalSwinging
+            }
+
+        if ((totalSwinging > jt * totalEffectiveTraction) && (newSpeedEfficiency > minSpeedEfficiency)) {
+            newSpeedEfficiency *= 0.7
+        } else if (speed < 1000) {
+            newSpeedEfficiency *= 1.3
+        }
+
+        val maxRise = 0.5
+        val newSpeed = speed + min(targetSpeed - speed, maxRise * speed)
+        vertices.forEach {
+            val swinging = it.mass * sqrt((it.oldDx - it.dx).pow(2) + (it.oldDy - it.dy).pow(2))
+            val factor = speed / (1.0 + sqrt(speed * swinging))
+            it.x += (it.dx * factor)
+            it.y += (it.dy * factor)
+        }
+        return newSpeed to minSpeedEfficiency
     }
 }

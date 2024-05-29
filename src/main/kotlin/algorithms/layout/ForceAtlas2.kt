@@ -4,11 +4,10 @@ import graph.AdjacencyList
 import kotlin.random.Random
 
 /*
-* source of realization:
-* https://github.com/bhargavchippada/forceatlas2/tree/master
-* GPL-3.0 license
+ * source of realization:
+ * https://github.com/bhargavchippada/forceatlas2/tree/master
+ * GPL-3.0 license
  */
-
 class ForceAtlas2(
     private val adjacencyList: AdjacencyList,
 ) {
@@ -18,9 +17,9 @@ class ForceAtlas2(
 
     fun layout(
         iterations: Int = 100,
-        randomStartPositionsMode: Boolean = false,
-        scalingRatio: Double = 2.0,
-        gravity: Double = 1.0,
+        randomStartPositionsMode: Boolean = true,
+        scalingRatio: Double = 15.0, // 15.0 for weighted, 2.0 for unweighted
+        gravity: Double = 2.0, // 2.0 for weighted, 1.0 for unweighted
         strongGravityMode: Boolean = true,
         edgeWeightInfluence: Double = 1.0,
     ): List<Pair<Double, Double>> {
@@ -59,6 +58,7 @@ class ForceAtlas2(
             speed = newSpeed
             speedEfficiency = newSpeedEfficiency
         }
-        return vertices.map { it.x to it.y }
+        val notNormalizeVertices = vertices.map { it.x to it.y }
+        return notNormalizeVertices
     }
 }
