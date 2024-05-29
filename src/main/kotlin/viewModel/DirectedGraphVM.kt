@@ -2,10 +2,10 @@ package viewModel
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import graph.DirectedGraph
+import graph.Graph
 
 class DirectedGraphVM(
-    graph: DirectedGraph,
+    graph: Graph,
     verticesColors: ArrayList<Color>? = null,
     coordinates: ArrayList<Pair<Double, Double>>? = null,
     sizes: ArrayList<Dp>? = null,

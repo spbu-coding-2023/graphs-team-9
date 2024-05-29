@@ -1,6 +1,7 @@
 package graph
 
 import algorithms.BellmanFordAlgorithm
+import algorithms.ExtremelyFastAlgorithm
 import algorithms.TarjanSAlgo
 
 open class DirectedGraph(
@@ -90,5 +91,9 @@ open class DirectedGraph(
 
     override fun minimumSpanningForest(): DirectedGraph {
         throw UnsupportedOperationException("minimumSpanningForest() hasn't implemented for directed graphs")
+    }
+
+    override fun keyVertices(): DoubleArray {
+        throw UnsupportedOperationException("keyVertices() hasn't implemented for directed graphs")
     }
 }

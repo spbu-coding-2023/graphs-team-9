@@ -2,6 +2,7 @@ package graph
 
 import algorithms.BellmanFordAlgorithm
 import algorithms.BoruvkaSAlgorithm
+import algorithms.ExtremelyFastAlgorithm
 import algorithms.FindBridgesAlgorithm
 
 open class UndirectedGraph() : Graph() {
@@ -109,6 +110,8 @@ open class UndirectedGraph() : Graph() {
         val boruvkaSAlgorithm = BoruvkaSAlgorithm(svsEdgesList, verticesCount)
         return UndirectedGraph(boruvkaSAlgorithm.boruvkaSAlgo(), vertexValues)
     }
+
+    override fun keyVertices(): DoubleArray = ExtremelyFastAlgorithm(adjacencyList()).getKeyVertices()
 
     internal constructor(svsEdgesList: ArrayList<SourceVertexStoringEdge>, vertexValues: ArrayList<String>) : this() {
         this.svsEdgesList = svsEdgesList
