@@ -17,7 +17,7 @@ fun main() =
             state =
                 rememberWindowState(
                     position = WindowPosition(alignment = Alignment.Center),
-                    ),
+                ),
         ) {
             menu()
         }
