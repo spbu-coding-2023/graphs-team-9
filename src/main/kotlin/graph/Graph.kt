@@ -136,6 +136,8 @@ abstract class Graph {
 
     abstract fun minimumSpanningForest(): Graph
 
+    abstract fun keyVertices(): DoubleArray
+
     fun partition(): Map<Int, Int> {
         return getPartition(svsEdgesList(), 1)
     }

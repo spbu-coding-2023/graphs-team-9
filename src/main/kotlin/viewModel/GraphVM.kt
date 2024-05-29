@@ -191,7 +191,7 @@ abstract class GraphVM(
 
     fun colorCycles(vertex: String) {
         if (cyclesAvailability) {
-            val cycles = graph.cycles(vertex)
+            val cycles = graph.findCyclesForVertex(vertex)
             var i = 0
             cycles.forEach { cycle ->
                 cycle.forEach { vertices[it].pathPositions.add(i++) }

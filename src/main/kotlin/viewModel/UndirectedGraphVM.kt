@@ -2,10 +2,10 @@ package viewModel
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import graph.UndirectedGraph
+import graph.Graph
 
 class UndirectedGraphVM(
-    graph: UndirectedGraph,
+    graph: Graph,
     verticesColors: ArrayList<Color>? = null,
     coordinates: ArrayList<Pair<Double, Double>>? = null,
     sizes: ArrayList<Dp>? = null,
