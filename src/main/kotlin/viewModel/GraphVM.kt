@@ -4,32 +4,56 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.times
 import graph.Graph
 import java.util.AbstractMap
 import java.util.TreeMap
+import kotlin.math.floor
 import kotlin.random.Random
 
 abstract class GraphVM(
     private val graph: Graph,
+    verticesColors: ArrayList<Color>? = null,
+    coordinates: ArrayList<Pair<Double, Double>>? = null,
+    sizes: ArrayList<Dp>? = null,
+    edgesColors: HashMap<Pair<String, String>, Color>? = null,
 ) {
-    private val standardWidth = 1024
-    private val standardHeight = 736
+    init {
+        require(verticesColors == null || verticesColors.size == graph.verticesCount()) {
+            "'verticesColors' size isn't equal verticesCount"
+        }
+        require(coordinates == null || coordinates.size == graph.verticesCount()) {
+            "'coordinates' size isn't equal verticesCount"
+        }
+        require(sizes == null || sizes.size == graph.verticesCount()) {
+            "'sizes' size isn't equal verticesCount"
+        }
+    }
+    private val unscaledCoordinates = coordinates ?: graph.layoutGraph()
+    val standardWidth = 1024
+    val standardHeight = 736
     private val widthState = mutableStateOf(standardWidth)
     private val heightState = mutableStateOf(standardHeight)
     private val vertexDefaultSize = mutableStateOf(10.dp + (1000.dp / (graph.verticesCount() + 24)))
-    var vertices = Array(graph.verticesCount()) { i -> VertexVM(graph.vertexValue(i), 0.dp, 0.dp, vertexDefaultSize.value) }
-    private val unscaledCoordinates = graph.layoutGraph()
+    private val verticesDataVisibilityState = mutableStateOf(false)
+    private val weightsVisibilityState = mutableStateOf(false)
+    private val labelsVisibilityState = mutableStateOf(false)
+    val verticesDataVisibility
+        get() = verticesDataVisibilityState.value
+    val weightVisibility
+        get() = weightsVisibilityState.value
+    val labelsVisibility
+        get() = labelsVisibilityState.value
+    var vertices =
+        Array(graph.verticesCount()) { i ->
+            VertexVM(
+                graph.vertexValue(i),
+                unscaledCoordinates[i].first.dp,
+                unscaledCoordinates[i].second.dp,
+                if (sizes != null) sizes[i] else vertexDefaultSize.value,
+                if (verticesColors != null) verticesColors[i] else Color.White,
+            )
+        }
 
-    private val minX = unscaledCoordinates.minOf { it.first }
-    private val maxX = unscaledCoordinates.maxOf { it.first }
-    private val minY = unscaledCoordinates.minOf { it.second }
-    private val maxY = unscaledCoordinates.maxOf { it.second }
-    private val leftOffset = vertexDefaultSize.value / 2
-    private val rightOffset: Dp = (widthState.value / 18).dp
-    private val topOffset = vertexDefaultSize.value / 2
-    private val bottomOffset = vertexDefaultSize.value / 2
-    private val padding = vertexDefaultSize.value * 2
 
     abstract val edges: List<EdgeVM>
     var height: Int
@@ -51,48 +75,6 @@ abstract class GraphVM(
     private val stronglyConnectedComponentsAvailabilityS = mutableStateOf(true)
     private val cyclesAvailabilityS = mutableStateOf(true)
     private val bridgesAvailabilityS = mutableStateOf(true)
-
-    private fun makeCoordinatesScaled(): List<Pair<Dp, Dp>> {
-        val width = widthState.value.dp
-        val height = heightState.value.dp
-        val scaleX: Dp = width - padding - leftOffset - rightOffset
-        val scaleY: Dp = height - padding - topOffset - bottomOffset
-        val newCoordinates =
-            unscaledCoordinates.map { point ->
-                (((point.first - minX) / (maxX - minX)) * scaleX) + vertexDefaultSize.value + leftOffset to ((point.second - minY) / (maxY - minY)) * scaleY + topOffset
-            }
-
-        val offsetX = (width - leftOffset - rightOffset - (newCoordinates.maxOf { it.first } - newCoordinates.minOf { it.first })) / 2
-        val offsetY = (height - topOffset - bottomOffset - (newCoordinates.maxOf { it.second } - newCoordinates.minOf { it.second })) / 2
-        return newCoordinates.map { point ->
-            point.first + offsetX to point.second + offsetY
-        }
-    }
-
-    private fun makeCoordinateUnscaled(scaledVertices: List<Pair<Dp, Dp>>): List<Pair<Double, Double>> {
-        val width = widthState.value.dp
-        val height = heightState.value.dp
-        val scaleX = width - padding - leftOffset - rightOffset
-        val scaleY = height - padding - topOffset - bottomOffset
-
-        val scaledMinX = scaledVertices.minOf { it.first }
-        val scaledMaxX = scaledVertices.maxOf { it.first }
-        val scaledMinY = scaledVertices.minOf { it.second }
-        val scaledMaxY = scaledVertices.maxOf { it.second }
-
-        val offsetX = (width - leftOffset - rightOffset - (scaledMaxX - scaledMinX)) / 2
-        val offsetY = (height - topOffset - bottomOffset - (scaledMaxY - scaledMinY)) / 2
-
-        val unscaledVertices =
-            scaledVertices.map { point ->
-                val scaledX = point.first - offsetX
-                val scaledY = point.second - offsetY
-                val originalX = (scaledX - vertexDefaultSize.value - leftOffset) / scaleX * (maxX - minX) + minX
-                val originalY = (scaledY - topOffset) / scaleY * (maxY - minY) + minY
-                originalX to originalY
-            }
-        return unscaledVertices
-    }
 
     var partitionAvailability: Boolean
         get() = partitionAvailabilityS.value
@@ -163,7 +145,7 @@ abstract class GraphVM(
     fun changeVerticesSizes() {
         if (keyVerticesAvailabilityS.value) {
             val ratios = graph.keyVertices()
-            vertices.forEachIndexed { i, vertex -> vertex.size *= (2 * ratios[i]).toFloat() }
+            vertices.forEachIndexed { i, vertex -> vertex.size *= 3.5f * ratios[i].toFloat() }
         }
     }
 
@@ -211,7 +193,7 @@ abstract class GraphVM(
 
     fun colorCycles(vertex: String) {
         if (cyclesAvailability) {
-            val cycles = graph.cycles(vertex)
+            val cycles = graph.findCyclesForVertex(vertex)
             var i = 0
             cycles.forEach { cycle ->
                 cycle.forEach { vertices[it].pathPositions.add(i++) }
@@ -248,6 +230,53 @@ abstract class GraphVM(
         vertices.forEach { it.removeOffset() }
     }
 
+    private fun makeCoordinatesScaled(): List<Pair<Dp, Dp>> {
+
+        val leftOffset = vertexDefaultSize.value / 2
+        val rightOffset: Dp = (widthState.value / 18).dp
+        val topOffset = vertexDefaultSize.value / 2
+        val bottomOffset = vertexDefaultSize.value / 2
+        val padding = vertexDefaultSize.value * 2
+        val width = widthState.value.dp
+        val height = heightState.value.dp
+        val scaleX: Dp = width - padding - leftOffset - rightOffset
+        val scaleY: Dp = height - padding - topOffset - bottomOffset
+        var minX: Float = Float.MAX_VALUE
+        var maxX: Float = Float.MIN_VALUE
+        var minY: Float  = Float.MAX_VALUE
+        var maxY: Float = Float.MIN_VALUE
+        vertices.forEach {
+            if (it.x.value > maxX) {
+                maxX = it.x.value
+            }
+            if (it.x.value < minX) {
+                minX = it.x.value
+            }
+            if (it.y.value > maxY) {
+                maxY = it.y.value
+            }
+            if (it.y.value < minY) {
+                minY = it.y.value
+            }
+        }
+        val newCoordinates =
+            vertices.map { vertex ->
+                ((vertex.x.value - minX) / (maxX - minX) * scaleX.value).dp + vertexDefaultSize.value +
+                        leftOffset to ((vertex.y.value - minY) /( (maxY - minY)) * scaleY.value).dp + topOffset
+            }
+
+        val offsetX =
+            (width - leftOffset - rightOffset - (newCoordinates.maxOf { it.first } - newCoordinates.minOf { it.first })) / 2
+        val offsetY =
+            (height - topOffset - bottomOffset - (newCoordinates.maxOf { it.second } - newCoordinates.minOf { it.second })) / 2
+        return newCoordinates.map { point ->
+                Pair(
+                    (floor((point.first + offsetX).value * 100.0f) / 100.0f).dp,
+                    (floor((point.second + offsetY).value * 100.0f) / 100.0f).dp
+                )
+        }
+    }
+
     fun layout() {
         val newVertexDefaultSize: Dp =
             10.dp + (1000.dp * (heightState.value * widthState.value) / (1024 * 736) / (graph.verticesCount() + 24))
@@ -259,5 +288,20 @@ abstract class GraphVM(
             vertex.size *= newVertexDefaultSize / vertexDefaultSize.value
         }
         vertexDefaultSize.value = newVertexDefaultSize
+    }
+
+    fun changeVerticesDataVisibility() {
+        verticesDataVisibilityState.value = !verticesDataVisibilityState.value
+        vertices.forEach { it.insideDataVisibility = verticesDataVisibilityState.value }
+    }
+
+    fun changeWeightsVisibility() {
+        weightsVisibilityState.value = !weightsVisibilityState.value
+        edges.forEach { it.weightVisibility = weightsVisibilityState.value }
+    }
+
+    fun changeLabelsVisibility() {
+        labelsVisibilityState.value = !labelsVisibilityState.value
+        edges.forEach { it.labelVisibility = labelsVisibilityState.value }
     }
 }

@@ -67,23 +67,8 @@ abstract class Graph {
         end: String,
     ): MutableList<Int>?
 
-    fun layoutGraph(
-        iterations: Int = 100,
-        randomStartPositionsMode: Boolean = false,
-        scalingRatio: Double = 2.0,
-        gravity: Double = 1.0,
-        strongGravityMode: Boolean = true,
-        edgeWeightInfluence: Double = 1.0,
-    ): List<Pair<Double, Double>> {
-        val algo = ForceAtlas2(this.adjacencyList())
-        return algo.layout()
-    }
-
-    abstract fun stronglyConnectedComponents(): ArrayList<ArrayList<Int>>
-
-    abstract fun minimumSpanningForest(): Graph
-
-    fun partition(): Map<Int, Int> {
-        return getPartition(svsEdgesList(), 1)
+    fun layoutGraph(): List<Pair<Double, Double>> {
+        val a = ForceAtlas2(adjacencyList())
+        return a.layout()
     }
 }
