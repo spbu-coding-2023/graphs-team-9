@@ -1,24 +1,25 @@
 package algorithms.louvain.org.jetbrains.research.ictl.louvain
 
-//changes:
-//remove :
-//import org.junit.Test
-//add :
-//import org.jetbrains.research.ictl.louvain.Link
-//import org.jetbrains.research.ictl.louvain.computeModularity
-//import org.jetbrains.research.ictl.louvain.getPartition
-//import org.junit.jupiter.api.Test
+// changes:
+// remove :
+// import org.junit.Test
+// add :
+// import org.jetbrains.research.ictl.louvain.Link
+// import org.jetbrains.research.ictl.louvain.computeModularity
+// import org.jetbrains.research.ictl.louvain.getPartition
+// import org.junit.jupiter.api.Test
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import org.jetbrains.research.ictl.louvain.Link
 import org.jetbrains.research.ictl.louvain.computeModularity
 import org.jetbrains.research.ictl.louvain.getPartition
+import org.jetbrains.research.ictl.louvain.Link
+import org.junit.jupiter.api.Test
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import java.io.File
 import kotlin.math.round
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import org.junit.jupiter.api.Test
+
 
 internal class LouvainTest {
     private fun genFullyConnected(indicesFrom: Int, size: Int): List<Link> {
