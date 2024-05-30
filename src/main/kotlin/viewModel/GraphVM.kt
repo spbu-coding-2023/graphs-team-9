@@ -165,11 +165,9 @@ abstract class GraphVM(
         start: String,
         end: String,
     ) {
-        if (shortestPathAvailabilityS.value) {
-            val shortestPath = graph.shortestPathByBFAlgorithm(start, end) ?: TODO()
-            for ((i, vertex) in shortestPath.withIndex()) {
-                vertices[vertex].pathPositions.add(i)
-            }
+        val shortestPath = graph.shortestPathByBFAlgorithm(start, end) ?: throw IllegalArgumentException()
+        for ((i, vertex) in shortestPath.withIndex()) {
+            vertices[vertex].pathPositions.add(i)
         }
     }
 
@@ -192,13 +190,11 @@ abstract class GraphVM(
     }
 
     fun colorCycles(vertex: String) {
-        if (cyclesAvailability) {
-            val cycles = graph.findCyclesForVertex(vertex)
-            var i = 0
-            cycles.forEach { cycle ->
-                cycle.forEach { vertices[it].pathPositions.add(i++) }
-                i++
-            }
+        val cycles = graph.findCyclesForVertex(vertex)
+        var i = 0
+        cycles.forEach { cycle ->
+            cycle.forEach { vertices[it].pathPositions.add(i++) }
+            i++
         }
     }
 

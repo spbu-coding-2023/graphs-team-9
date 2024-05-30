@@ -21,6 +21,7 @@ class WriteResultOfAnalysis(private val graph: GraphVM, name: String) {
     private fun writeData() {
         val undirectedGraph = UndirectedGraphVM(UndirectedGraph())
         val directedGraph = DirectedGraphVM(DirectedGraph())
+        writer.write("Analyzed, ")
         when (graph::class) {
             undirectedGraph::class -> writer.write("Undirected, ")
             directedGraph::class -> writer.write("Directed, ")

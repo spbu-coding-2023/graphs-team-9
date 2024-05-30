@@ -19,19 +19,29 @@ class ReadResultOfAnalysis(name: String) {
     private val sizes: ArrayList<Dp> = arrayListOf()
     private val edgesColors: HashMap<Pair<String, String>, Color> = hashMapOf()
     private var isGraphDirected = false
+    private lateinit var graphVM: GraphVM
 
     fun getGraph(): GraphVM {
         val graph = readData()
         reader.close()
 
-        return when (isGraphDirected) {
-            true -> DirectedGraphVM(graph, verticesColors, coordinates, sizes, edgesColors)
-            else -> UndirectedGraphVM(graph, verticesColors, coordinates, sizes, edgesColors)
-        }
+        graphVM =
+            when (isGraphDirected) {
+                true -> DirectedGraphVM(graph, verticesColors, coordinates, sizes, edgesColors)
+                else -> UndirectedGraphVM(graph, verticesColors, coordinates, sizes, edgesColors)
+            }
+        graphVM.partitionAvailability = false
+        graphVM.keyVerticesAvailability = false
+        graphVM.mfsAvailability = false
+        graphVM.shortestPathAvailability = false
+        graphVM.stronglyConnectedComponentsAvailability = false
+        graphVM.cyclesAvailability = false
+        graphVM.bridgesAvailability = false
+        return graphVM
     }
 
     private fun readData(): Graph {
-        val (type, verticesCount) = reader.readLine().split(", ")
+        val (isAnalyzed, type, verticesCount) = reader.readLine().split(", ")
         val graph = createGraph(type)
 
         readVertices(graph, verticesCount.toInt())

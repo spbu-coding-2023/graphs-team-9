@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun postgreSQLScreen() {
+fun sqliteScreen() {
     Divider(color = Color.Black, modifier = Modifier.fillMaxHeight().width(1.dp))
 
     Column(modifier = Modifier.padding(20.dp)) {

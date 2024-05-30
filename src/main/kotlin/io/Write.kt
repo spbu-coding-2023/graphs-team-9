@@ -20,6 +20,7 @@ class Write(private val graph: Graph, name: String) {
         val undirectedGraph = UndirectedGraph()
         val directedGraph = DirectedGraph()
         var isGraphDirected = false
+        writer.write("NotAnalyzed, ")
         when (graph::class) {
             undirectedGraph::class -> writer.write("Undirected, ")
             directedGraph::class -> {

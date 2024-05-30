@@ -16,7 +16,7 @@ class Read(name: String) {
     }
 
     private fun readData(): Graph {
-        val (type, weight, verticesCount) = reader.readLine().split(", ")
+        val (isAnalyzed, type, weight, verticesCount) = reader.readLine().split(", ")
         val graph = createGraph(type)
         if (weight == "Weighted") graph.weighted = true
         val isGraphWeighted = graph.isWeighted()
