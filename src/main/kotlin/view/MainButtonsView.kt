@@ -44,7 +44,7 @@ import viewModel.UndirectedGraphVM
 enum class ButtonPressed {
     None,
     ChooseFile,
-    PostgreSQL,
+    SQLlite,
     Neo4j,
 }
 
@@ -96,10 +96,10 @@ fun mainButtons() {
                             .width(75.dp)
                             .height(75.dp),
                     onClick = {
-                        buttonState = MainButtonVM(buttonState).onClick(ButtonPressed.PostgreSQL)
+                        buttonState = MainButtonVM(buttonState).onClick(ButtonPressed.SQLlite)
                     },
                 ) {
-                    if (buttonState == ButtonPressed.PostgreSQL) {
+                    if (buttonState == ButtonPressed.SQLlite) {
                         Text("❌", textAlign = TextAlign.Center, fontSize = 30.sp)
                     } else {
                         Text("SQLite", textAlign = TextAlign.Center)
@@ -136,20 +136,7 @@ fun mainButtons() {
                     var path by remember { mutableStateOf("graphs/") }
                     var isErrorOccurred by remember { mutableStateOf(false) }
 
-                    if (isErrorOccurred) {
-                        AlertDialog(
-                            title = { Text("Error", fontSize = 20.sp) },
-                            text = { Text("Can't read file", fontSize = 15.sp) },
-                            onDismissRequest = { isErrorOccurred = false },
-                            confirmButton = {
-                                Button(
-                                    onClick = { isErrorOccurred = false },
-                                ) {
-                                    Text("OK", fontSize = 15.sp)
-                                }
-                            },
-                        )
-                    }
+                    if (isErrorOccurred) alertDialogView({ isErrorOccurred = false }, "Error", "Can't read file")
 
                     Divider(color = Color.Black, modifier = Modifier.fillMaxHeight().width(1.dp))
 
@@ -159,8 +146,8 @@ fun mainButtons() {
                         OutlinedTextField(
                             placeholder = { Text("Enter path to .csv file") },
                             modifier =
-                                Modifier
-                                    .fillMaxWidth(),
+                            Modifier
+                                .fillMaxWidth(),
                             value = file,
                             onValueChange = { text ->
                                 file = text
@@ -176,50 +163,51 @@ fun mainButtons() {
                                 Text(
                                     text = currentFile,
                                     modifier =
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .height(40.dp)
-                                            .padding(5.dp)
-                                            .clickable(
-                                                onClick = {
-                                                    if (currentFile.substringAfterLast(".") == "csv") {
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .height(40.dp)
+                                        .padding(5.dp)
+                                        .clickable(
+                                            onClick = {
+                                                if (currentFile.substringAfterLast(".") == "csv") {
+                                                    try {
+                                                        val graph = FileListVM(currentFile).getGraph()
+                                                        screenState = FileListVM(currentFile).defineGraphType(graph)
+                                                        when (screenState) {
+                                                            Screen.UndirectedGraph -> undirectedGraphVM = UndirectedGraphVM(graph)
+                                                            else -> directedGraphVM = DirectedGraphVM(graph)
+                                                        }
+                                                        buttonState = ButtonPressed.None
+                                                    } catch (e: IllegalArgumentException) {
                                                         try {
-                                                            val graph = FileListVM(currentFile).getGraph()
-                                                            screenState = FileListVM(currentFile).defineGraphType(graph)
+                                                            val graphVM = FileListVM(currentFile).getGraphVM()
+                                                            screenState = FileListVM(currentFile).defineGraphVMType(graphVM)
                                                             when (screenState) {
-                                                                Screen.UndirectedGraph -> undirectedGraphVM = UndirectedGraphVM(graph)
-                                                                else -> directedGraphVM = DirectedGraphVM(graph)
+                                                                Screen.UndirectedGraph ->
+                                                                    undirectedGraphVM =
+                                                                        graphVM as UndirectedGraphVM
+                                                                else -> directedGraphVM = graphVM as DirectedGraphVM
                                                             }
                                                             buttonState = ButtonPressed.None
                                                         } catch (e: IllegalArgumentException) {
-                                                            try {
-                                                                val graphVM = FileListVM(currentFile).getGraphVM()
-                                                                screenState = FileListVM(currentFile).defineGraphVMType(graphVM)
-                                                                when (screenState) {
-                                                                    Screen.UndirectedGraph ->
-                                                                        undirectedGraphVM =
-                                                                            graphVM as UndirectedGraphVM
-                                                                    else -> directedGraphVM = graphVM as DirectedGraphVM
-                                                                }
-                                                                buttonState = ButtonPressed.None
-                                                            } catch (e: IllegalArgumentException) {
-                                                                isErrorOccurred = true
-                                                            }
+                                                            isErrorOccurred = true
                                                         }
-                                                    } else {
-                                                        file = "$currentFile/"
-                                                        path = "graphs/$file"
-                                                        files = TextFieldVM(path).addFilesToList(file)
                                                     }
-                                                },
-                                            ),
+                                                } else {
+                                                    file = "$currentFile/"
+                                                    path = "graphs/$file"
+                                                    files = TextFieldVM(path).addFilesToList(file)
+                                                }
+                                            },
+                                        ),
                                 )
                                 Divider()
                             }
                         }
                     }
+
                 }
-                ButtonPressed.PostgreSQL -> postgreSQLScreen()
+                ButtonPressed.SQLlite -> postgreSQLScreen()
                 ButtonPressed.Neo4j -> {
                     var graphsList by remember { mutableStateOf(arrayListOf(GraphInfo("", true, true))) }
                     var isApplyClicked by remember { mutableStateOf(false) }

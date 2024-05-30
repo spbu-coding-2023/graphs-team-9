@@ -9,7 +9,7 @@ import java.io.FileWriter
 class Write(private val graph: Graph, name: String) {
     private val verticesCount = graph.verticesCount()
     private val isGraphWeighted = graph.isWeighted()
-    private val writer = BufferedWriter(FileWriter("$name.csv"))
+    private val writer = BufferedWriter(FileWriter("graphs/$name.csv"))
 
     init {
         writeData()

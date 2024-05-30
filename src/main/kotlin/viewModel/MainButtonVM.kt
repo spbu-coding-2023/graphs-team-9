@@ -11,10 +11,10 @@ class MainButtonVM(private val currentState: ButtonPressed) {
                     else -> ButtonPressed.ChooseFile
                 }
             }
-            ButtonPressed.PostgreSQL -> {
+            ButtonPressed.SQLlite -> {
                 return when (currentState) {
-                    ButtonPressed.PostgreSQL -> ButtonPressed.None
-                    else -> ButtonPressed.PostgreSQL
+                    ButtonPressed.SQLlite -> ButtonPressed.None
+                    else -> ButtonPressed.SQLlite
                 }
             }
             else -> {

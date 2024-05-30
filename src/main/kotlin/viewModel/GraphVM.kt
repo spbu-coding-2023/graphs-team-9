@@ -11,7 +11,7 @@ import kotlin.math.floor
 import kotlin.random.Random
 
 abstract class GraphVM(
-    private val graph: Graph,
+    internal val graph: Graph,
     verticesColors: ArrayList<Color>? = null,
     coordinates: ArrayList<Pair<Double, Double>>? = null,
     sizes: ArrayList<Dp>? = null,
