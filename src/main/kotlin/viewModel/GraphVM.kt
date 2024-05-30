@@ -7,6 +7,7 @@ import androidx.compose.ui.unit.dp
 import graph.Graph
 import java.util.AbstractMap
 import java.util.TreeMap
+import kotlin.math.floor
 import kotlin.random.Random
 
 abstract class GraphVM(
@@ -28,6 +29,7 @@ abstract class GraphVM(
         }
     }
 
+    private val unscaledCoordinates = coordinates ?: graph.layoutGraph()
     val standardWidth = 1024
     val standardHeight = 736
     private val widthState = mutableStateOf(standardWidth)
@@ -46,13 +48,13 @@ abstract class GraphVM(
         Array(graph.verticesCount()) { i ->
             VertexVM(
                 graph.vertexValue(i),
-                0.dp,
-                0.dp,
+                unscaledCoordinates[i].first.dp,
+                unscaledCoordinates[i].second.dp,
                 if (sizes != null) sizes[i] else vertexDefaultSize.value,
                 if (verticesColors != null) verticesColors[i] else Color.White,
             )
         }
-    private val unscaledCoordinates = coordinates ?: graph.layout()
+
     abstract val edges: List<EdgeVM>
     var height: Int
         get() = heightState.value
@@ -143,7 +145,7 @@ abstract class GraphVM(
     fun changeVerticesSizes() {
         if (keyVerticesAvailabilityS.value) {
             val ratios = graph.keyVertices()
-            vertices.forEachIndexed { i, vertex -> vertex.size *= (2 * ratios[i]).toFloat() }
+            vertices.forEachIndexed { i, vertex -> vertex.size *= 3.5f * ratios[i].toFloat() }
         }
     }
 
@@ -228,13 +230,60 @@ abstract class GraphVM(
         vertices.forEach { it.removeOffset() }
     }
 
+    private fun makeCoordinatesScaled(): List<Pair<Dp, Dp>> {
+        val leftOffset = vertexDefaultSize.value / 2
+        val rightOffset: Dp = (widthState.value / 18).dp
+        val topOffset = vertexDefaultSize.value / 2
+        val bottomOffset = vertexDefaultSize.value / 2
+        val padding = vertexDefaultSize.value * 2
+        val width = widthState.value.dp
+        val height = heightState.value.dp
+        val scaleX: Dp = width - padding - leftOffset - rightOffset
+        val scaleY: Dp = height - padding - topOffset - bottomOffset
+        var minX: Float = Float.MAX_VALUE
+        var maxX: Float = Float.MIN_VALUE
+        var minY: Float = Float.MAX_VALUE
+        var maxY: Float = Float.MIN_VALUE
+        vertices.forEach {
+            if (it.x.value > maxX) {
+                maxX = it.x.value
+            }
+            if (it.x.value < minX) {
+                minX = it.x.value
+            }
+            if (it.y.value > maxY) {
+                maxY = it.y.value
+            }
+            if (it.y.value < minY) {
+                minY = it.y.value
+            }
+        }
+        val newCoordinates =
+            vertices.map { vertex ->
+                ((vertex.x.value - minX) / (maxX - minX) * scaleX.value).dp + vertexDefaultSize.value +
+                    leftOffset to ((vertex.y.value - minY) / ((maxY - minY)) * scaleY.value).dp + topOffset
+            }
+
+        val offsetX =
+            (width - leftOffset - rightOffset - (newCoordinates.maxOf { it.first } - newCoordinates.minOf { it.first })) / 2
+        val offsetY =
+            (height - topOffset - bottomOffset - (newCoordinates.maxOf { it.second } - newCoordinates.minOf { it.second })) / 2
+        return newCoordinates.map { point ->
+            Pair(
+                (floor((point.first + offsetX).value * 100.0f) / 100.0f).dp,
+                (floor((point.second + offsetY).value * 100.0f) / 100.0f).dp,
+            )
+        }
+    }
+
     fun layout() {
         val newVertexDefaultSize: Dp =
             10.dp + (1000.dp * (heightState.value * widthState.value) / (1024 * 736) / (graph.verticesCount() + 24))
+        val scaledCoordinates =
+            makeCoordinatesScaled()
         vertices.forEachIndexed { i, vertex ->
-            vertex.x = unscaledCoordinates[i].first.dp * width
-            vertex.y =
-                unscaledCoordinates[i].second.dp * height
+            vertex.x = scaledCoordinates[i].first
+            vertex.y = scaledCoordinates[i].second
             vertex.size *= newVertexDefaultSize / vertexDefaultSize.value
         }
         vertexDefaultSize.value = newVertexDefaultSize

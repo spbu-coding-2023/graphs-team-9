@@ -13,26 +13,26 @@ class VertexVM(
     size: Dp = 25.dp,
     color: Color = Color.White,
 ) {
-    private var xStrategyBasedS = mutableStateOf(x)
-    private var yStrategyBasedS = mutableStateOf(y)
+    private var xS = mutableStateOf(x)
+    private var yS = mutableStateOf(y)
     private var sizeS = mutableStateOf(size)
     private var colorS = mutableStateOf(color)
     private var pathPositionsS = mutableStateOf(arrayListOf<Int>())
     private var insideDataVisibilityS = mutableStateOf(false)
     private var outsideDataVisibilityS = mutableStateOf(false)
-    private var xOffsetS = mutableStateOf(0.dp)
-    private var yOffsetS = mutableStateOf(0.dp)
 
+    private val defaultX = x
+    private val defaultY = y
     var x: Dp
-        get() = xStrategyBasedS.value + xOffsetS.value
+        get() = xS.value
         set(coordinate) {
-            xStrategyBasedS.value = coordinate
+            xS.value = coordinate
         }
 
     var y: Dp
-        get() = yStrategyBasedS.value + yOffsetS.value
+        get() = yS.value
         set(coordinate) {
-            yStrategyBasedS.value = coordinate
+            yS.value = coordinate
         }
 
     var size: Dp
@@ -69,12 +69,12 @@ class VertexVM(
     }
 
     fun onDrag(offset: Offset) {
-        xOffsetS.value += offset.x.dp
-        yOffsetS.value += offset.y.dp
+        xS.value += offset.x.dp
+        yS.value += offset.y.dp
     }
 
     fun removeOffset() {
-        xOffsetS.value = 0.dp
-        yOffsetS.value = 0.dp
+        xS.value = defaultX
+        yS.value = defaultY
     }
 }

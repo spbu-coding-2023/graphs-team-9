@@ -91,8 +91,4 @@ open class DirectedGraph(
     override fun minimumSpanningForest(): DirectedGraph {
         throw UnsupportedOperationException("minimumSpanningForest() hasn't implemented for directed graphs")
     }
-
-    override fun keyVertices(): DoubleArray {
-        throw UnsupportedOperationException("keyVertices() hasn't implemented for directed graphs")
-    }
 }

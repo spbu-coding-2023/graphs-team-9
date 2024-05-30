@@ -15,7 +15,6 @@ abstract class EdgeVM(
     val isLoop: Boolean = (source === target)
     private var weightVisibilityS = mutableStateOf(false)
     private var labelVisibilityS = mutableStateOf(false)
-
     protected var specialColor = Color.Blue
 
     var weightVisibility: Boolean

@@ -157,7 +157,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "partition")
         }
@@ -182,7 +182,7 @@ fun analyzerView(
                         isErrorInKeyVerticesOccurred = true
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "key vertices")
         }
@@ -217,7 +217,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "minimum spanning forest")
         }
@@ -241,6 +241,7 @@ fun analyzerView(
                     if (currentMfsAvailability) {
                         graphVM.mfsAvailability = false
                     }
+
                     isShortestPathButtonPressed = true
                     backButtonVM.saveCurrentAction()
                     backButtonVM.onClick = {
@@ -253,7 +254,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "shortest path")
         }
@@ -333,7 +334,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "strongly connected components")
         }
@@ -374,7 +375,7 @@ fun analyzerView(
                         isErrorInCyclesPathOccurred = true
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "cycles")
         }
@@ -411,7 +412,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "bridges")
         }

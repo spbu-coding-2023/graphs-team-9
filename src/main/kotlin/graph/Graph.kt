@@ -2,6 +2,8 @@ package graph
 
 import algorithms.CycleSearchAlgorithm
 import algorithms.DijkstraAlgorithm
+import algorithms.ExtremelyFastAlgorithm
+import algorithms.layout.ForceAtlas2
 import org.jetbrains.research.ictl.louvain.getPartition
 
 abstract class Graph {
@@ -67,6 +69,11 @@ abstract class Graph {
         start: String,
         end: String,
     ): MutableList<Int>?
+
+    fun layoutGraph(): List<Pair<Double, Double>> {
+        val a = ForceAtlas2(adjacencyList())
+        return a.layout()
+    }
 
     fun shortestPathByDijkstra(
         startVertexValue: String,
@@ -136,7 +143,7 @@ abstract class Graph {
 
     abstract fun minimumSpanningForest(): Graph
 
-    abstract fun keyVertices(): DoubleArray
+    fun keyVertices(): DoubleArray = ExtremelyFastAlgorithm(adjacencyList()).getKeyVertices()
 
     fun partition(): Map<Int, Int> {
         return getPartition(svsEdgesList(), 1)

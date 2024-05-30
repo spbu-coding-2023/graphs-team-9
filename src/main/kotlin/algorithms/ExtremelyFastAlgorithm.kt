@@ -1,10 +1,10 @@
 package algorithms
 
-import graph.UndirectedAdjacencyList
+import graph.AdjacencyList
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
-class ExtremelyFastAlgorithm(private val adjacencyList: UndirectedAdjacencyList) {
+class ExtremelyFastAlgorithm(private val adjacencyList: AdjacencyList) {
     private val verticesCount = adjacencyList.verticesCount()
     private val basis: Int = ceil(sqrt(verticesCount.toDouble())).toInt()
     private val groups: Int = 3 * basis

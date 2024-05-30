@@ -7,7 +7,7 @@ import java.io.BufferedReader
 import java.io.FileReader
 
 class Read(name: String) {
-    private val reader = BufferedReader(FileReader("$name.csv"))
+    private val reader = BufferedReader(FileReader(name))
 
     fun getGraph(): Graph {
         val graph = readData()
