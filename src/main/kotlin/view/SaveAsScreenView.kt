@@ -20,15 +20,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import io.Write
 import io.WriteResultOfAnalysis
+import neo4jRepository
 import viewModel.GraphVM
+import viewModel.UndirectedGraphVM
 
 @Composable
 fun saveAsScreen(
     onClick: () -> Unit,
     graphVM: GraphVM,
 ) {
-    var isFirstCheckboxCLicked by remember { mutableStateOf(false) }
-    var isSecondCheckboxCLicked by remember { mutableStateOf(false) }
+    var isGraphCheckboxCLicked by remember { mutableStateOf(false) }
+    var isAnalysisCheckboxCLicked by remember { mutableStateOf(false) }
     var isCSVButtonEnabled by remember { mutableStateOf(true) }
 
     Column(
@@ -46,26 +48,41 @@ fun saveAsScreen(
         )
 
         Row {
-            Checkbox(checked = isFirstCheckboxCLicked, onCheckedChange = { isFirstCheckboxCLicked = !isFirstCheckboxCLicked })
+            Checkbox(checked = isGraphCheckboxCLicked, onCheckedChange = { isGraphCheckboxCLicked = !isGraphCheckboxCLicked })
             Text("graph", modifier = Modifier.padding(vertical = 10.dp))
         }
 
         Row {
-            Checkbox(checked = isSecondCheckboxCLicked, onCheckedChange = { isSecondCheckboxCLicked = !isSecondCheckboxCLicked })
+            Checkbox(checked = isAnalysisCheckboxCLicked, onCheckedChange = { isAnalysisCheckboxCLicked = !isAnalysisCheckboxCLicked })
             Text("analysis", modifier = Modifier.padding(vertical = 10.dp))
         }
 
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                if (isFirstCheckboxCLicked) Write(graphVM.graph, name)
-                if (isSecondCheckboxCLicked) WriteResultOfAnalysis(graphVM, name)
+                if (isGraphCheckboxCLicked) Write(graphVM.graph, name)
+                if (isAnalysisCheckboxCLicked) WriteResultOfAnalysis(graphVM, name)
             },
             colors = ButtonDefaults.buttonColors(Color.White),
             enabled = isCSVButtonEnabled,
         ) { Text("CSV") }
         Button(modifier = Modifier.fillMaxWidth(), onClick = {}, colors = ButtonDefaults.buttonColors(Color.White)) { Text("SQLite") }
-        Button(modifier = Modifier.fillMaxWidth(), onClick = {}, colors = ButtonDefaults.buttonColors(Color.White)) { Text("Neo4j") }
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            enabled = neo4jRepository != null,
+            onClick = {
+                if (isAnalysisCheckboxCLicked) {
+                    neo4jRepository?.apply {
+                        if (graphVM::class == UndirectedGraphVM::class) {
+                            putAnalyzedGraphVM(graphVM, name, false)
+                        } else {
+                            putAnalyzedGraphVM(graphVM, name, true)
+                        }
+                    }
+                }
+            },
+            colors = ButtonDefaults.buttonColors(Color.White),
+        ) { Text("Neo4j") }
         Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = onClick) { Text("OK") }
     }
 }

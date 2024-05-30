@@ -33,9 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import graph.GraphInfo
 import graph.Neo4jRepository
+import neo4jRepository
 import viewModel.BackButtonVM
 import viewModel.DirectedGraphVM
 import viewModel.FileListVM
+import viewModel.GraphVM
 import viewModel.MainButtonVM
 import viewModel.TextFieldVM
 import viewModel.UndirectedGraphVM
@@ -217,7 +219,7 @@ fun mainButtons() {
                     var graphsList by remember { mutableStateOf(arrayListOf(GraphInfo("", true, true))) }
                     var isApplyClicked by remember { mutableStateOf(false) }
 
-                    when (isApplyClicked) {
+                    when (isApplyClicked || neo4jRepository != null) {
                         false -> {
                             Divider(color = Color.Black, modifier = Modifier.fillMaxHeight().width(1.dp))
 
@@ -273,10 +275,7 @@ fun mainButtons() {
                                             .align(Alignment.End),
                                     onClick = {
                                         isApplyClicked = true
-                                        Neo4jRepository(uri, username, password).apply {
-                                            graphsList = dbGraphsInfo()
-                                            close()
-                                        }
+                                        neo4jRepository = Neo4jRepository(uri, username, password)
                                     },
                                 ) {
                                     Text("Apply")
@@ -284,17 +283,54 @@ fun mainButtons() {
                             }
                         }
                         else -> {
+                            val neo4jRepo = neo4jRepository as Neo4jRepository
+                            graphsList = neo4jRepo.dbGraphsInfo()
                             LazyColumn(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                                items(graphsList) { currentDatabase ->
+                                items(graphsList) { currentGraph ->
                                     Text(
-                                        text = currentDatabase.name,
+                                        text = currentGraph.name,
                                         modifier =
                                             Modifier
                                                 .fillMaxWidth()
                                                 .height(40.dp)
                                                 .padding(5.dp)
                                                 .clickable(
-                                                    onClick = { TODO() },
+                                                    onClick = {
+                                                        if (currentGraph.isAnalyzed) {
+                                                            val graphVM: GraphVM
+                                                            if (currentGraph.isDirected) {
+                                                                directedGraphVM = neo4jRepo.getDirectedAnalyzedGraphVM(currentGraph.name)
+                                                                graphVM = directedGraphVM
+                                                                screenState = Screen.DirectedGraph
+                                                            } else {
+                                                                undirectedGraphVM =
+                                                                    neo4jRepo.getUndirectedAnalyzedGraphVM(
+                                                                        currentGraph.name,
+                                                                    )
+                                                                screenState = Screen.UndirectedGraph
+                                                                graphVM = undirectedGraphVM
+                                                            }
+                                                            graphVM.cyclesAvailability = false
+                                                            graphVM.mfsAvailability = false
+                                                            graphVM.shortestPathAvailability = false
+                                                            graphVM.bridgesAvailability = false
+                                                            graphVM.partitionAvailability = false
+                                                            graphVM.keyVerticesAvailability = false
+                                                            graphVM.stronglyConnectedComponentsAvailability = false
+                                                        } else if (currentGraph.isDirected) {
+                                                            directedGraphVM =
+                                                                DirectedGraphVM(
+                                                                    neo4jRepo.getDirectedGraph(currentGraph.name),
+                                                                )
+                                                            screenState = Screen.DirectedGraph
+                                                        } else {
+                                                            undirectedGraphVM =
+                                                                UndirectedGraphVM(
+                                                                    neo4jRepo.getUndirectedGraph(currentGraph.name),
+                                                                )
+                                                            screenState = Screen.UndirectedGraph
+                                                        }
+                                                    },
                                                 ),
                                     )
                                 }
