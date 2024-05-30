@@ -305,3 +305,4 @@ abstract class GraphVM(
         edges.forEach { it.labelVisibility = labelsVisibilityState.value }
     }
 }
+

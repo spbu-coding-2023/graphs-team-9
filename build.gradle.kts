@@ -34,6 +34,8 @@ dependencies {
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
+    // neo4j
+    implementation("org.neo4j.driver", "neo4j-java-driver", "5.6.0")
 
     compileOnly("org.jetbrains.dokka:dokka-core:1.9.20")
 }

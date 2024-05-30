@@ -12,7 +12,7 @@ import viewModel.UndirectedGraphVM
 fun undirectedGraphView(viewModel: UndirectedGraphVM) {
     Box(
         Modifier.fillMaxSize().onGloballyPositioned {
-                layoutCoordinates ->
+            layoutCoordinates ->
             viewModel.height = layoutCoordinates.size.height
             viewModel.width = layoutCoordinates.size.width
         },

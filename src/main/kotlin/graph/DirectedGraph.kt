@@ -1,6 +1,7 @@
 package graph
 
 import algorithms.BellmanFordAlgorithm
+import algorithms.ExtremelyFastAlgorithm
 import algorithms.TarjanSAlgo
 
 open class DirectedGraph(
