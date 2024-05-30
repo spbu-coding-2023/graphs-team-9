@@ -1,7 +1,6 @@
 package algorithms
 
 import graph.AdjacencyList
-import graph.UndirectedAdjacencyList
 import kotlin.math.ceil
 import kotlin.math.sqrt
 

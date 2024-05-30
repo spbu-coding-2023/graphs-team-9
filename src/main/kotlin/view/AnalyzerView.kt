@@ -29,7 +29,6 @@ fun analyzerView(
     graphVM: GraphVM,
     backButtonVM: BackButtonVM,
 ) {
-
     var isShortestPathButtonPressed by remember { mutableStateOf(false) }
     var isErrorInShortestPathOccurred by remember { mutableStateOf(false) }
     var isErrorInCyclesPathOccurred by remember { mutableStateOf(false) }
@@ -88,7 +87,6 @@ fun analyzerView(
         Row(Modifier.weight(3f)) {
             Button(
                 modifier = Modifier.weight(3f),
-
                 onClick = { isSaveButtonClicked = !isSaveButtonClicked },
             ) {
                 Text(text = "save")
@@ -159,7 +157,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "partition")
         }
@@ -171,7 +169,6 @@ fun analyzerView(
             enabled = graphVM.keyVerticesAvailability,
             onClick = (
                 {
-
                     try {
                         graphVM.changeVerticesSizes()
                         backButtonVM.saveCurrentAction()
@@ -185,7 +182,7 @@ fun analyzerView(
                         isErrorInKeyVerticesOccurred = true
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "key vertices")
         }
@@ -220,7 +217,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "minimum spanning forest")
         }
@@ -257,7 +254,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "shortest path")
         }
@@ -337,7 +334,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "strongly connected components")
         }
@@ -378,7 +375,7 @@ fun analyzerView(
                         isErrorInCyclesPathOccurred = true
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "cycles")
         }
@@ -415,7 +412,7 @@ fun analyzerView(
                         backButtonVM.setSavedActionAsOnClick()
                     }
                 }
-                ),
+            ),
         ) {
             Text(text = "bridges")
         }

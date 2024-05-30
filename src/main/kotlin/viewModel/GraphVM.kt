@@ -28,6 +28,7 @@ abstract class GraphVM(
             "'sizes' size isn't equal verticesCount"
         }
     }
+
     private val unscaledCoordinates = coordinates ?: graph.layoutGraph()
     val standardWidth = 1024
     val standardHeight = 736
@@ -53,7 +54,6 @@ abstract class GraphVM(
                 if (verticesColors != null) verticesColors[i] else Color.White,
             )
         }
-
 
     abstract val edges: List<EdgeVM>
     var height: Int
@@ -231,7 +231,6 @@ abstract class GraphVM(
     }
 
     private fun makeCoordinatesScaled(): List<Pair<Dp, Dp>> {
-
         val leftOffset = vertexDefaultSize.value / 2
         val rightOffset: Dp = (widthState.value / 18).dp
         val topOffset = vertexDefaultSize.value / 2
@@ -243,7 +242,7 @@ abstract class GraphVM(
         val scaleY: Dp = height - padding - topOffset - bottomOffset
         var minX: Float = Float.MAX_VALUE
         var maxX: Float = Float.MIN_VALUE
-        var minY: Float  = Float.MAX_VALUE
+        var minY: Float = Float.MAX_VALUE
         var maxY: Float = Float.MIN_VALUE
         vertices.forEach {
             if (it.x.value > maxX) {
@@ -262,7 +261,7 @@ abstract class GraphVM(
         val newCoordinates =
             vertices.map { vertex ->
                 ((vertex.x.value - minX) / (maxX - minX) * scaleX.value).dp + vertexDefaultSize.value +
-                        leftOffset to ((vertex.y.value - minY) /( (maxY - minY)) * scaleY.value).dp + topOffset
+                    leftOffset to ((vertex.y.value - minY) / ((maxY - minY)) * scaleY.value).dp + topOffset
             }
 
         val offsetX =
@@ -270,10 +269,10 @@ abstract class GraphVM(
         val offsetY =
             (height - topOffset - bottomOffset - (newCoordinates.maxOf { it.second } - newCoordinates.minOf { it.second })) / 2
         return newCoordinates.map { point ->
-                Pair(
-                    (floor((point.first + offsetX).value * 100.0f) / 100.0f).dp,
-                    (floor((point.second + offsetY).value * 100.0f) / 100.0f).dp
-                )
+            Pair(
+                (floor((point.first + offsetX).value * 100.0f) / 100.0f).dp,
+                (floor((point.second + offsetY).value * 100.0f) / 100.0f).dp,
+            )
         }
     }
 
@@ -305,4 +304,3 @@ abstract class GraphVM(
         edges.forEach { it.labelVisibility = labelsVisibilityState.value }
     }
 }
-

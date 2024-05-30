@@ -3,7 +3,6 @@ package viewModel
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import graph.Graph
-import graph.UndirectedGraph
 
 class UndirectedGraphVM(
     graph: Graph,

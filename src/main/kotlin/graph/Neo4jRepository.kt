@@ -55,11 +55,11 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
         val standardHeight = graphVM.standardHeight
         val commands = StringBuilder("CREATE (graph: GraphAnl {name : '$graphName', isDirected: $isDirected})\n")
         graphVM.vertices.forEach {
-            val size = (it.size - 10.dp) / (height * width) * (standardHeight * width) + 10.dp
+            val size = (it.size - 10.dp) / (height * width) * (standardHeight * standardWidth) + 10.dp
             commands.append(
                 "CREATE (v${it.data}: VertexAnl {data: '${it.data}', size: ${size.value}, colorR: ${it.color.red}," +
                     "colorG: ${it.color.green}, colorB: ${it.color.blue}, x: ${it.x.value}, y: ${it.y.value}})\n",
-            ) // добавить масштабирование координат
+            )
             commands.append("CREATE (v${it.data})-[:PartOf]->(graph)\n")
         }
         graphVM.edges.forEach {

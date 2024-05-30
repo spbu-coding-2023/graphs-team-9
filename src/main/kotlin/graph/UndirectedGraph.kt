@@ -2,7 +2,6 @@ package graph
 
 import algorithms.BellmanFordAlgorithm
 import algorithms.BoruvkaSAlgorithm
-import algorithms.ExtremelyFastAlgorithm
 import algorithms.FindBridgesAlgorithm
 
 open class UndirectedGraph() : Graph() {
