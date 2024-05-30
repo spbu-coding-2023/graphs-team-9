@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm")
     id("org.jetbrains.compose")
     jacoco
+    kotlin("plugin.serialization") version "1.5.30"
     // Documentation generation
     id("org.jetbrains.dokka") version "1.9.20"
 }
@@ -38,6 +39,8 @@ dependencies {
     implementation("org.neo4j.driver", "neo4j-java-driver", "5.6.0")
 
     compileOnly("org.jetbrains.dokka:dokka-core:1.9.20")
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 }
 
 compose.desktop {
