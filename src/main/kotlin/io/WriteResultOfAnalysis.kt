@@ -1,5 +1,6 @@
 package io
 
+import androidx.compose.ui.unit.dp
 import graph.DirectedGraph
 import graph.UndirectedGraph
 import viewModel.DirectedGraphVM
@@ -35,10 +36,11 @@ class WriteResultOfAnalysis(private val graph: GraphVM, name: String) {
     private fun writeVertices() {
         for (vertex in vertices) {
             writer.newLine()
+            val size = (vertex.size - 10.dp) / (graph.width * graph.height) * (graph.standardHeight * graph.standardWidth) + 10.dp
             writer.write(
                 "${vertex.data}, ${vertex.x.toString().substringBeforeLast(".")}, " +
                     "${vertex.y.toString().substringBeforeLast(".")}, " +
-                    "${vertex.size.toString().substringBeforeLast(".")}\n${vertex.color.red}, " +
+                    "${size.toString().substringBeforeLast(".")}\n${vertex.color.red}, " +
                     "${vertex.color.green}, ${vertex.color.blue}",
             )
         }
