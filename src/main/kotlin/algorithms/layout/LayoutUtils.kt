@@ -174,7 +174,7 @@ object LayoutUtils {
                     maxJT,
                     estimatedOptimalJitterTolerance * totalEffectiveTraction / (
                         vertices.size * vertices.size
-                    ),
+                        ),
                 ),
             )
         val minSpeedEfficiency = 0.05

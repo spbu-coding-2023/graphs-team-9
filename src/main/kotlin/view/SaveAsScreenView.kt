@@ -4,11 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -68,7 +68,14 @@ fun saveAsScreen(
             colors = ButtonDefaults.buttonColors(Color.White),
             enabled = isCSVButtonEnabled,
         ) { Text("CSV") }
-        Button(modifier = Modifier.fillMaxWidth(), enabled = false,  onClick = {}, colors = ButtonDefaults.buttonColors(Color.White)) { Text("SQLite") }
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            enabled = false,
+            onClick = {},
+            colors = ButtonDefaults.buttonColors(Color.White)
+        ) {
+            Text("SQLite")
+        }
         Button(
             modifier = Modifier.fillMaxWidth(),
             enabled = neo4jRepository != null,
@@ -81,8 +88,7 @@ fun saveAsScreen(
                             putAnalyzedGraphVM(graphVM, name, true)
                         }
                     }
-                }
-                else {
+                } else {
                     neo4jRepository?.apply {
                         if (graphVM::class == UndirectedGraphVM::class) {
                             putGraph(graphVM.graph, name, false)

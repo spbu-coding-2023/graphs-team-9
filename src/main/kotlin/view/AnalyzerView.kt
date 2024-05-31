@@ -85,7 +85,7 @@ fun analyzerView(
                                 backButtonVM.setSavedActionAsOnClick()
                             }
                         }
-                    ),
+                        ),
                 ) {
                     Text(text = "partition")
                 }
@@ -106,7 +106,7 @@ fun analyzerView(
                                 backButtonVM.setSavedActionAsOnClick()
                             }
                         }
-                    ),
+                        ),
                 ) {
                     Text(text = "key vertices")
                 }
@@ -142,7 +142,7 @@ fun analyzerView(
                                 backButtonVM.setSavedActionAsOnClick()
                             }
                         }
-                    ),
+                        ),
                 ) {
                     Text(text = "minimum spanning forest")
                 }
@@ -180,7 +180,7 @@ fun analyzerView(
                                 backButtonVM.setSavedActionAsOnClick()
                             }
                         }
-                    ),
+                        ),
                 ) {
                     Text(text = "shortest path")
                 }
@@ -264,7 +264,7 @@ fun analyzerView(
                                 backButtonVM.setSavedActionAsOnClick()
                             }
                         }
-                    ),
+                        ),
                 ) {
                     Text(text = "strongly connected components")
                 }
@@ -302,7 +302,7 @@ fun analyzerView(
                                 backButtonVM.setSavedActionAsOnClick()
                             }
                         }
-                    ),
+                        ),
                 ) {
                     Text(text = "cycles")
                 }
@@ -323,21 +323,24 @@ fun analyzerView(
 
                         Spacer(Modifier.weight(1f))
 
-                        Button(enabled = isOKButtonForCyclesEnabled, onClick = {
-                            try {
-                                graphVM.colorCycles(vertex)
-                                backButtonVM.saveCurrentAction()
-                                isOKButtonForCyclesEnabled = false
-                                backButtonVM.onClick = {
-                                    isOKButtonForCyclesEnabled = true
-                                    vertex = ""
-                                    graphVM.removePaths()
-                                    backButtonVM.setSavedActionAsOnClick()
+                        Button(
+                            enabled = isOKButtonForCyclesEnabled,
+                            onClick = {
+                                try {
+                                    graphVM.colorCycles(vertex)
+                                    backButtonVM.saveCurrentAction()
+                                    isOKButtonForCyclesEnabled = false
+                                    backButtonVM.onClick = {
+                                        isOKButtonForCyclesEnabled = true
+                                        vertex = ""
+                                        graphVM.removePaths()
+                                        backButtonVM.setSavedActionAsOnClick()
+                                    }
+                                } catch (e: NoSuchElementException) {
+                                    isErrorInCyclesOccurred = true
                                 }
-                            } catch (e: NoSuchElementException) {
-                                isErrorInCyclesOccurred = true
-                            }
-                        }) {
+                            },
+                        ) {
                             Text("OK")
                         }
                     }
@@ -375,7 +378,7 @@ fun analyzerView(
                                 backButtonVM.setSavedActionAsOnClick()
                             }
                         }
-                    ),
+                        ),
                 ) {
                     Text(text = "bridges")
                 }

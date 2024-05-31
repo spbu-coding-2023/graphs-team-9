@@ -193,7 +193,7 @@ abstract class GraphVM(
         val cycles = graph.findCyclesForVertex(vertex)
         var i = 0
         cycles.forEach { cycle ->
-            vertices[cycle[0]].pathPositions.add(i+cycle.size)
+            vertices[cycle[0]].pathPositions.add(i + cycle.size)
             cycle.forEach { vertices[it].pathPositions.add(i++) }
             i++
         }
