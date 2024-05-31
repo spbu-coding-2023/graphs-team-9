@@ -5,7 +5,7 @@ package org.jetbrains.research.ictl.louvain
  */
 internal class InternalLink(
     val to: Int,
-    val weight: Double,
+    val weight: Double
 )
 
 /**
@@ -16,7 +16,7 @@ internal sealed class BaseNode(
     var community: Int,
     val originalNodes: Set<Int>,
     open val incidentLinks: List<InternalLink>,
-    open val selfLoopsWeight: Double,
+    open val selfLoopsWeight: Double
 ) {
     fun neighbourCommunities(nodes: List<Node>) = incidentLinks.map { nodes[it.to].community }.distinct().filter { it != community }
 }
@@ -25,10 +25,9 @@ internal class Node(
     community: Int,
     originalNodes: Set<Int>,
     incidentLinks: List<InternalLink>,
-    selfLoopsWeight: Double = 0.0,
+    selfLoopsWeight: Double = 0.0
 ) : BaseNode(community, originalNodes, incidentLinks, selfLoopsWeight) {
     val outDegree = incidentLinks.sumOf { it.weight }
-
     fun degree() = outDegree + selfLoopsWeight
 }
 
@@ -36,7 +35,7 @@ internal class MutableNode(
     community: Int,
     originalNodes: Set<Int>,
     override val incidentLinks: MutableList<InternalLink> = mutableListOf(),
-    override var selfLoopsWeight: Double = 0.0,
+    override var selfLoopsWeight: Double = 0.0
 ) : BaseNode(community, originalNodes, incidentLinks, selfLoopsWeight) {
     fun toNode(): Node = Node(community, originalNodes, incidentLinks)
 }
