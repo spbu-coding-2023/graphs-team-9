@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
@@ -34,9 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import graph.GraphInfo
 import graph.Neo4jRepository
+import neo4jRepository
 import viewModel.BackButtonVM
 import viewModel.DirectedGraphVM
 import viewModel.FileListVM
+import viewModel.GraphVM
 import viewModel.MainButtonVM
 import viewModel.TextFieldVM
 import viewModel.UndirectedGraphVM
@@ -44,7 +45,7 @@ import viewModel.UndirectedGraphVM
 enum class ButtonPressed {
     None,
     ChooseFile,
-    PostgreSQL,
+    SQLite,
     Neo4j,
 }
 
@@ -96,10 +97,10 @@ fun mainButtons() {
                             .width(75.dp)
                             .height(75.dp),
                     onClick = {
-                        buttonState = MainButtonVM(buttonState).onClick(ButtonPressed.PostgreSQL)
+                        buttonState = MainButtonVM(buttonState).onClick(ButtonPressed.SQLite)
                     },
                 ) {
-                    if (buttonState == ButtonPressed.PostgreSQL) {
+                    if (buttonState == ButtonPressed.SQLite) {
                         Text("❌", textAlign = TextAlign.Center, fontSize = 30.sp)
                     } else {
                         Text("SQLite", textAlign = TextAlign.Center)
@@ -136,20 +137,7 @@ fun mainButtons() {
                     var path by remember { mutableStateOf("graphs/") }
                     var isErrorOccurred by remember { mutableStateOf(false) }
 
-                    if (isErrorOccurred) {
-                        AlertDialog(
-                            title = { Text("Error", fontSize = 20.sp) },
-                            text = { Text("Can't read file", fontSize = 15.sp) },
-                            onDismissRequest = { isErrorOccurred = false },
-                            confirmButton = {
-                                Button(
-                                    onClick = { isErrorOccurred = false },
-                                ) {
-                                    Text("OK", fontSize = 15.sp)
-                                }
-                            },
-                        )
-                    }
+                    if (isErrorOccurred) alertDialogView({ isErrorOccurred = false }, "Error", "Can't read file")
 
                     Divider(color = Color.Black, modifier = Modifier.fillMaxHeight().width(1.dp))
 
@@ -184,27 +172,34 @@ fun mainButtons() {
                                                 onClick = {
                                                     if (currentFile.substringAfterLast(".") == "csv") {
                                                         try {
-                                                            val graph = FileListVM(currentFile).getGraph()
-                                                            screenState = FileListVM(currentFile).defineGraphType(graph)
-                                                            when (screenState) {
-                                                                Screen.UndirectedGraph -> undirectedGraphVM = UndirectedGraphVM(graph)
-                                                                else -> directedGraphVM = DirectedGraphVM(graph)
-                                                            }
-                                                            buttonState = ButtonPressed.None
-                                                        } catch (e: IllegalArgumentException) {
-                                                            try {
-                                                                val graphVM = FileListVM(currentFile).getGraphVM()
-                                                                screenState = FileListVM(currentFile).defineGraphVMType(graphVM)
-                                                                when (screenState) {
-                                                                    Screen.UndirectedGraph ->
-                                                                        undirectedGraphVM =
-                                                                            graphVM as UndirectedGraphVM
-                                                                    else -> directedGraphVM = graphVM as DirectedGraphVM
+                                                            when (!FileListVM(currentFile).isGraphAnalyzed()) {
+                                                                true -> {
+                                                                    val graph = FileListVM(currentFile).getGraph()
+                                                                    screenState = FileListVM(currentFile).defineGraphType(graph)
+                                                                    when (screenState) {
+                                                                        Screen.UndirectedGraph ->
+                                                                            undirectedGraphVM =
+                                                                                UndirectedGraphVM(
+                                                                                    graph,
+                                                                                )
+                                                                        else -> directedGraphVM = DirectedGraphVM(graph)
+                                                                    }
+                                                                    buttonState = ButtonPressed.None
                                                                 }
-                                                                buttonState = ButtonPressed.None
-                                                            } catch (e: IllegalArgumentException) {
-                                                                isErrorOccurred = true
+                                                                else -> {
+                                                                    val graphVM = FileListVM(currentFile).getGraphVM()
+                                                                    screenState = FileListVM(currentFile).defineGraphVMType(graphVM)
+                                                                    when (screenState) {
+                                                                        Screen.UndirectedGraph ->
+                                                                            undirectedGraphVM =
+                                                                                graphVM as UndirectedGraphVM
+                                                                        else -> directedGraphVM = graphVM as DirectedGraphVM
+                                                                    }
+                                                                    buttonState = ButtonPressed.None
+                                                                }
                                                             }
+                                                        } catch (e: IllegalArgumentException) {
+                                                            isErrorOccurred = true
                                                         }
                                                     } else {
                                                         file = "$currentFile/"
@@ -219,12 +214,12 @@ fun mainButtons() {
                         }
                     }
                 }
-                ButtonPressed.PostgreSQL -> postgreSQLScreen()
+                ButtonPressed.SQLite -> sqliteScreen()
                 ButtonPressed.Neo4j -> {
                     var graphsList by remember { mutableStateOf(arrayListOf(GraphInfo("", true, true))) }
                     var isApplyClicked by remember { mutableStateOf(false) }
 
-                    when (isApplyClicked) {
+                    when (isApplyClicked || neo4jRepository != null) {
                         false -> {
                             Divider(color = Color.Black, modifier = Modifier.fillMaxHeight().width(1.dp))
 
@@ -280,10 +275,7 @@ fun mainButtons() {
                                             .align(Alignment.End),
                                     onClick = {
                                         isApplyClicked = true
-                                        Neo4jRepository(uri, username, password).apply {
-                                            graphsList = dbGraphsInfo()
-                                            close()
-                                        }
+                                        neo4jRepository = Neo4jRepository(uri, username, password)
                                     },
                                 ) {
                                     Text("Apply")
@@ -291,17 +283,54 @@ fun mainButtons() {
                             }
                         }
                         else -> {
+                            val neo4jRepo = neo4jRepository as Neo4jRepository
+                            graphsList = neo4jRepo.dbGraphsInfo()
                             LazyColumn(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                                items(graphsList) { currentDatabase ->
+                                items(graphsList) { currentGraph ->
                                     Text(
-                                        text = currentDatabase.name,
+                                        text = currentGraph.name,
                                         modifier =
                                             Modifier
                                                 .fillMaxWidth()
                                                 .height(40.dp)
                                                 .padding(5.dp)
                                                 .clickable(
-                                                    onClick = { TODO() },
+                                                    onClick = {
+                                                        if (currentGraph.isAnalyzed) {
+                                                            val graphVM: GraphVM
+                                                            if (currentGraph.isDirected) {
+                                                                directedGraphVM = neo4jRepo.getDirectedAnalyzedGraphVM(currentGraph.name)
+                                                                graphVM = directedGraphVM
+                                                                screenState = Screen.DirectedGraph
+                                                            } else {
+                                                                undirectedGraphVM =
+                                                                    neo4jRepo.getUndirectedAnalyzedGraphVM(
+                                                                        currentGraph.name,
+                                                                    )
+                                                                screenState = Screen.UndirectedGraph
+                                                                graphVM = undirectedGraphVM
+                                                            }
+                                                            graphVM.cyclesAvailability = false
+                                                            graphVM.mfsAvailability = false
+                                                            graphVM.shortestPathAvailability = false
+                                                            graphVM.bridgesAvailability = false
+                                                            graphVM.partitionAvailability = false
+                                                            graphVM.keyVerticesAvailability = false
+                                                            graphVM.stronglyConnectedComponentsAvailability = false
+                                                        } else if (currentGraph.isDirected) {
+                                                            directedGraphVM =
+                                                                DirectedGraphVM(
+                                                                    neo4jRepo.getDirectedGraph(currentGraph.name),
+                                                                )
+                                                            screenState = Screen.DirectedGraph
+                                                        } else {
+                                                            undirectedGraphVM =
+                                                                UndirectedGraphVM(
+                                                                    neo4jRepo.getUndirectedGraph(currentGraph.name),
+                                                                )
+                                                            screenState = Screen.UndirectedGraph
+                                                        }
+                                                    },
                                                 ),
                                     )
                                 }

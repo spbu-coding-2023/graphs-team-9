@@ -5,6 +5,8 @@ import graph.UndirectedGraph
 import io.Read
 import io.ReadResultOfAnalysis
 import view.Screen
+import java.io.BufferedReader
+import java.io.FileReader
 
 class FileListVM(private val file: String) {
     fun getGraph(): Graph {
@@ -36,6 +38,20 @@ class FileListVM(private val file: String) {
         return when (graph::class) {
             undirectedGraph::class -> Screen.UndirectedGraph
             else -> Screen.DirectedGraph
+        }
+    }
+
+    fun isGraphAnalyzed(): Boolean {
+        try {
+            val reader = BufferedReader(FileReader("graphs/$file"))
+            val mainData = reader.readLine().split(", ")
+            reader.close()
+            return when (mainData[0]) {
+                "Analyzed" -> true
+                else -> false
+            }
+        } catch (e: Exception) {
+            throw IllegalArgumentException()
         }
     }
 }

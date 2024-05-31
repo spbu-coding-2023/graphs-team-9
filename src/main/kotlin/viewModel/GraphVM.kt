@@ -11,7 +11,7 @@ import kotlin.math.floor
 import kotlin.random.Random
 
 abstract class GraphVM(
-    private val graph: Graph,
+    internal val graph: Graph,
     verticesColors: ArrayList<Color>? = null,
     coordinates: ArrayList<Pair<Double, Double>>? = null,
     sizes: ArrayList<Dp>? = null,
@@ -145,7 +145,7 @@ abstract class GraphVM(
     fun changeVerticesSizes() {
         if (keyVerticesAvailabilityS.value) {
             val ratios = graph.keyVertices()
-            vertices.forEachIndexed { i, vertex -> vertex.size *= 3.5f * ratios[i].toFloat() }
+            vertices.forEachIndexed { i, vertex -> vertex.size *= 2f * ratios[i].toFloat() }
         }
     }
 
@@ -165,11 +165,9 @@ abstract class GraphVM(
         start: String,
         end: String,
     ) {
-        if (shortestPathAvailabilityS.value) {
-            val shortestPath = graph.shortestPathByBFAlgorithm(start, end) ?: TODO()
-            for ((i, vertex) in shortestPath.withIndex()) {
-                vertices[vertex].pathPositions.add(i)
-            }
+        val shortestPath = graph.shortestPathByBFAlgorithm(start, end) ?: throw IllegalArgumentException()
+        for ((i, vertex) in shortestPath.withIndex()) {
+            vertices[vertex].pathPositions.add(i)
         }
     }
 
@@ -192,13 +190,12 @@ abstract class GraphVM(
     }
 
     fun colorCycles(vertex: String) {
-        if (cyclesAvailability) {
-            val cycles = graph.findCyclesForVertex(vertex)
-            var i = 0
-            cycles.forEach { cycle ->
-                cycle.forEach { vertices[it].pathPositions.add(i++) }
-                i++
-            }
+        val cycles = graph.findCyclesForVertex(vertex)
+        var i = 0
+        cycles.forEach { cycle ->
+            vertices[cycle[0]].pathPositions.add(i + cycle.size)
+            cycle.forEach { vertices[it].pathPositions.add(i++) }
+            i++
         }
     }
 
