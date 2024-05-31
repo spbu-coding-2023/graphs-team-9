@@ -68,7 +68,7 @@ fun saveAsScreen(
             colors = ButtonDefaults.buttonColors(Color.White),
             enabled = isCSVButtonEnabled,
         ) { Text("CSV") }
-        Button(modifier = Modifier.fillMaxWidth(), onClick = {}, colors = ButtonDefaults.buttonColors(Color.White)) { Text("SQLite") }
+        Button(modifier = Modifier.fillMaxWidth(), enabled = false,  onClick = {}, colors = ButtonDefaults.buttonColors(Color.White)) { Text("SQLite") }
         Button(
             modifier = Modifier.fillMaxWidth(),
             enabled = neo4jRepository != null,
@@ -79,6 +79,15 @@ fun saveAsScreen(
                             putAnalyzedGraphVM(graphVM, name, false)
                         } else {
                             putAnalyzedGraphVM(graphVM, name, true)
+                        }
+                    }
+                }
+                else {
+                    neo4jRepository?.apply {
+                        if (graphVM::class == UndirectedGraphVM::class) {
+                            putGraph(graphVM.graph, name, false)
+                        } else {
+                            putGraph(graphVM.graph, name, true)
                         }
                     }
                 }
