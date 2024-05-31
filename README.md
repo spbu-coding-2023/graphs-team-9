@@ -34,3 +34,7 @@ cd graphs-team-9
 **Implementations:**
 1. [forceatlas2](https://github.com/bhargavchippada/forceatlas2/tree/master), GPL-3.0 license
 2. [louvain](https://github.com/JetBrains-Research/louvain/tree/main), Apache-2.0 license
+
+## License
+
+This project uses the GNU General Public License v3.0. See the LICENSE for more info.
