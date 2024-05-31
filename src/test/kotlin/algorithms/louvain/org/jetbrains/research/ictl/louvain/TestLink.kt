@@ -4,10 +4,10 @@ package algorithms.louvain.org.jetbrains.research.ictl.louvain
 // add:
 // import org.jetbrains.research.ictl.louvain.Link
 
-import org.jetbrains.research.ictl.louvain.Link
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.jetbrains.research.ictl.louvain.Link
 
 @Polymorphic
 @Serializable
