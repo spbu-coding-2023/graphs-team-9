@@ -1,7 +1,8 @@
 # Graph visualization and analysis app
+This app enables users to visualize and analyze graphs using gui.
+Application supports modern (later 2006) and classic graph algorithms, allowing for analysis and visualization.
 
-This app enables users to visualize and analyze graphs using gui. 
-Application supports modern and classic graph algorithms, allowing for detailed analysis and visualization.
+![app_screenshot.jpg](src/main/resources/app_screenshot.jpg)
 
 ## Features
 - Supported graphs: 
@@ -11,7 +12,7 @@ Application supports modern and classic graph algorithms, allowing for detailed 
 - [High closeness centrality vertices](https://www.researchgate.net/publication/281414046_An_Extremely_Fast_Algorithm_for_Identifying_High_Closeness_Centrality_Vertices_in_Large-Scale_Networks)
 - [Detecting communities](https://en.wikipedia.org/wiki/Louvain_method)
 - [Layout](https://www.researchgate.net/publication/262977655_ForceAtlas2_a_Continuous_Graph_Layout_Algorithm_for_Handy_Network_Visualization_Designed_for_the_Gephi_Software)
-- classic algorithms (SCC, SSSP, finding cycles, etc.)
+- Сlassic algorithms (SCC, SSSP, finding cycles, etc.)
 
 ## Getting started
 
