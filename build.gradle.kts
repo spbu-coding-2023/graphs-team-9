@@ -5,8 +5,6 @@ plugins {
     id("org.jetbrains.compose")
     jacoco
     kotlin("plugin.serialization") version "1.5.30"
-    // Documentation generation
-    id("org.jetbrains.dokka") version "1.9.20"
 }
 
 group = "com.example"
@@ -38,8 +36,6 @@ dependencies {
     // neo4j
     implementation("org.neo4j.driver", "neo4j-java-driver", "5.6.0")
 
-    compileOnly("org.jetbrains.dokka:dokka-core:1.9.20")
-
     testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 }
 
@@ -67,24 +63,4 @@ tasks.named<JacocoReport>("jacocoTestReport") {
         xml.required = true
         html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
     }
-}
-
-tasks.dokkaHtml {
-    outputDirectory.set(layout.buildDirectory.dir("documentation/html"))
-}
-
-tasks.dokkaGfm {
-    outputDirectory.set(layout.buildDirectory.dir("documentation/markdown"))
-}
-
-tasks.register<Jar>("dokkaHtmlJar") {
-    dependsOn(tasks.dokkaHtml)
-    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    archiveClassifier.set("html-docs")
-}
-
-tasks.register<Jar>("dokkaJavadocJar") {
-    dependsOn(tasks.dokkaJavadoc)
-    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    archiveClassifier.set("javadoc")
 }
