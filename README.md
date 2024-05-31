@@ -38,4 +38,4 @@ cd graphs-team-9
 
 ## License
 
-This project uses the GNU General Public License v3.0. See the LICENSE for more info.
+This project uses the GNU General Public License v3.0. See the [LICENSE](LICENSE) for more info.
