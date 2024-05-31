@@ -216,8 +216,11 @@ fun mainButtons() {
                 }
                 ButtonPressed.SQLite -> sqliteScreen()
                 ButtonPressed.Neo4j -> {
+                    var isErrorOccurred by remember { mutableStateOf(false) }
                     var graphsList by remember { mutableStateOf(arrayListOf(GraphInfo("", true, true))) }
                     var isApplyClicked by remember { mutableStateOf(false) }
+
+                    if (isErrorOccurred) alertDialogView({ isErrorOccurred = false }, "Error", "Can't connect to database")
 
                     when (isApplyClicked || neo4jRepository != null) {
                         false -> {
@@ -274,8 +277,12 @@ fun mainButtons() {
                                             .height(45.dp)
                                             .align(Alignment.End),
                                     onClick = {
-                                        isApplyClicked = true
-                                        neo4jRepository = Neo4jRepository(uri, username, password)
+                                        try {
+                                            neo4jRepository = Neo4jRepository(uri, username, password)
+                                            isApplyClicked = true
+                                        } catch (e: Exception) {
+                                            isErrorOccurred = true
+                                        }
                                     },
                                 ) {
                                     Text("Apply")

@@ -85,6 +85,7 @@ fun sqliteScreen() {
 
         Button(
             colors = ButtonDefaults.buttonColors(Color.White),
+            enabled = false,
             modifier =
                 Modifier
                     .width(100.dp)
