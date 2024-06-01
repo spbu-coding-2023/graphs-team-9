@@ -9,5 +9,4 @@ class GraphEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<GraphEntity>(GraphsTable)
     var name by GraphsTable.name
     var type by GraphsTable.type
-    var relatedGraphID by EdgesTable.relatedGraphID
 }
