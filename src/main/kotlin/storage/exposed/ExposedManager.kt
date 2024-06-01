@@ -3,52 +3,79 @@ package storage.exposed
 import graph.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import storage.exposed.edges.EdgesEntity
+import storage.exposed.edges.EdgeEntity
 import storage.exposed.edges.EdgesTable
-import storage.exposed.vertices.VerticesEntity
+import storage.exposed.graph.GraphEntity
+import storage.exposed.graph.GraphsTable
+import storage.exposed.vertices.VertexEntity
 import storage.exposed.vertices.VerticesTable
 
-const val dbPath = "./data/graphs-team-9.db"
-
-class ExposedManager : ExposedManagerInterface {
-    private val db by lazy {
-        Database.connect("jdbc:sqlite:$dbPath", "org.sqlite.JDBC")
-    }
+class ExposedManager {
+    private val dbPath = "graph.db"
 
     private fun initConnection() {
-        transaction(db) {
-            SchemaUtils.create(VerticesTable)
-            SchemaUtils.create(EdgesTable)
-        }
-    }
-
-    private fun clearTables() {
-        initConnection()
+        Database.connect("jdbc:sqlite:$dbPath", "org.sqlite.JDBC")
         transaction {
-            if (VerticesTable.selectAll().empty().not() || EdgesTable.selectAll().empty().not())
-                {
-                    VerticesTable.deleteAll()
-                    EdgesTable.deleteAll()
-                }
+            addLogger(StdOutSqlLogger)
+            SchemaUtils.create(GraphsTable, VerticesTable, EdgesTable)
         }
     }
 
-    override fun saveGraph(graph: Graph<String>) {
+    fun saveGraph(graphName: String, graph: Graph) {
         initConnection()
         val vertexCount = graph.verticesCount()
-        when (graph is UndirectedGraph<String>) {
-            true -> {
-                val graphsRepresentation = graph.svsEdgesList()
+        if (graph is UndirectedGraph) {
+            val graphsRepresentation = graph.svsEdgesList()
+            initConnection()
+            transaction {
+                val graphID = GraphsTable.insertAndGetId {
+                    it[name] = graphName
+                    it[type] = "Undirected"
+                }.value
                 for (edge in graphsRepresentation) {
-                    transaction(db) {
-                        EdgesEntity.new {
+                    addLogger(StdOutSqlLogger)
+                    EdgeEntity.new {
+                        fromVertexValue =
+                            VertexEntity.new {
+                                value = graph.vertexValue(edge.source())
+                            }
+                        toVertexValue =
+                            VertexEntity.new {
+                                value = graph.vertexValue(edge.target())
+                            }
+                        label =
+                            if (edge.label() == "") {
+                                null
+                            } else {
+                                edge.label()
+                            }
+                        weight = edge.weight()
+                        relatedGraphID = graphID
+                    }
+                }
+            }
+        }
+        else {
+            val graphsRepresentation = graph.adjacencyList()
+            initConnection()
+            transaction {
+                val graphID = GraphsTable.insertAndGetId {
+                    it[name] = graphName
+                    it[type] = "Directed"
+                }.value
+                for (sourceVertexIndex in 0 until vertexCount) {
+                    for (outgoingEdge in 0 until graphsRepresentation.outgoingEdgesCount(sourceVertexIndex)) {
+                        val edge = graphsRepresentation.getEdge(sourceVertexIndex, outgoingEdge)
+                        addLogger(StdOutSqlLogger)
+
+                        EdgeEntity.new {
                             fromVertexValue =
-                                VerticesEntity.new {
-                                    value = edge.source().toString()
+                                VertexEntity.new {
+                                    value = graph.vertexValue(sourceVertexIndex)
                                 }
                             toVertexValue =
-                                VerticesEntity.new {
-                                    value = edge.target().toString()
+                                VertexEntity.new {
+                                    value = graph.vertexValue(edge.target())
                                 }
                             label =
                                 if (edge.label() == "") {
@@ -56,33 +83,8 @@ class ExposedManager : ExposedManagerInterface {
                                 } else {
                                     edge.label()
                                 }
-                        }
-                    }
-                }
-            }
-
-            else -> {
-                val graphsRepresentation = graph.adjacencyList()
-                for (sourceVertexIndex in 0 until vertexCount) {
-                    for (outgoingEdge in 0 until graphsRepresentation.outgoingEdgesCount(sourceVertexIndex)) {
-                        val edge = graphsRepresentation.getEdge(sourceVertexIndex, outgoingEdge)
-                        transaction(db) {
-                            EdgesEntity.new {
-                                fromVertexValue =
-                                    VerticesEntity.new {
-                                        value = sourceVertexIndex.toString()
-                                    }
-                                toVertexValue =
-                                    VerticesEntity.new {
-                                        value = edge.target().toString()
-                                    }
-                                label =
-                                    if (edge.label() == "") {
-                                        null
-                                    } else {
-                                        edge.label()
-                                    }
-                            }
+                            weight = edge.weight()
+                            relatedGraphID = graphID
                         }
                     }
                 }
@@ -90,25 +92,34 @@ class ExposedManager : ExposedManagerInterface {
         }
     }
 
-    override fun readGraph(
-        fileName: String,
-        db: Database,
-    ): Graph<String> {
-        TODO("Not yet implemented")
+    private fun getEmptyDirectedOnUndirectedGraph(type: String) : Graph {
+        return if (type == "Undirected") UndirectedGraph()
+        else DirectedGraph()
     }
 
-//    override fun readGraph(fileName: String, db: Database): Graph<String> {
-//        val db by lazy {
-//            Database.connect("jdbc:sqlite:${fileName}", "org.sqlite.JDBC")
-//        }
-//        transaction(db) {
-//            val query = EdgesTable.selectAll()
-//            query.forEach {
-//
-//            }
-//            val vertices = VerticesEntity.find { Vertices.graph eq graph.id }.map { it.name }
-//            val edges = EdgesEntity.find { Edges.graph eq graph.id }.map { it.from.name to it.to.name }
-//            vertices to edges
-//        }
-//    }
+    fun readGraph(
+        graphName: String
+    ) : Graph? {
+        initConnection()
+        transaction {
+            var graphId = 0
+            var graphType = ""
+            GraphEntity.find { GraphsTable.name eq graphName }.firstOrNull()?.let {
+                graphId = it.id.value
+                graphType = it.type
+            }
+            val graph = getEmptyDirectedOnUndirectedGraph(graphType)
+            VertexEntity.find { VerticesTable.relatedGraphID eq graphId }.forEach { vertex ->
+                graph.addVertex(vertex.value)
+            }
+            EdgeEntity.find { EdgesTable.relatedGraphID eq graphId }.firstOrNull()?.let {  edge ->
+                if (edge.label == null) {
+                    graph.addEdge(edge.fromVertexValue.value, edge.toVertexValue.value, " ", edge.weight)
+                }
+                graph.addEdge(edge.fromVertexValue.value, edge.toVertexValue.value, edge.label.toString(), edge.weight)
+            }
+            return@transaction graph
+        }
+        return null
+    }
 }
