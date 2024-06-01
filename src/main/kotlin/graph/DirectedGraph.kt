@@ -3,10 +3,10 @@ package graph
 import algorithms.BellmanFordAlgorithm
 import algorithms.TarjanSAlgo
 
-open class DirectedGraph<V>(
+open class DirectedGraph(
     private val adjacencyList: DirectedAdjacencyList = DirectedAdjacencyList(),
-    final override val vertexValues: ArrayList<V> = arrayListOf(),
-) : Graph<V>() {
+    final override val vertexValues: ArrayList<String> = arrayListOf(),
+) : Graph() {
     init {
         require(adjacencyList.verticesCount() == vertexValues.size) {
             "vertexValues size isn't equal adjacencyList's vertices count"
@@ -22,7 +22,7 @@ open class DirectedGraph<V>(
         for (vertex in 0 until adjacencyList.verticesCount()) {
             for (outgoingEdgeSInd in 0 until adjacencyList.outgoingEdgesCount(vertex)) {
                 val edge = adjacencyList.getEdge(vertex, outgoingEdgeSInd)
-                svsEdgesList.add(SourceVertexStoringEdge(vertex, edge.target(), edge.label(), edge.weight().toDouble()))
+                svsEdgesList.add(SourceVertexStoringEdge(vertex, edge.target(), edge.label(), edge.weight()))
             }
         }
         return svsEdgesList
@@ -36,19 +36,19 @@ open class DirectedGraph<V>(
         firstVertexInd: Int,
         secondVertexInd: Int,
         label: String,
-        weight: Number,
+        weight: Double,
     ) {
         adjacencyList.addEdge(firstVertexInd, secondVertexInd, label, weight)
     }
 
-    override fun addVertex(value: V) {
+    override fun addVertex(value: String) {
         require(isAbleToAdd) {
             "Not able to add vertices when graph is immutable"
         }
         if (vertexIndicesMap[value] == null) {
             vertexIndicesMap[value] = adjacencyList.addVertex()
+            vertexValues.add(value)
         }
-        vertexValues.add(value)
     }
 
     override fun findBridges(): MutableSet<Set<Int>> {
@@ -56,8 +56,8 @@ open class DirectedGraph<V>(
     }
 
     override fun shortestPathByBFAlgorithm(
-        start: V,
-        end: V,
+        start: String,
+        end: String,
     ): MutableList<Int>? {
         val algo = BellmanFordAlgorithm(adjacencyList)
         var idStart = -1
@@ -88,7 +88,7 @@ open class DirectedGraph<V>(
         return tarjanSAlgo.tarjanSAlgo()
     }
 
-    override fun minimumSpanningForest(): DirectedGraph<V> {
+    override fun minimumSpanningForest(): DirectedGraph {
         throw UnsupportedOperationException("minimumSpanningForest() hasn't implemented for directed graphs")
     }
 }

@@ -4,8 +4,7 @@ plugins {
     kotlin("jvm")
     id("org.jetbrains.compose")
     jacoco
-    // Documentation generation
-    id("org.jetbrains.dokka") version "1.9.20"
+    kotlin("plugin.serialization") version "1.5.30"
 }
 
 group = "com.example"
@@ -36,7 +35,8 @@ dependencies {
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
-
+    // neo4j
+    implementation("org.neo4j.driver", "neo4j-java-driver", "5.6.0")
     compileOnly("org.jetbrains.dokka:dokka-core:1.9.20")
 
     // JetBrains Exposed
@@ -46,6 +46,7 @@ dependencies {
 
     // JDBC Sqlite
     implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 }
 
 compose.desktop {
@@ -72,24 +73,4 @@ tasks.named<JacocoReport>("jacocoTestReport") {
         xml.required = true
         html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
     }
-}
-
-tasks.dokkaHtml {
-    outputDirectory.set(layout.buildDirectory.dir("documentation/html"))
-}
-
-tasks.dokkaGfm {
-    outputDirectory.set(layout.buildDirectory.dir("documentation/markdown"))
-}
-
-tasks.register<Jar>("dokkaHtmlJar") {
-    dependsOn(tasks.dokkaHtml)
-    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    archiveClassifier.set("html-docs")
-}
-
-tasks.register<Jar>("dokkaJavadocJar") {
-    dependsOn(tasks.dokkaJavadoc)
-    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    archiveClassifier.set("javadoc")
 }

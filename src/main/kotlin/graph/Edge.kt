@@ -3,7 +3,7 @@ package graph
 open class Edge(
     private val target: Int,
     private val label: String = "",
-    private val weight: Number = 1,
+    private val weight: Double = 1.0,
 ) {
     fun target(): Int {
         return target
@@ -13,7 +13,7 @@ open class Edge(
         return label
     }
 
-    open fun weight(): Number {
+    open fun weight(): Double {
         return weight
     }
 }

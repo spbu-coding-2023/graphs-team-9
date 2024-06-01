@@ -4,10 +4,10 @@ import algorithms.BellmanFordAlgorithm
 import algorithms.BoruvkaSAlgorithm
 import algorithms.FindBridgesAlgorithm
 
-class UndirectedGraph<V>() : Graph<V>() {
+open class UndirectedGraph() : Graph() {
     private var verticesCount: Int = 0
     private var svsEdgesList: ArrayList<SourceVertexStoringEdge> = arrayListOf()
-    override var vertexValues: ArrayList<V> = arrayListOf()
+    override var vertexValues: ArrayList<String> = arrayListOf()
 
     override fun svsEdgesList(): List<SourceVertexStoringEdge> {
         return svsEdgesList
@@ -29,7 +29,7 @@ class UndirectedGraph<V>() : Graph<V>() {
         firstVertexInd: Int,
         secondVertexInd: Int,
         label: String,
-        weight: Number,
+        weight: Double,
     ) {
         require(!isEdgeContained(firstVertexInd, secondVertexInd)) {
             "Duplicated edges are not allowed"
@@ -39,7 +39,7 @@ class UndirectedGraph<V>() : Graph<V>() {
                 firstVertexInd,
                 secondVertexInd,
                 label,
-                weight.toDouble(),
+                weight,
             ),
         )
     }
@@ -56,14 +56,14 @@ class UndirectedGraph<V>() : Graph<V>() {
         return false
     }
 
-    override fun addVertex(value: V) {
+    override fun addVertex(value: String) {
         require(isAbleToAdd) {
             "Not able to add vertices when graph is immutable"
         }
         if (vertexIndicesMap[value] == null) {
             vertexIndicesMap[value] = verticesCount++
+            vertexValues.add(value)
         }
-        vertexValues.add(value)
     }
 
     override fun findBridges(): MutableSet<Set<Int>> {
@@ -72,8 +72,8 @@ class UndirectedGraph<V>() : Graph<V>() {
     }
 
     override fun shortestPathByBFAlgorithm(
-        start: V,
-        end: V,
+        start: String,
+        end: String,
     ): MutableList<Int>? {
         if (hasNegativeWeights) throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
 
@@ -105,14 +105,24 @@ class UndirectedGraph<V>() : Graph<V>() {
         throw UnsupportedOperationException("getStronglyComponent() hasn't implemented for undirected graphs")
     }
 
-    override fun minimumSpanningForest(): UndirectedGraph<V> {
+    override fun minimumSpanningForest(): UndirectedGraph {
         val boruvkaSAlgorithm = BoruvkaSAlgorithm(svsEdgesList, verticesCount)
         return UndirectedGraph(boruvkaSAlgorithm.boruvkaSAlgo(), vertexValues)
     }
 
-    private constructor(svsEdgesList: ArrayList<SourceVertexStoringEdge>, vertexValues: ArrayList<V>) : this() {
+    internal constructor(svsEdgesList: ArrayList<SourceVertexStoringEdge>, vertexValues: ArrayList<String>) : this() {
         this.svsEdgesList = svsEdgesList
         this.verticesCount = vertexValues.size
+
+        for (edge in svsEdgesList) {
+            require(0 <= edge.source() && edge.source() < this.verticesCount) {
+                "graph doesn't have ${edge.source()} vertex"
+            }
+            require(0 <= edge.target() && edge.target() < this.verticesCount) {
+                "graph doesn't have ${edge.target()} vertex"
+            }
+        }
+
         this.vertexValues = vertexValues
     }
 }
