@@ -3,14 +3,14 @@ package storage.exposed.edges
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import storage.exposed.vertices.VerticesEntity
+import storage.exposed.vertices.VertexEntity
 
-class EdgesEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<EdgesEntity>(EdgesTable)
+class EdgeEntity(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<EdgeEntity>(EdgesTable)
 
-    var fromVertexIndex by VerticesEntity referencedOn EdgesTable.fromVertexIndex
-    var toVertexIndex by VerticesEntity referencedOn EdgesTable.toVertexIndex
-    var weight by EdgesTable.weight
+    var fromVertexValue by VertexEntity referencedOn EdgesTable.fromVertexValue
+    var toVertexValue by VertexEntity referencedOn EdgesTable.toVertexValue
     var label by EdgesTable.label
-    var type by EdgesTable.type
+    var weight by EdgesTable.weight
+    var relatedGraphID by EdgesTable.relatedGraphID
 }
