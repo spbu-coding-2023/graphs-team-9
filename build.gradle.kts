@@ -43,6 +43,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.slf4j:slf4j-nop:2.0.7")
 
     // JDBC Sqlite
     implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
