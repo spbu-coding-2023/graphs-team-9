@@ -8,7 +8,9 @@ import storage.exposed.vertices.VerticesEntity
 class EdgesEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<EdgesEntity>(EdgesTable)
 
-    var fromVertexValue by VerticesEntity referencedOn EdgesTable.fromVertexValue
-    var toVertexValue by VerticesEntity referencedOn EdgesTable.toVertexValue
+    var fromVertexIndex by VerticesEntity referencedOn EdgesTable.fromVertexIndex
+    var toVertexIndex by VerticesEntity referencedOn EdgesTable.toVertexIndex
+    var weight by EdgesTable.weight
     var label by EdgesTable.label
+    var type by EdgesTable.type
 }
