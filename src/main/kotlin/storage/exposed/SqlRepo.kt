@@ -10,7 +10,7 @@ import storage.exposed.graph.GraphsTable
 import storage.exposed.vertices.VertexEntity
 import storage.exposed.vertices.VerticesTable
 
-class ExposedManager {
+class SqlRepo {
     private val dbPath = "graph.db"
 
     private fun initConnection() {
